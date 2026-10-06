@@ -1,7 +1,11 @@
 # Topgun
+
+โครงสร้างโปรเจกต์ Topgun แบ่งเป็นส่วน Firmware และ ML ดังนี้
+
+```text
 Topgun/
 ├── Firmware/                     # เพื่อน
-│   ├── app.py                    # / , POST /api/predict, /market, /health
+│   ├── app.py                    # /, POST /api/predict, /market, /health
 │   ├── mqtt_pub.py               # queue → MQTT (ไม่อยู่ใน request path)
 │   ├── service.py                # subscribe → validate → SQLite (UNIQUE msg_id)
 │   ├── templates/                # index.html, market.html
@@ -20,3 +24,4 @@ Topgun/
 ├── .env.example
 ├── .gitignore
 └── README.md
+```
