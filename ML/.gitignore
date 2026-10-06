@@ -1,0 +1,23 @@
+# --- Python / env ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.env
+.env.*
+
+# --- ข้อมูล: ห้ามเข้า git (ml-spec ข้อ 5) ---
+data/
+!data/.gitkeep
+
+# --- น้ำหนักโมเดลระหว่างเทรน (ไฟล์ใหญ่) ---
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+runs/

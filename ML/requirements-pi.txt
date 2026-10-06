@@ -1,0 +1,14 @@
+# Runtime บน Raspberry Pi (ARM64) — ห้าม torch / scikit-learn
+# ติดตั้ง: pip install -r ML/requirements-pi.txt && pip install -e ./ML
+#
+# version = ตัวล่าสุดบน PyPI ณ 6 ต.ค. 2569 ที่มี wheel aarch64 (เช็คจาก PyPI JSON API)
+# ยังไม่ได้ติดตั้งจริงบน Pi
+# numpy แยกตาม Python ด้วย environment marker (pip เลือกบรรทัดเดียวให้เอง):
+#   - 2.5.x ต้องใช้ Python >= 3.12
+#   - 2.4.6 = ตัวล่าสุดที่มี wheel cp311 aarch64 (Pi OS Bookworm = Python 3.11)
+pillow==12.3.0
+pillow-heif==1.8.0          # เปิดไฟล์ HEIC จาก iPhone
+numpy==2.4.6; python_version < "3.12"
+numpy==2.5.3; python_version >= "3.12"
+onnxruntime==1.30.0
+opencv-python-headless==5.0.0.93   # major 5 — โค้ดร่าง (segment/viz) ยังไม่ได้ทดสอบกับ cv2 5.x
