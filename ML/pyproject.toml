@@ -14,6 +14,15 @@ dependencies = ["pillow"]
 [project.optional-dependencies]
 heic = ["pillow-heif"]
 dev = ["pytest"]
+# ใช้บน notebook เท่านั้น (เตรียมข้อมูล / baseline / กราฟ) — Pi ใช้ requirements-pi.txt
+# sklearn / matplotlib ห้ามเข้า runtime บน Pi · torch ติดตั้งแยก (เลือก CUDA build เอง)
+train = [
+    "numpy",
+    "opencv-python-headless",
+    "pillow",
+    "scikit-learn",
+    "matplotlib",
+]
 
 [tool.setuptools.dynamic]
 version = { attr = "roastml.__version__" }
@@ -23,3 +32,4 @@ include = ["roastml*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]  # ให้ test import tools.* ได้ (tools ไม่ได้อยู่ใน wheel)
