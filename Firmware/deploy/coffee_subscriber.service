@@ -1,0 +1,25 @@
+[Unit]
+Description=Topgun MQTT to SQLite subscriber
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=topgun
+Group=topgun
+WorkingDirectory=/opt/topgun/Firmware
+EnvironmentFile=/etc/topgun/topgun.env
+Environment=PYTHONUNBUFFERED=1
+Environment=TOPGUN_DB_PATH=/var/lib/topgun/predictions.sqlite3
+ExecStart=/opt/topgun/.venv/bin/python -m service
+Restart=on-failure
+RestartSec=3
+StateDirectory=topgun
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/topgun
+
+[Install]
+WantedBy=multi-user.target

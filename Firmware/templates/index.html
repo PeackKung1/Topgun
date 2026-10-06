@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#263a2b">
+  <title>Topgun · ตรวจระดับคั่วกาแฟ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">TG</div>
+      <div><p class="eyebrow">TESA TOP GUN RALLY</p><h1>ตรวจระดับคั่วกาแฟ</h1></div>
+      <a class="text-link" href="/market">ประวัติ</a>
+    </header>
+
+    <section class="panel intro">
+      <p class="step">วิธีใช้งาน</p>
+      <h2>ถ่ายรูปเมล็ดกาแฟให้เห็นชัด</h2>
+      <ol>
+        <li>วางเมล็ดบนพื้นเรียบ แสงสว่างและสีไม่เพี้ยน</li>
+        <li>ถ่ายให้เห็นเมล็ดชัด ไม่เบลอ แล้วเลือกรูปจากมือถือ</li>
+        <li>กดวิเคราะห์ ระบบจะแสดงระดับคั่วและความมั่นใจ</li>
+      </ol>
+      <p class="hint">รองรับ JPG, PNG และ HEIC · ระบบย่อรูปก่อนอัปโหลด</p>
+    </section>
+
+    <section class="panel upload-panel">
+      <form id="predict-form">
+        <label class="file-picker" for="image-input">
+          <span class="camera-icon" aria-hidden="true">＋</span>
+          <span><strong>เลือกรูปหรือถ่ายภาพ</strong><small>แตะเพื่อเปิดกล้องหรือคลังรูป</small></span>
+        </label>
+        <input id="image-input" name="image" type="file" accept="image/*,.heic,.heif" capture="environment" required>
+        <figure id="preview-wrap" class="preview-wrap" hidden>
+          <img id="preview" alt="ตัวอย่างรูปเมล็ดกาแฟ">
+          <figcaption id="file-info"></figcaption>
+        </figure>
+        <button id="submit-button" class="button" type="submit" disabled>วิเคราะห์ระดับคั่ว</button>
+      </form>
+      <p id="progress" class="progress" role="status" aria-live="polite"></p>
+      <section id="result" class="result" aria-live="polite" hidden></section>
+    </section>
+
+    <footer>ประมวลผลภายในอุปกรณ์ · รูปจะไม่ถูกบันทึกลงประวัติ</footer>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>

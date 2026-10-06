@@ -1,0 +1,14 @@
+[Unit]
+Description=Check Topgun service after boot
+After=coffee_service.service
+Requires=coffee_service.service
+
+[Service]
+Type=oneshot
+User=topgun
+Group=topgun
+EnvironmentFile=/etc/topgun/topgun.env
+ExecStart=/opt/topgun/Firmware/deploy/boot-check.sh
+
+[Install]
+WantedBy=multi-user.target
