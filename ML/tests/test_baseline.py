@@ -157,3 +157,52 @@ def test_load_rows_excludes_test_and_non_targets(tmp_path):
         for p, lab, sp in data:
             w.writerow({c: "" for c in cols} | {"path": p, "label": lab, "split": sp})
     assert [r["path"] for r in tb.load_rows(tmp_path)] == ["a", "e"]
+
+
+# ------------------------------------------------------------ main() end-to-end บนข้อมูลสังเคราะห์ (ไม่แตะข้อมูลจริง)
+def _synthetic_dataset(root):
+    """5 source × 3 คลาส × 4 ภาพ (กองเมล็ดสีตามระดับคั่ว) + แถว test ที่ต้องไม่ถูกอ่าน"""
+    from PIL import Image
+
+    from roastml.paths import ensure_layout
+
+    root.mkdir(parents=True, exist_ok=True)
+    ensure_layout(root)
+    cols = ["path", "label", "label_orig", "source", "group", "split", "license", "url", "md5", "phash", "roi",
+            "device", "paper_path"]
+    color = {"light": (150, 105, 70), "medium": (105, 70, 45), "dark": (60, 38, 25)}
+    rows = []
+    for s in tb.FOLDS:
+        for lab, c in color.items():
+            for i in range(4):
+                p = f"raw/{s}/{lab}_{i}.jpg"
+                (root / p).parent.mkdir(parents=True, exist_ok=True)
+                Image.fromarray(pile(c, (96, 96))).save(root / p, quality=90)
+                lo = f"agtron_{ {'light': 75, 'medium': 55, 'dark': 35}[lab] }" if s == "agtron" else lab
+                rows.append({"path": p, "label": lab, "label_orig": lo, "source": s, "group": f"{s}:{i % 2}",
+                             "split": "trainval", "md5": f"{s}{lab}{i}", "roi": "10 10 80 80" if s == "agtron" else ""})
+    rows.append({"path": "raw/does_not_exist.jpg", "label": "dark", "source": "agtron", "split": "test",
+                 "md5": "t", "roi": ""})  # ถ้าถูกอ่าน feature จะ error
+    with open(root / "manifest.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        for r in rows:
+            w.writerow({c: "" for c in cols} | r)
+
+
+def test_train_baseline_main_end_to_end(tmp_path, monkeypatch):
+    import json
+
+    data = tmp_path / "data"
+    _synthetic_dataset(data)
+    monkeypatch.setattr(tb, "RESULTS", tmp_path / "results")
+    monkeypatch.setattr(tb, "MODEL_OUT", tmp_path / "models" / "current")
+    assert tb.main(["--data-dir", str(data), "--workers", "1"]) == 0
+    rep = json.loads((tmp_path / "results" / "baseline_loso.json").read_text(encoding="utf-8"))
+    assert rep["n_errors"] == 0 and rep["n_images"] == 60  # แถว test ไม่ถูกโหลด
+    assert set(rep["B0"]["folds"]) >= set(tb.FOLDS) and "rf_devlong" not in rep["B0"]["folds"]
+    assert {"B0", "B1-small", "B1", "selected", "shortcut_probe"} <= set(rep)
+    assert rep["B1"]["agtron_by_value"]  # แยกตามค่า Agtron
+    card = json.loads((tmp_path / "models" / "current" / "model_card.json").read_text(encoding="utf-8"))
+    assert card["backend"] in ("b0_threshold", "b1_linear") and card["low_conf_threshold"] == tb.LOW_CONF_THRESHOLD
+    assert (tmp_path / "results" / "baseline_confusion" / "B1_agtron.csv").is_file()

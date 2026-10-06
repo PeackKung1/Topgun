@@ -1,0 +1,406 @@
+{
+ "seed": 20261006,
+ "A_smartcrop": {
+  "ontoum224": {
+   "n": 895,
+   "modes": {
+    "beans": 895
+   },
+   "fallback_full_pct": 0.0,
+   "by_label_full_pct": {
+    "light": 0.0,
+    "medium": 0.0,
+    "dark": 0.0
+   }
+  },
+  "rf_hendi": {
+   "n": 1512,
+   "modes": {
+    "pile": 1507,
+    "full": 5
+   },
+   "fallback_full_pct": 0.3,
+   "by_label_full_pct": {
+    "light": 0.0,
+    "medium": 0.0,
+    "dark": 1.0
+   }
+  },
+  "rf_robusta": {
+   "n": 1046,
+   "modes": {
+    "pile": 538,
+    "beans": 298,
+    "full": 210
+   },
+   "fallback_full_pct": 20.1,
+   "by_label_full_pct": {
+    "light": 1.5,
+    "medium": 20.3,
+    "dark": 22.4
+   }
+  },
+  "rf_boos": {
+   "n": 893,
+   "modes": {
+    "beans": 823,
+    "full": 70
+   },
+   "fallback_full_pct": 7.8,
+   "by_label_full_pct": {
+    "light": 13.1,
+    "medium": 10.4,
+    "dark": 0.0
+   }
+  },
+  "agtron": {
+   "n": 561,
+   "modes": {
+    "pile": 561
+   },
+   "fallback_full_pct": 0.0,
+   "by_label_full_pct": {
+    "light": 0.0,
+    "medium": 0.0,
+    "dark": 0.0
+   }
+  }
+ },
+ "B_overlap_L_iqr_cross_source_cross_label": [
+  {
+   "a": "ontoum224:light",
+   "b": "rf_robusta:medium",
+   "overlap_L": 9.73,
+   "a_iqr": [
+    41.69,
+    51.42
+   ],
+   "b_iqr": [
+    30.14,
+    59.6
+   ]
+  },
+  {
+   "a": "rf_hendi:light",
+   "b": "rf_robusta:medium",
+   "overlap_L": 6.5,
+   "a_iqr": [
+    43.34,
+    49.84
+   ],
+   "b_iqr": [
+    30.14,
+    59.6
+   ]
+  },
+  {
+   "a": "ontoum224:medium",
+   "b": "rf_robusta:dark",
+   "overlap_L": 6.22,
+   "a_iqr": [
+    24.94,
+    31.16
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "ontoum224:light",
+   "b": "rf_robusta:dark",
+   "overlap_L": 5.51,
+   "a_iqr": [
+    41.69,
+    51.42
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "rf_boos:light",
+   "b": "rf_robusta:medium",
+   "overlap_L": 5.36,
+   "a_iqr": [
+    44.77,
+    50.13
+   ],
+   "b_iqr": [
+    30.14,
+    59.6
+   ]
+  },
+  {
+   "a": "agtron:medium",
+   "b": "rf_robusta:dark",
+   "overlap_L": 4.51,
+   "a_iqr": [
+    26.69,
+    31.2
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "agtron:light",
+   "b": "rf_robusta:dark",
+   "overlap_L": 4.27,
+   "a_iqr": [
+    32.71,
+    36.98
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "agtron:light",
+   "b": "rf_robusta:medium",
+   "overlap_L": 4.27,
+   "a_iqr": [
+    32.71,
+    36.98
+   ],
+   "b_iqr": [
+    30.14,
+    59.6
+   ]
+  },
+  {
+   "a": "rf_hendi:light",
+   "b": "rf_robusta:dark",
+   "overlap_L": 3.86,
+   "a_iqr": [
+    43.34,
+    49.84
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "rf_boos:medium",
+   "b": "rf_robusta:dark",
+   "overlap_L": 3.83,
+   "a_iqr": [
+    30.28,
+    34.11
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "rf_boos:medium",
+   "b": "rf_robusta:light",
+   "overlap_L": 3.83,
+   "a_iqr": [
+    30.28,
+    34.11
+   ],
+   "b_iqr": [
+    29.92,
+    34.59
+   ]
+  },
+  {
+   "a": "ontoum224:light",
+   "b": "rf_hendi:medium",
+   "overlap_L": 3.5,
+   "a_iqr": [
+    41.69,
+    51.42
+   ],
+   "b_iqr": [
+    45.61,
+    49.11
+   ]
+  },
+  {
+   "a": "rf_boos:light",
+   "b": "rf_hendi:medium",
+   "overlap_L": 3.5,
+   "a_iqr": [
+    44.77,
+    50.13
+   ],
+   "b_iqr": [
+    45.61,
+    49.11
+   ]
+  },
+  {
+   "a": "rf_boos:light",
+   "b": "rf_robusta:dark",
+   "overlap_L": 2.43,
+   "a_iqr": [
+    44.77,
+    50.13
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "rf_hendi:dark",
+   "b": "rf_robusta:medium",
+   "overlap_L": 2.37,
+   "a_iqr": [
+    37.46,
+    39.83
+   ],
+   "b_iqr": [
+    30.14,
+    59.6
+   ]
+  },
+  {
+   "a": "ontoum224:medium",
+   "b": "rf_boos:dark",
+   "overlap_L": 2.09,
+   "a_iqr": [
+    24.94,
+    31.16
+   ],
+   "b_iqr": [
+    5.05,
+    27.03
+   ]
+  },
+  {
+   "a": "rf_hendi:medium",
+   "b": "rf_robusta:dark",
+   "overlap_L": 1.59,
+   "a_iqr": [
+    45.61,
+    49.11
+   ],
+   "b_iqr": [
+    19.6,
+    47.2
+   ]
+  },
+  {
+   "a": "agtron:light",
+   "b": "rf_boos:medium",
+   "overlap_L": 1.4,
+   "a_iqr": [
+    32.71,
+    36.98
+   ],
+   "b_iqr": [
+    30.28,
+    34.11
+   ]
+  },
+  {
+   "a": "agtron:medium",
+   "b": "rf_robusta:light",
+   "overlap_L": 1.28,
+   "a_iqr": [
+    26.69,
+    31.2
+   ],
+   "b_iqr": [
+    29.92,
+    34.59
+   ]
+  },
+  {
+   "a": "ontoum224:medium",
+   "b": "rf_robusta:light",
+   "overlap_L": 1.24,
+   "a_iqr": [
+    24.94,
+    31.16
+   ],
+   "b_iqr": [
+    29.92,
+    34.59
+   ]
+  },
+  {
+   "a": "agtron:medium",
+   "b": "rf_boos:dark",
+   "overlap_L": 0.34,
+   "a_iqr": [
+    26.69,
+    31.2
+   ],
+   "b_iqr": [
+    5.05,
+    27.03
+   ]
+  }
+ ],
+ "B_inversions_L_median": [
+  {
+   "darker_label": "rf_hendi:dark",
+   "L_median": 38.38,
+   "lighter_label": "agtron:light",
+   "L_median_2": 34.63
+  },
+  {
+   "darker_label": "rf_hendi:medium",
+   "L_median": 47.41,
+   "lighter_label": "agtron:light",
+   "L_median_2": 34.63
+  },
+  {
+   "darker_label": "rf_robusta:medium",
+   "L_median": 42.9,
+   "lighter_label": "agtron:light",
+   "L_median_2": 34.63
+  },
+  {
+   "darker_label": "rf_hendi:dark",
+   "L_median": 38.38,
+   "lighter_label": "agtron:medium",
+   "L_median_2": 29.43
+  },
+  {
+   "darker_label": "rf_hendi:medium",
+   "L_median": 47.41,
+   "lighter_label": "ontoum224:light",
+   "L_median_2": 47.01
+  },
+  {
+   "darker_label": "rf_hendi:dark",
+   "L_median": 38.38,
+   "lighter_label": "ontoum224:medium",
+   "L_median_2": 28.86
+  },
+  {
+   "darker_label": "rf_hendi:dark",
+   "L_median": 38.38,
+   "lighter_label": "rf_boos:medium",
+   "L_median_2": 33.49
+  },
+  {
+   "darker_label": "rf_boos:medium",
+   "L_median": 33.49,
+   "lighter_label": "rf_robusta:light",
+   "L_median_2": 31.34
+  },
+  {
+   "darker_label": "rf_hendi:dark",
+   "L_median": 38.38,
+   "lighter_label": "rf_robusta:light",
+   "L_median_2": 31.34
+  },
+  {
+   "darker_label": "rf_hendi:medium",
+   "L_median": 47.41,
+   "lighter_label": "rf_robusta:light",
+   "L_median_2": 31.34
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
-  "n_rows": 8367,
+  "n_rows": 7472,
   "source_x_split_x_label": {
     "agtron": {
       "test": {
@@ -29,13 +29,6 @@
         "mixed": 102
       }
     },
-    "rf_devlong": {
-      "trainval": {
-        "dark": 295,
-        "light": 300,
-        "medium": 300
-      }
-    },
     "rf_hendi": {
       "trainval": {
         "dark": 519,
@@ -56,22 +49,21 @@
     }
   },
   "label_totals": {
-    "dark": 2208,
+    "dark": 1913,
     "green": 1091,
-    "light": 1483,
-    "medium": 2197,
+    "light": 1183,
+    "medium": 1897,
     "empty": 305,
     "mixed": 1083
   },
   "split_totals": {
-    "trainval": 8281,
+    "trainval": 7386,
     "test": 86
   },
   "n_groups_per_source": {
     "agtron": 7,
     "ontoum224": 1194,
     "rf_boos": 7,
-    "rf_devlong": 895,
     "rf_hendi": 79,
     "rf_robusta": 638
   },
@@ -97,9 +89,14 @@
       "3:Motorola X4"
     ]
   },
+  "cross_source_near_dups": 0,
   "dedupe_md5": {
     "groups_deduped": 923,
     "removed:ontoum224": 406,
     "removed:rf_hendi": 520
+  },
+  "excluded_sources": {
+    "rf_devlong": "สำเนา ontoum224 (resize 224→640) ยืนยันด้วย pHash + MAD 6 ต.ค.",
+    "rf_color": "augment + adaptive equalization"
   }
 }

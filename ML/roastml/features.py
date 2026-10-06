@@ -15,7 +15,7 @@ import numpy as np
 from .segment import SegConfig, SegResult, border_pixels, segment, to_lab
 
 L_BINS = np.linspace(0.0, 100.0, 9)  # histogram L* 8 ช่อง
-STAT_NAMES = ["L_med", "L_mean", "L_p10", "L_p25", "L_p75", "L_p90", "L_std", "a_med", "b_med", "C_med", "hue"]
+STAT_NAMES = ["L_med", "L_mean", "L_p10", "L_p25", "L_p75", "L_p90", "L_std", "L_iqr", "a_med", "b_med", "C_med", "hue"]
 HIST_NAMES = [f"Lh{i}" for i in range(len(L_BINS) - 1)]
 FEATURES_ALL = STAT_NAMES + HIST_NAMES
 
@@ -25,6 +25,8 @@ FEATURE_SETS = {
     "L": ["L_med", "L_p10", "L_p90", "L_std"],
     "Lab": ["L_med", "L_p10", "L_p90", "L_std", "a_med", "b_med", "C_med"],
     "Lab_hist": ["L_med", "L_p10", "L_p90", "L_std", "a_med", "b_med", "C_med"] + HIST_NAMES,
+    # B1-small: feature น้อย ทนโดเมนเปลี่ยนกว่า (ใช้คู่กับ C เล็ก = regularize แรง)
+    "small": ["L_med", "a_med", "b_med", "L_iqr", "C_med"],
 }
 
 # feature ของ "ขอบภาพ" สำหรับ shortcut probe (ทายคลาสจากพื้นหลังอย่างเดียว)
@@ -41,7 +43,7 @@ def pixel_stats(lab_px: np.ndarray) -> np.ndarray:
     a_med, b_med = float(np.median(a)), float(np.median(b))
     hist = np.histogram(np.clip(L, 0, 100), bins=L_BINS)[0].astype(np.float64)
     hist /= max(hist.sum(), 1.0)
-    stats = [p50, float(L.mean()), p10, p25, p75, p90, float(L.std()),
+    stats = [p50, float(L.mean()), p10, p25, p75, p90, float(L.std()), p75 - p25,
              a_med, b_med, float(np.median(np.hypot(a, b))), float(np.degrees(np.arctan2(b_med, a_med)))]
     return np.concatenate([np.asarray(stats, np.float64), hist])
 

@@ -4,7 +4,8 @@
 - label: light | medium | dark (target) · green | empty | mixed (เก็บไว้ ไม่ใช่ target)
 - split: trainval (ประเมินด้วย LOSO ตาม source) · test = agtron 2 เครื่องที่สุ่มไว้ (แช่แข็ง)
 - md5 = ไฟล์ต้นฉบับ · phash = ภาพที่ใช้จริง (agtron = ROI crop, อื่นๆ = ภาพเต็ม)
-- dedupe รอบนี้ด้วย md5 อย่างเดียว: เก็บ 1 ไฟล์ต่อ md5 (ลำดับ source ตาม SOURCE_PRIORITY → split เดิม train>valid>test → path)
+- near-dup ข้าม source (pHash ≤ 6 และ MAD ภาพย่อ 64px < 0.03) → fail ไม่เขียน manifest (เคยเจอ rf_devlong = สำเนา ontoum224)
+- dedupe ภายใน source ด้วย md5: เก็บ 1 ไฟล์ต่อ md5 (ลำดับ source ตาม SOURCE_PRIORITY → split เดิม train>valid>test → path)
   md5 เดียวกันแต่ label ต่างกัน → ตัดทั้งกลุ่ม
 - แถวที่ตัดทิ้งทั้งหมด (พร้อมเหตุผล) → $ROAST_DATA_DIR/cache/manifest_dropped.csv · ตัวเลขสรุป → ML/results/manifest_summary.json
 
@@ -25,7 +26,7 @@ from pathlib import Path
 
 from roastml.paths import CACHE, RAW, data_dir
 from tools import agtron as ag
-from tools.imghash import md5_file, phash_array
+from tools.imghash import load_gray, md5_file, phash_array, thumb_array
 from tools.index_sources import Item, index_source
 
 import numpy as np
@@ -36,7 +37,12 @@ COLUMNS = ["path", "label", "label_orig", "source", "group", "split", "license",
 TARGETS = ("light", "medium", "dark")
 NON_TARGETS = ("green", "empty", "mixed")
 # ลำดับความสำคัญเวลา md5 ซ้ำข้าม source (ml-spec: ontoum224 > rf_* ตามลำดับในตาราง)
-SOURCE_PRIORITY = ("ontoum224", "rf_hendi", "rf_devlong", "rf_robusta", "rf_boos", "agtron")
+SOURCE_PRIORITY = ("ontoum224", "rf_hendi", "rf_robusta", "rf_boos", "agtron")
+# ตัดทิ้งทั้ง source (results/split_decisions.md)
+EXCLUDED_SOURCES = {"rf_devlong": "สำเนา ontoum224 (resize 224→640) ยืนยันด้วย pHash + MAD 6 ต.ค.",
+                    "rf_color": "augment + adaptive equalization"}
+NEAR_DUP_PHASH = 6      # Hamming ≤ นี้ → ผู้สมัคร
+NEAR_DUP_MAD = 0.03     # mean abs diff ภาพย่อ 64px (0..1) < นี้ → ภาพเดียวกัน
 SPLIT_ORIG_PRIORITY = {"train": 0, "valid": 1, "test": 2}
 
 LICENSE = {"ontoum224": "CC BY-SA 4.0", "rf_hendi": "CC BY 4.0", "rf_devlong": "CC BY 4.0",
@@ -154,7 +160,9 @@ def rows_agtron(root: Path, dropped: list[dict]) -> tuple[list[Row], dict]:
     return rows, report
 
 
-def fill_hashes(root: Path, rows: list[Row]) -> None:
+def fill_hashes(root: Path, rows: list[Row]) -> dict[str, np.ndarray]:
+    """เติม md5 + phash · คืน {path: ภาพย่อ 64px uint8} ไว้ยืนยัน near-dup (ภาพที่ใช้จริง: agtron = ROI)"""
+    thumbs = {}
     for r in rows:
         p = root / r.path
         r.md5 = md5_file(p)
@@ -162,9 +170,42 @@ def fill_hashes(root: Path, rows: list[Row]) -> None:
             img = ag.load_roi(p, tuple(int(v) for v in r.roi.split()))
             gray = np.asarray(img.convert("L"))
         else:
-            from tools.imghash import load_gray
             gray = load_gray(p)
         r.phash = f"{phash_array(gray):016x}"
+        thumbs[r.path] = (thumb_array(gray) * 255).round().astype(np.uint8)
+    return thumbs
+
+
+class CrossSourceDuplicateError(RuntimeError):
+    """พบภาพเดียวกันอยู่ต่าง source → LOSO จะรั่ว"""
+
+
+_POPCOUNT = np.array([bin(i).count("1") for i in range(256)], np.uint8)
+
+
+def cross_source_near_dups(rows: list[Row], thumbs: dict[str, np.ndarray],
+                           phash_t: int = NEAR_DUP_PHASH, mad_t: float = NEAR_DUP_MAD) -> list[dict]:
+    """คู่ภาพต่าง source ที่ pHash ≤ phash_t และ MAD(ภาพย่อ 64px) < mad_t"""
+    by_src: dict[str, list[Row]] = defaultdict(list)
+    for r in rows:
+        by_src[r.source].append(r)
+    srcs = sorted(by_src)
+    hashes = {s: np.array([int(r.phash, 16) for r in by_src[s]], dtype=np.uint64) for s in srcs}
+    found = []
+    for i, a in enumerate(srcs):
+        for b in srcs[i + 1:]:
+            hb = hashes[b]
+            for start in range(0, len(hashes[a]), 256):  # ทีละก้อน กัน memory บวม
+                ha = hashes[a][start:start + 256]
+                x = (ha[:, None] ^ hb[None, :]).view(np.uint8).reshape(len(ha), len(hb), 8)
+                dist = _POPCOUNT[x].sum(axis=-1)
+                for ia, ib in np.argwhere(dist <= phash_t):
+                    ra, rb = by_src[a][start + ia], by_src[b][ib]
+                    ta, tb = thumbs[ra.path].astype(np.float32), thumbs[rb.path].astype(np.float32)
+                    mad = float(np.abs(ta - tb).mean() / 255.0)
+                    if mad < mad_t:
+                        found.append({"a": ra.path, "b": rb.path, "phash_dist": int(dist[ia, ib]), "mad64": round(mad, 4)})
+    return found
 
 
 def dedupe_md5(rows: list[Row], dropped: list[dict]) -> tuple[list[Row], dict]:
@@ -232,7 +273,12 @@ def build(root: Path, sources: tuple[str, ...] = SOURCE_PRIORITY) -> tuple[list[
             rows += r
         else:
             rows += rows_from_items(root, index_source(root, s), dropped)
-    fill_hashes(root, rows)
+    thumbs = fill_hashes(root, rows)
+    dups = cross_source_near_dups(rows, thumbs)
+    if dups:
+        ex = "\n".join(f"  {d['a']} ~ {d['b']} (pHash {d['phash_dist']}, MAD {d['mad64']})" for d in dups[:10])
+        raise CrossSourceDuplicateError(f"พบภาพซ้ำข้าม source {len(dups)} คู่ — ไม่เขียน manifest\n{ex}")
+    extra["cross_source_near_dups"] = 0
     rows, extra["dedupe_md5"] = dedupe_md5(rows, dropped)
     rows.sort(key=lambda r: (SOURCE_PRIORITY.index(r.source), r.path))
     return rows, dropped, extra
@@ -245,7 +291,12 @@ def main(argv: list[str] | None = None) -> int:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     root = args.data_dir.resolve() if args.data_dir else data_dir()
 
-    rows, dropped, extra = build(root)
+    try:
+        rows, dropped, extra = build(root)
+    except CrossSourceDuplicateError as e:
+        print(f"FAIL: {e}", file=sys.stderr)
+        return 3
+    extra["excluded_sources"] = EXCLUDED_SOURCES
     write_csv_atomic(root / "manifest.csv", [asdict(r) for r in rows], COLUMNS)
     (root / CACHE).mkdir(exist_ok=True)
     write_csv_atomic(root / CACHE / "manifest_dropped.csv", dropped, ["path", "source", "label_orig", "reason"])

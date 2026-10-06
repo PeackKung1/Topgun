@@ -50,6 +50,16 @@ def test_load_roi_uses_exif_transposed_coords(tmp_path):
         ag.load_roi(p, (0, 0, 70, 30))
 
 
+_SEED = iter(range(10_000))
+
+
+def textured(size=64, seed=None):
+    """ภาพลายสุ่มหยาบ (8×8 ขยาย) — แต่ละภาพไม่ซ้ำกัน เพื่อไม่ให้ near-dup check จับผิด"""
+    r = np.random.default_rng(next(_SEED) if seed is None else seed)
+    small = r.integers(0, 256, (8, 8, 3), dtype=np.uint8)
+    return np.asarray(Image.fromarray(small).resize((size, size), Image.NEAREST))
+
+
 def write_agtron(base, rows, devices=(("0", "PhoneA"), ("1", "PhoneB"))):
     img_dir = base / "RAW" / "RAW"
     img_dir.mkdir(parents=True)
@@ -60,7 +70,7 @@ def write_agtron(base, rows, devices=(("0", "PhoneA"), ("1", "PhoneB"))):
         lines.append(f"{dev};{name};{paper};{a};0;8;8;56;56;48")
         for n in (name, paper):
             if not (img_dir / n).exists():
-                Image.fromarray(np.full((64, 64, 3), 40 + 20 * i, np.uint8)).save(img_dir / n)
+                Image.fromarray(textured()).save(img_dir / n, quality=95)
     (base / "photos.csv").write_text("\n".join(lines) + "\n")
 
 
@@ -132,8 +142,9 @@ def test_build_end_to_end(tmp_path):
     raw = tmp_path / "raw"
 
     def img(p, v):
+        """v = seed · ภาพ PNG/JPEG คุณภาพสูง seed เดียวกัน = ไฟล์ byte เดียวกัน (ใช้ทดสอบ md5 dedupe)"""
         p.parent.mkdir(parents=True, exist_ok=True)
-        Image.fromarray(np.full((32, 32, 3), v, np.uint8)).save(p)
+        Image.fromarray(textured(32, seed=1000 + v)).save(p, **({"quality": 95} if p.suffix == ".jpg" else {}))
 
     img(raw / "ontoum224" / "train" / "Dark" / "d1.png", 10)
     img(raw / "ontoum224" / "test" / "Dark" / "d9.png", 10)  # md5 ซ้ำ train → ตัด
@@ -155,6 +166,7 @@ def test_build_end_to_end(tmp_path):
     rows, dropped, extra = mm.build(tmp_path)
     by = {(r.source, r.path.split("/")[-1]): r for r in rows}
     assert ("ontoum224", "d9.png") not in by and by[("ontoum224", "d1.png")].label == "dark"
+    assert not any(r.source == "rf_devlong" for r in rows)  # ตัดทั้ง source
     assert by[("ontoum224", "g1.png")].label == "green"
     assert by[("rf_robusta", "v_mp4-0_jpg.rf.0.jpg")].label == "dark"
     assert ("rf_robusta", "v_mp4-1_jpg.rf.1.jpg") not in by  # Maw อย่างเดียว
@@ -177,3 +189,47 @@ def test_build_end_to_end(tmp_path):
         header = next(csv.reader(f))
     assert header[:10] == ["path", "label", "label_orig", "source", "group", "split", "license", "url", "md5", "phash"]
     assert "split_orig" not in header
+
+
+def test_cross_source_near_dup_detected_and_build_fails(tmp_path):
+    ensure_layout(tmp_path)
+    raw = tmp_path / "raw"
+    base = textured(224, seed=7)
+    for s, name in (("ontoum224", "a.png"), ("rf_hendi", "20240101_000000_001_jpg.rf.a.jpg")):
+        p = raw / s / "train" / "Dark" / name
+        p.parent.mkdir(parents=True)
+        im = Image.fromarray(base)
+        if s == "rf_hendi":
+            im = im.resize((640, 640))  # สำเนาที่ resize แบบ stretch (แบบ devlong)
+        im.save(p, **({"quality": 90} if p.suffix == ".jpg" else {}))
+    other = raw / "ontoum224" / "train" / "Light" / "b.png"
+    other.parent.mkdir(parents=True)
+    Image.fromarray(textured(224, seed=8)).save(other)
+
+    rows, dropped = [], []
+    from tools.index_sources import index_source
+    for s in ("ontoum224", "rf_hendi"):
+        rows += mm.rows_from_items(tmp_path, index_source(tmp_path, s), dropped)
+    thumbs = mm.fill_hashes(tmp_path, rows)
+    dups = mm.cross_source_near_dups(rows, thumbs)
+    assert len(dups) == 1 and dups[0]["a"].endswith("a.png") and dups[0]["mad64"] < 0.03
+    with pytest.raises(mm.CrossSourceDuplicateError):
+        mm.build(tmp_path, sources=("ontoum224", "rf_hendi"))
+
+
+def test_cross_source_check_ignores_same_source(tmp_path):
+    r1 = mm.Row("s/a", "dark", "Dark", "ontoum224", "g", "trainval", "", "", phash="0" * 16)
+    r2 = mm.Row("s/b", "dark", "Dark", "ontoum224", "g", "trainval", "", "", phash="0" * 16)
+    t = np.zeros((64, 64), np.uint8)
+    assert mm.cross_source_near_dups([r1, r2], {"s/a": t, "s/b": t}) == []
+
+
+def test_diag_overlap_and_inversion():
+    from tools.diagnose_baseline import inversions, iqr_overlaps
+
+    st = lambda med, p25, p75: {"L_med": {"median": med, "p25": p25, "p75": p75, "n": 5}}  # noqa: E731
+    stats = {("A", "dark"): st(40, 35, 45), ("B", "light"): st(38, 30, 42), ("B", "dark"): st(10, 5, 15)}
+    ov = iqr_overlaps(stats)
+    assert [(d["a"], d["b"]) for d in ov] == [("A:dark", "B:light")] and ov[0]["overlap_L"] == 7
+    inv = inversions(stats)
+    assert inv == [{"darker_label": "A:dark", "L_median": 40, "lighter_label": "B:light", "L_median_2": 38}]

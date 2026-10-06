@@ -2,11 +2,13 @@
 
 โปรโตคอล (ml-spec ข้อ 5, 7, 8 + results/split_decisions.md):
 - ข้อมูล: manifest แถว split=trainval และ label ∈ {light, medium, dark} เท่านั้น · **ไม่โหลด split=test เลย**
-- LOSO 6 fold หน่วย = source: ontoum224, rf_hendi, rf_devlong, rf_robusta, rf_boos, agtron (5 เครื่อง)
+- LOSO 5 fold หน่วย = source: ontoum224, rf_hendi, rf_robusta, rf_boos, agtron (5 เครื่อง) · rf_devlong ตัดทิ้ง (สำเนา ontoum224)
 - รูป: อ่าน bytes → roastml.decode.decode_image (เส้นทางเดียวกับ Pi) → agtron crop ROI (ไม่ smart crop) · อื่นๆ segment/smart crop
   (segment ไม่เจอเมล็ด → ใช้ภาพเต็ม)
-- B0: threshold 2 ค่าบน L_med (เลือกบน train fold ด้วย macro-F1) · B1: StandardScaler + LogisticRegression(class_weight=balanced)
-  เลือก feature set × C ด้วย mean LOSO macro-F1 (ตัวเลข fold ของ config ที่ถูกเลือกจึงมองโลกในแง่ดีเล็กน้อย)
+- B0: threshold 2 ค่าบน L_med (เลือกบน train fold ด้วย macro-F1)
+  B1: Lab_hist + LogisticRegression · B1-small: median L*/a*/b*, IQR L*, chroma + LogisticRegression C เล็ก
+  เลือกตัว deploy (ทุก config ของ B0/B1/B1-small) ด้วย mean LOSO macro-F1 5 fold เท่านั้น
+  (ตัวเลข fold ของ config ที่ถูกเลือกจึงมองโลกในแง่ดีเล็กน้อย)
 - shortcut probe: ทายคลาสจาก "ขอบภาพ" อย่างเดียว ภายในแต่ละ source (StratifiedGroupKFold ตาม group)
 
 ใช้: python -m tools.train_baseline [--workers 8] [--no-export]
@@ -37,12 +39,13 @@ from roastml.segment import SegConfig
 
 ML_DIR = Path(__file__).resolve().parent.parent
 RESULTS = ML_DIR / "results"
-MODEL_OUT = ML_DIR / "models" / "b1"
+MODEL_OUT = ML_DIR / "models" / "current"  # gitignored (เทรนรวม agtron license Unknown)
 CLASSES = ["light", "medium", "dark"]          # ลำดับใน report
 ORDINAL = {"dark": 0, "medium": 1, "light": 2}  # สำหรับ B0 (L* ต่ำ = เข้ม)
-FOLDS = ["ontoum224", "rf_hendi", "rf_devlong", "rf_robusta", "rf_boos", "agtron"]
-C_GRID = [0.01, 0.1, 1.0, 10.0]
-B1_SETS = ["L", "Lab", "Lab_hist"]
+FOLDS = ["ontoum224", "rf_hendi", "rf_robusta", "rf_boos", "agtron"]
+# (ชื่อโมเดล, feature set, C grid) · ลำดับ = ความซับซ้อน (ใช้ตัดสินเมื่อคะแนนเท่ากัน)
+B1_GRID = [("B1-small", "small", [0.001, 0.01, 0.1]), ("B1", "Lab_hist", [0.01, 0.1, 1.0, 10.0])]
+LOW_CONF_THRESHOLD = 0.6  # ค่าคงที่ชั่วคราว (ยังไม่เลือกด้วย LOSO)
 SEED = 20261006
 
 
@@ -270,7 +273,7 @@ def main(argv: list[str] | None = None) -> int:
 
     report: dict = {
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "protocol": "LOSO 6 fold (source) บน split=trainval label∈{light,medium,dark}; split=test ไม่ถูกโหลด",
+        "protocol": "LOSO 5 fold (source) บน split=trainval label∈{light,medium,dark}; split=test ไม่ถูกโหลด",
         "seed": SEED,
         "versions": {"roastml": roastml.__version__, "python": platform.python_version(),
                      "numpy": np.__version__, "sklearn": sklearn.__version__,
@@ -312,84 +315,94 @@ def main(argv: list[str] | None = None) -> int:
     add_csv("B0", "L_med", b0)
     print(f"B0 mean LOSO macro-F1 {b0['mean']['macro_f1']:.3f} ({time.time() - t0:.0f}s)")
 
-    # ---------------- B1 grid
-    grid = []
-    preds = {}
-    for fs in B1_SETS:
-        for C in C_GRID:
+    # ---------------- B1-small / B1 grid
+    cands = [{"model": "B0", "feature_set": "L_med", "C": None, "complexity": 0,
+              "mean_macro_f1": b0["mean"]["macro_f1"], "tab": b0, "pred": p_b0}]
+    for complexity, (model, fs, cs) in enumerate(B1_GRID, start=1):
+        for C in cs:
             p = loso_predict(X, y, src, lambda Xt, yt, fs=fs, C=C: fit_b1(Xt, yt, fs, C))
             tab = fold_table(y, p, src)
-            preds[(fs, C)] = p
-            grid.append({"feature_set": fs, "C": C, "n_features": len(FEATURE_SETS[fs]),
-                         "mean_macro_f1": tab["mean"]["macro_f1"], "mean_acc": tab["mean"]["acc"],
-                         "per_fold_macro_f1": {s: tab[s]["macro_f1"] for s in FOLDS if s in tab}, "tab": tab})
-            add_csv("B1", f"{fs}|C={C}", tab)
-            print(f"B1 {fs:8s} C={C:<5} mean macro-F1 {tab['mean']['macro_f1']:.3f} "
-                  + " ".join(f"{s}={tab[s]['macro_f1']:.2f}" for s in FOLDS if s in tab))
-    # เลือก: macro-F1 เฉลี่ยสูงสุด (ปัด 2 ตำแหน่ง) → feature น้อยกว่า → C เล็กกว่า (regularize แรงกว่า)
-    best = sorted(grid, key=lambda g: (-round(g["mean_macro_f1"], 2), g["n_features"], g["C"]))[0]
-    bfs, bC = best["feature_set"], best["C"]
-    p_b1 = preds[(bfs, bC)]
-    report["B1"] = {
-        "selection": "mean LOSO macro-F1 (ปัด 2 ตำแหน่ง) → feature น้อยกว่า → C เล็กกว่า",
-        "selected": {"feature_set": bfs, "C": bC},
-        "grid": [{k: v for k, v in g.items() if k != "tab"} for g in grid],
-        "folds": best["tab"],
-        "agtron_by_value": agtron_breakdown(lorig, p_b1, src),
-    }
+            cands.append({"model": model, "feature_set": fs, "C": C, "complexity": complexity,
+                          "mean_macro_f1": tab["mean"]["macro_f1"], "tab": tab, "pred": p})
+            add_csv(model, f"{fs}|C={C}", tab)
+            print(f"{model:8s} {fs:8s} C={C:<6} mean macro-F1 {tab['mean']['macro_f1']:.3f} "
+                  + " ".join(f"{s_}={tab[s_]['macro_f1']:.2f}" for s_ in FOLDS if s_ in tab))
 
-    # confusion CSV
+    # เลือก: macro-F1 เฉลี่ย 5 fold สูงสุด (ปัด 2 ตำแหน่ง) → โมเดลง่ายกว่า → C เล็กกว่า
+    rank = lambda g: (-round(g["mean_macro_f1"], 2), g["complexity"], g["C"] or 0)  # noqa: E731
+    best = sorted(cands, key=rank)[0]
+    per_model_best = {m: sorted([g for g in cands if g["model"] == m], key=rank)[0] for m in ("B0", "B1-small", "B1")}
+    report["grid"] = [{k: (v if k != "tab" else {s_: v[s_]["macro_f1"] for s_ in FOLDS if s_ in v})
+                       for k, v in g.items() if k != "pred"} for g in cands]
+    for m, g in per_model_best.items():
+        report[m] = {"config": {"feature_set": g["feature_set"], "C": g["C"]}, "folds": g["tab"],
+                     "agtron_by_value": agtron_breakdown(lorig, g["pred"], src)}
+    report["B0"]["thresholds_per_fold"] = b0_thr
+    report["selected"] = {"model": best["model"], "feature_set": best["feature_set"], "C": best["C"],
+                          "mean_macro_f1": best["mean_macro_f1"],
+                          "rule": "mean LOSO macro-F1 5 fold (ปัด 2 ตำแหน่ง) → โมเดลง่ายกว่า → C เล็กกว่า"}
+
+    # confusion CSV (ตัวที่ดีที่สุดของแต่ละโมเดล)
     cm_dir = RESULTS / "baseline_confusion"
     cm_dir.mkdir(parents=True, exist_ok=True)
-    for name, tab in (("B0", b0), ("B1", best["tab"])):
+    for name, g in per_model_best.items():
         for fold in FOLDS + ["pooled"]:
-            if fold in tab:
+            if fold in g["tab"]:
                 with open(cm_dir / f"{name}_{fold}.csv", "w", newline="", encoding="utf-8") as f:
                     w = csv.writer(f)
                     w.writerow(["true\\pred"] + CLASSES)
-                    for c, r in zip(CLASSES, tab[fold]["cm"]):
+                    for c, r in zip(CLASSES, g["tab"][fold]["cm"]):
                         w.writerow([c] + r)
 
     # ---------------- shortcut probe
+    probe_fs = per_model_best["B1"]["feature_set"]
     probe = {}
-    for s in FOLDS:
-        m = src == s
-        probe[s] = {
+    for s_ in FOLDS:
+        m = src == s_
+        probe[s_] = {
             "border_only": within_source_cv(B[m], y[m], grp[m]),
-            "b1_features_same_cv": within_source_cv(select(X[m], FEATURE_SETS[bfs]), y[m], grp[m]),
+            f"{probe_fs}_features_same_cv": within_source_cv(select(X[m], FEATURE_SETS[probe_fs]), y[m], grp[m]),
             "n_classes": len(set(y[m])),
             "chance_macro_f1_approx": round(1 / max(len(set(y[m])), 1), 3),
-            "note": "agtron ใช้ ROI crop → ขอบภาพ = เมล็ด ไม่ใช่พื้นหลัง" if s == "agtron" else "",
+            "note": {"agtron": "ใช้ ROI crop → ขอบภาพ = เมล็ด ไม่ใช่พื้นหลัง",
+                     "rf_boos": "แต่ละคลาสมาจาก 2 วิดีโอ (group) → CV ภายใน source แทบไม่มีความหมาย"}.get(s_, ""),
         }
     report["shortcut_probe"] = probe
 
-    # ---------------- export B1 (เทรนบน trainval ทั้งหมดของ 6 source)
+    # ---------------- export ตัวที่เลือก (เทรนบน trainval ทั้ง 5 source) → ML/models/current (gitignored)
     if not args.no_export:
-        spec = fit_b1(X, y, bfs, bC)
-        agree = float(np.mean(predict_spec(spec, X) == make_pipe(bC).fit(select(X, FEATURE_SETS[bfs]), y)
-                              .predict(select(X, FEATURE_SETS[bfs]))))
-        if agree < 0.999:
-            raise RuntimeError(f"numpy/sklearn ไม่ตรงกัน: {agree}")
+        if best["model"] == "B0":
+            spec = b0_spec(fit_b0(select(X, ["L_med"])[:, 0], y))
+            backend, agree = "b0_threshold", None
+        else:
+            fs, C = best["feature_set"], best["C"]
+            spec = fit_b1(X, y, fs, C)
+            agree = float(np.mean(predict_spec(spec, X) == make_pipe(C).fit(select(X, FEATURE_SETS[fs]), y)
+                                  .predict(select(X, FEATURE_SETS[fs]))))
+            if agree < 0.999:
+                raise RuntimeError(f"numpy/sklearn ไม่ตรงกัน: {agree}")
+            backend = "b1_linear"
         MODEL_OUT.mkdir(parents=True, exist_ok=True)
-        name = f"b1-{bfs}-C{bC}"
+        name = f"{best['model'].lower()}-{best['feature_set']}" + (f"-C{best['C']}" if best["C"] else "")
         (MODEL_OUT / "model.json").write_text(json.dumps(spec, indent=1), encoding="utf-8")
         card = {
-            "backend": "b1_linear", "name": name, "model_file": "model.json",
-            "created": report["created"], "low_conf_threshold": 0.6,
-            "low_conf_threshold_note": "ค่าเริ่มต้น ยังไม่ได้เลือกด้วย LOSO",
-            "seg_config": cfg.to_dict(), "feature_set": bfs, "C": bC,
+            "backend": backend, "name": name, "model_file": "model.json",
+            "created": report["created"], "low_conf_threshold": LOW_CONF_THRESHOLD,
+            "low_conf_threshold_note": "ค่าคงที่ชั่วคราว ยังไม่ได้เลือกด้วย LOSO",
+            "seg_config": cfg.to_dict(), "feature_set": best["feature_set"], "C": best["C"],
             "train": {"split": "trainval", "sources": FOLDS, "counts": dict(Counter(y))},
             "loso_mean_macro_f1": best["mean_macro_f1"], "versions": report["versions"],
-            "data_license_note": "เทรนรวม agtron (license Unknown) — ใช้ภายใน",
+            "data_license_note": "เทรนรวม agtron (license Unknown) — ใช้ภายใน ห้าม commit",
         }
         (MODEL_OUT / "model_card.json").write_text(json.dumps(card, ensure_ascii=False, indent=1), encoding="utf-8")
-        report["export"] = {"dir": "ML/models/b1", "name": name, "numpy_sklearn_agreement": agree}
+        report["export"] = {"dir": "ML/models/current", "name": name, "backend": backend,
+                            "numpy_sklearn_agreement": agree}
 
     RESULTS.mkdir(exist_ok=True)
     write_csv(RESULTS / "baseline_loso.csv", csv_rows)
     (RESULTS / "baseline_loso.json").write_text(json.dumps(report, ensure_ascii=False, indent=1, default=str) + "\n",
                                                 encoding="utf-8")
-    print(f"\nเลือก B1: {bfs} C={bC} · mean LOSO macro-F1 {best['mean_macro_f1']:.3f}")
+    print(f"\nเลือก: {best['model']} {best['feature_set']} C={best['C']} · mean LOSO macro-F1 {best['mean_macro_f1']:.3f}")
     print(f"→ {RESULTS / 'baseline_loso.csv'}\n→ {RESULTS / 'baseline_loso.json'}")
     return 0
 
