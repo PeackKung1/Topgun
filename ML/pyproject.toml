@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=64"]  # >=64 = รองรับ editable install (PEP 660)
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roastml"
+dynamic = ["version"]
+description = "จำแนกระดับคั่วเมล็ดกาแฟจากรูป (light / medium / dark) — runtime สำหรับ Pi"
+requires-python = ">=3.11"
+# runtime ขั้นต่ำของ contract (api + stub) ใช้แค่ Pillow
+# version ที่ pin สำหรับ Pi อยู่ใน requirements-pi.txt
+dependencies = ["pillow"]
+
+[project.optional-dependencies]
+heic = ["pillow-heif"]
+dev = ["pytest"]
+
+[tool.setuptools.dynamic]
+version = { attr = "roastml.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["roastml*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
