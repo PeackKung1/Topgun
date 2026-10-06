@@ -1,0 +1,182 @@
+{
+  "ontoum224": {
+    "n_images": 1600,
+    "labels_orig": {
+      "Dark": 400,
+      "Green": 400,
+      "Light": 400,
+      "Medium": 400
+    },
+    "split_orig_x_label": {
+      "test": {
+        "Dark": 100,
+        "Green": 100,
+        "Light": 100,
+        "Medium": 100
+      },
+      "train": {
+        "Dark": 300,
+        "Green": 300,
+        "Light": 300,
+        "Medium": 300
+      }
+    },
+    "sizes_top": {
+      "224x224": 1600
+    },
+    "n_distinct_sizes": 1,
+    "n_unreadable": 0,
+    "n_distinct_stems": 1200
+  },
+  "rf_hendi": {
+    "n_images": 2677,
+    "labels_orig": {
+      "Dark": 519,
+      "Empty": 510,
+      "Light": 643,
+      "Medium": 665,
+      "Raw": 340
+    },
+    "split_orig_x_label": {
+      "train": {
+        "Dark": 374,
+        "Empty": 349,
+        "Light": 458,
+        "Medium": 501,
+        "Raw": 241
+      },
+      "valid": {
+        "Dark": 145,
+        "Empty": 161,
+        "Light": 185,
+        "Medium": 164,
+        "Raw": 99
+      }
+    },
+    "sizes_top": {
+      "640x640": 2677
+    },
+    "n_distinct_sizes": 1,
+    "n_unreadable": 0,
+    "n_distinct_stems": 2157
+  },
+  "rf_devlong": {
+    "n_images": 895,
+    "labels_orig": {
+      "Dark": 295,
+      "Light": 300,
+      "Medium": 300
+    },
+    "split_orig_x_label": {
+      "test": {
+        "Dark": 19,
+        "Light": 31,
+        "Medium": 39
+      },
+      "train": {
+        "Dark": 217,
+        "Light": 216,
+        "Medium": 195
+      },
+      "valid": {
+        "Dark": 59,
+        "Light": 53,
+        "Medium": 66
+      }
+    },
+    "sizes_top": {
+      "640x640": 895
+    },
+    "n_distinct_sizes": 1,
+    "n_unreadable": 0,
+    "n_distinct_stems": 895
+  },
+  "rf_robusta": {
+    "n_images": 2481,
+    "labels_orig": {
+      "(no_label)": 1,
+      "Dark Roast": 500,
+      "Dark Roast|Light Roast": 4,
+      "Dark Roast|Light Roast|Maw|Medium Roast": 27,
+      "Dark Roast|Light Roast|Maw|Medium Roast|Raw": 157,
+      "Dark Roast|Light Roast|Medium Roast": 94,
+      "Dark Roast|Light Roast|Medium Roast|Raw": 252,
+      "Dark Roast|Maw": 43,
+      "Dark Roast|Maw|Medium Roast": 12,
+      "Dark Roast|Maw|Medium Roast|Raw": 1,
+      "Dark Roast|Medium Roast": 87,
+      "Dark Roast|Raw": 32,
+      "Light Roast": 67,
+      "Light Roast|Maw": 2,
+      "Light Roast|Maw|Medium Roast|Raw": 1,
+      "Light Roast|Medium Roast": 47,
+      "Light Roast|Medium Roast|Raw": 85,
+      "Light Roast|Raw": 106,
+      "Maw": 1,
+      "Maw|Medium Roast": 14,
+      "Medium Roast": 479,
+      "Medium Roast|Raw": 17,
+      "Raw": 452
+    },
+    "split_orig_x_label": {
+      "test": {
+        "Dark Roast": 46,
+        "Dark Roast|Light Roast": 1,
+        "Dark Roast|Raw": 5,
+        "Light Roast": 1,
+        "Medium Roast": 43,
+        "Medium Roast|Raw": 1,
+        "Raw": 43
+      },
+      "train": {
+        "(no_label)": 1,
+        "Dark Roast": 363,
+        "Dark Roast|Light Roast": 3,
+        "Dark Roast|Light Roast|Maw|Medium Roast": 27,
+        "Dark Roast|Light Roast|Maw|Medium Roast|Raw": 157,
+        "Dark Roast|Light Roast|Medium Roast": 93,
+        "Dark Roast|Light Roast|Medium Roast|Raw": 252,
+        "Dark Roast|Maw": 43,
+        "Dark Roast|Maw|Medium Roast": 12,
+        "Dark Roast|Maw|Medium Roast|Raw": 1,
+        "Dark Roast|Medium Roast": 87,
+        "Dark Roast|Raw": 25,
+        "Light Roast": 66,
+        "Light Roast|Maw": 2,
+        "Light Roast|Maw|Medium Roast|Raw": 1,
+        "Light Roast|Medium Roast": 46,
+        "Light Roast|Medium Roast|Raw": 85,
+        "Light Roast|Raw": 106,
+        "Maw": 1,
+        "Maw|Medium Roast": 14,
+        "Medium Roast": 356,
+        "Medium Roast|Raw": 11,
+        "Raw": 325
+      },
+      "valid": {
+        "Dark Roast": 91,
+        "Dark Roast|Light Roast|Medium Roast": 1,
+        "Dark Roast|Raw": 2,
+        "Light Roast|Medium Roast": 1,
+        "Medium Roast": 80,
+        "Medium Roast|Raw": 5,
+        "Raw": 84
+      }
+    },
+    "sizes_top": {
+      "416x416": 2481
+    },
+    "n_distinct_sizes": 1,
+    "n_unreadable": 0,
+    "n_distinct_stems": 2288,
+    "n_classes_per_image": {
+      "0": 1,
+      "1": 1499,
+      "2": 352,
+      "3": 191,
+      "4": 281,
+      "5": 157
+    },
+    "boxes_total": 4699
+  }
+}

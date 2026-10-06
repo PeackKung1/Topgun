@@ -21,3 +21,9 @@ data/
 *.ckpt
 checkpoints/
 runs/
+
+# --- path ข้อมูลของเครื่องนี้ (roastml/paths.py) ---
+local_paths.json
+
+# --- โมเดลที่เทรนด้วย agtron (license Unknown) ห้ามขึ้น git — ส่งเข้า Pi ด้วย scp/USB ---
+models/

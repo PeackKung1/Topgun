@@ -1,0 +1,223 @@
+{
+  "rf_robusta": {
+    "n_images": 2481,
+    "n_stems": 2288,
+    "n_stem_groups_dup": 193,
+    "n_files_in_dup_groups": 386,
+    "group_size_hist": {
+      "2": 193
+    },
+    "threshold": 6,
+    "pairs_total": 193,
+    "pairs_by_identity_split_label": {
+      "different/cross_split/diff_label": 98,
+      "different/same_split/diff_label": 94,
+      "different/same_split/same_label": 1
+    },
+    "clusters_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "files_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "ข_stem_groups_with_different_images": 193,
+    "ข_pairs_different_image": 193,
+    "ข_pairs_different_image_diff_label": 192,
+    "phash_dist_hist_non_md5": {
+      "16": 1,
+      "18": 2,
+      "20": 3,
+      "22": 11,
+      "24": 11,
+      "26": 28,
+      "28": 26,
+      "30": 32,
+      "32": 32,
+      "34": 23,
+      "36": 14,
+      "38": 6,
+      "40": 2,
+      "42": 2
+    },
+    "mad64_max_same_image": null,
+    "mad64_min_different": 0.175,
+    "sensitivity_pairs_same_image_by_T": {
+      "2": 0,
+      "4": 0,
+      "6": 0,
+      "8": 0,
+      "10": 0,
+      "12": 0
+    },
+    "md5_dup_other_stem": {
+      "md5_groups_other_stem": 0,
+      "files_in_those_groups": 0,
+      "group_size_hist": {},
+      "groups_cross_split": 0,
+      "groups_diff_label": 0,
+      "files_diff_label": 0
+    }
+  },
+  "rf_hendi": {
+    "n_images": 2677,
+    "n_stems": 2157,
+    "n_stem_groups_dup": 520,
+    "n_files_in_dup_groups": 1040,
+    "group_size_hist": {
+      "2": 520
+    },
+    "threshold": 6,
+    "pairs_total": 520,
+    "pairs_by_identity_split_label": {
+      "md5/cross_split/same_label": 228,
+      "md5/same_split/same_label": 292
+    },
+    "clusters_by_category": {
+      "ก_cross_split": 228,
+      "ก2_same_split": 292,
+      "ค_label_conflict": 0
+    },
+    "files_by_category": {
+      "ก_cross_split": 456,
+      "ก2_same_split": 584,
+      "ค_label_conflict": 0
+    },
+    "ข_stem_groups_with_different_images": 0,
+    "ข_pairs_different_image": 0,
+    "ข_pairs_different_image_diff_label": 0,
+    "phash_dist_hist_non_md5": {},
+    "mad64_max_same_image": 0.0,
+    "mad64_min_different": null,
+    "sensitivity_pairs_same_image_by_T": {
+      "2": 520,
+      "4": 520,
+      "6": 520,
+      "8": 520,
+      "10": 520,
+      "12": 520
+    },
+    "md5_dup_other_stem": {
+      "md5_groups_other_stem": 0,
+      "files_in_those_groups": 0,
+      "group_size_hist": {},
+      "groups_cross_split": 0,
+      "groups_diff_label": 0,
+      "files_diff_label": 0
+    }
+  },
+  "ontoum224": {
+    "n_images": 1600,
+    "n_stems": 1200,
+    "n_stem_groups_dup": 400,
+    "n_files_in_dup_groups": 800,
+    "group_size_hist": {
+      "2": 400
+    },
+    "threshold": 6,
+    "pairs_total": 400,
+    "pairs_by_identity_split_label": {
+      "different/cross_split/same_label": 400
+    },
+    "clusters_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "files_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "ข_stem_groups_with_different_images": 400,
+    "ข_pairs_different_image": 400,
+    "ข_pairs_different_image_diff_label": 0,
+    "phash_dist_hist_non_md5": {
+      "8": 1,
+      "10": 2,
+      "12": 8,
+      "14": 13,
+      "16": 9,
+      "18": 23,
+      "20": 33,
+      "22": 25,
+      "24": 44,
+      "26": 53,
+      "28": 50,
+      "30": 45,
+      "32": 40,
+      "34": 25,
+      "36": 16,
+      "38": 9,
+      "40": 2,
+      "44": 1,
+      "48": 1
+    },
+    "mad64_max_same_image": null,
+    "mad64_min_different": 0.0575,
+    "sensitivity_pairs_same_image_by_T": {
+      "2": 0,
+      "4": 0,
+      "6": 0,
+      "8": 1,
+      "10": 3,
+      "12": 11
+    },
+    "md5_dup_other_stem": {
+      "md5_groups_other_stem": 403,
+      "files_in_those_groups": 809,
+      "group_size_hist": {
+        "2": 400,
+        "3": 3
+      },
+      "groups_cross_split": 400,
+      "groups_diff_label": 0,
+      "files_diff_label": 0
+    }
+  },
+  "rf_devlong": {
+    "n_images": 895,
+    "n_stems": 895,
+    "n_stem_groups_dup": 0,
+    "n_files_in_dup_groups": 0,
+    "group_size_hist": {},
+    "threshold": 6,
+    "pairs_total": 0,
+    "pairs_by_identity_split_label": {},
+    "clusters_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "files_by_category": {
+      "ก_cross_split": 0,
+      "ก2_same_split": 0,
+      "ค_label_conflict": 0
+    },
+    "ข_stem_groups_with_different_images": 0,
+    "ข_pairs_different_image": 0,
+    "ข_pairs_different_image_diff_label": 0,
+    "phash_dist_hist_non_md5": {},
+    "mad64_max_same_image": null,
+    "mad64_min_different": null,
+    "sensitivity_pairs_same_image_by_T": {
+      "2": 0,
+      "4": 0,
+      "6": 0,
+      "8": 0,
+      "10": 0,
+      "12": 0
+    },
+    "md5_dup_other_stem": {
+      "md5_groups_other_stem": 0,
+      "files_in_those_groups": 0,
+      "group_size_hist": {},
+      "groups_cross_split": 0,
+      "groups_diff_label": 0,
+      "files_diff_label": 0
+    }
+  }
+}
