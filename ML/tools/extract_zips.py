@@ -24,7 +24,8 @@ from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from roastml.paths import CACHE, RAW, ZIPS, DataDirError, data_dir, ensure_layout
 
-SOURCES = ("agtron", "ontoum224", "rf_robusta", "rf_boos", "rf_hendi", "rf_devlong", "rf_color")
+# rf_color ตัดออก 6 ต.ค. (มี augment + adaptive equalization → ขัด ml-spec ข้อ 5)
+SOURCES = ("agtron", "ontoum224", "rf_robusta", "rf_boos", "rf_hendi", "rf_devlong")
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff", ".heic", ".heif"}
 TMP_PARENT = "extract_tmp"  # ใต้ cache/
 

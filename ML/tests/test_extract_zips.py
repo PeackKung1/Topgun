@@ -86,10 +86,10 @@ def test_existing_dest_as_file_untouched(root):
     "a/file.jpg:stream",
 ])
 def test_zip_slip_rejects_whole_file(root, evil):
-    z = make_zip(root / "zips" / "rf_color.zip", {"good/a.jpg": b"1", evil: b"x"})
+    z = make_zip(root / "zips" / "rf_devlong.zip", {"good/a.jpg": b"1", evil: b"x"})
     r = ez.extract_one(z, root)
     assert r.status == "unsafe", (evil, r.message)
-    assert not (root / "raw" / "rf_color").exists()  # ไม่แตกแม้แต่ไฟล์ที่ดี
+    assert not (root / "raw" / "rf_devlong").exists()  # ไม่แตกแม้แต่ไฟล์ที่ดี
     assert not (root / "evil.jpg").exists() and not (root / "raw" / "evil.jpg").exists()
     assert no_tmp_left(root)
 
@@ -155,3 +155,8 @@ def test_survey_counts(root):
     assert (s.n_files, s.n_images, s.total_bytes) == (3, 2, 7)
     assert s.image_dirs == {"train/Light": 1, "valid/Dark": 1}
     assert "train/  (1 ภาพ)" in s.tree and "  Light/  (1 ภาพ)" in s.tree
+
+
+def test_rf_color_no_longer_accepted(root):
+    z = make_zip(root / "zips" / "rf_color.zip", {"a.jpg": b"1"})
+    assert ez.extract_one(z, root).status == "unknown_source"
