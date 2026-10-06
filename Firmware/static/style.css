@@ -20,6 +20,9 @@ body { margin: 0; color: var(--ink); background: var(--cream); }
 .intro h2 { margin: 0 0 10px; font-size: 1.22rem; }
 .intro ol { margin: 0; padding-left: 1.2rem; color: #47544a; line-height: 1.7; }
 .hint { margin: 13px 0 0; color: var(--muted); font-size: .83rem; line-height: 1.5; }
+.counts-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.counts-heading h2 { margin: 0; font-size: 1rem; }
+.counts-heading > span { color: var(--muted); font-size: .78rem; white-space: nowrap; }
 .file-picker { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 14px; border: 1.5px dashed #b8c7b7; border-radius: 15px; background: #f8faf6; cursor: pointer; }
 .file-picker strong, .file-picker small { display: block; }
 .file-picker small { margin-top: 4px; color: var(--muted); }

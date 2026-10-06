@@ -26,6 +26,15 @@
       <p class="hint">รองรับ JPG, PNG และ HEIC · ระบบย่อรูปก่อนอัปโหลด</p>
     </section>
 
+    <section class="panel counts-panel" aria-live="polite">
+      <div class="counts-heading"><div><p class="step">ผลที่วิเคราะห์ได้</p><h2>จำนวนแยกตามระดับคั่ว</h2></div><span id="counts-total">{{ snapshot.total }} รายการ</span></div>
+      <div class="count-grid">
+        <div><strong id="roast-count-light">{{ snapshot.counts.light }}</strong><span>คั่วอ่อน</span></div>
+        <div><strong id="roast-count-medium">{{ snapshot.counts.medium }}</strong><span>คั่วกลาง</span></div>
+        <div><strong id="roast-count-dark">{{ snapshot.counts.dark }}</strong><span>คั่วเข้ม</span></div>
+      </div>
+    </section>
+
     <section class="panel upload-panel">
       <form id="predict-form">
         <label class="file-picker" for="image-input">

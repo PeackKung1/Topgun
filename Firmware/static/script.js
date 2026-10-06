@@ -9,6 +9,22 @@
   const fileInfo = document.querySelector('#file-info');
   const labels = { light: 'คั่วอ่อน', medium: 'คั่วกลาง', dark: 'คั่วเข้ม' };
 
+  async function refreshCounts() {
+    try {
+      const response = await fetch('/api/market', { cache: 'no-store' });
+      if (!response.ok) return;
+      const snapshot = await response.json();
+      for (const roast of ['light', 'medium', 'dark']) {
+        const counter = document.querySelector(`#roast-count-${roast}`);
+        if (counter) counter.textContent = snapshot.counts[roast] ?? 0;
+      }
+      const total = document.querySelector('#counts-total');
+      if (total) total.textContent = `ผลวิเคราะห์ ${snapshot.total} รายการ`;
+    } catch (_error) {
+      // Counts remain at their last rendered value while the local service reconnects.
+    }
+  }
+
   let selectedFile = null;
   let previewUrl = null;
 
@@ -89,6 +105,12 @@
     }
   }
 
+  if (!form || !input || !button || !progress || !resultBox) {
+    refreshCounts();
+    window.setInterval(refreshCounts, 3000);
+    return;
+  }
+
   input.addEventListener('change', () => {
     selectedFile = input.files && input.files[0] ? input.files[0] : null;
     button.disabled = !selectedFile;
@@ -122,6 +144,7 @@
       if (!response.ok) throw new Error(data.error || `ส่งรูปไม่สำเร็จ (${response.status})`);
       progress.textContent = '';
       renderResult(data, elapsedMs);
+      refreshCounts();
     } catch (error) {
       progress.textContent = '';
       showError(error.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
@@ -129,4 +152,7 @@
       button.disabled = !selectedFile;
     }
   });
+
+  refreshCounts();
+  window.setInterval(refreshCounts, 3000);
 })();

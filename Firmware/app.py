@@ -36,7 +36,10 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
 
     @app.get("/")
     def index():
-        return render_template("index.html")
+        from service import read_market_snapshot
+
+        snapshot = read_market_snapshot(os.getenv("TOPGUN_DB_PATH", str(ROOT / "data" / "predictions.sqlite3")))
+        return render_template("index.html", snapshot=snapshot)
 
     @app.post("/api/predict")
     def predict():
@@ -75,6 +78,13 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
 
         snapshot = read_market_snapshot(os.getenv("TOPGUN_DB_PATH", str(ROOT / "data" / "predictions.sqlite3")))
         return render_template("market.html", snapshot=snapshot)
+
+    @app.get("/api/market")
+    def market_snapshot():
+        from service import read_market_snapshot
+
+        snapshot = read_market_snapshot(os.getenv("TOPGUN_DB_PATH", str(ROOT / "data" / "predictions.sqlite3")))
+        return jsonify(snapshot)
 
     @app.errorhandler(413)
     def too_large(_error):

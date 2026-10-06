@@ -17,11 +17,11 @@
     <section class="panel">
       <p class="step">ผลรวม</p>
       <div class="count-grid">
-        <div><strong>{{ snapshot.counts.light }}</strong><span>คั่วอ่อน</span></div>
-        <div><strong>{{ snapshot.counts.medium }}</strong><span>คั่วกลาง</span></div>
-        <div><strong>{{ snapshot.counts.dark }}</strong><span>คั่วเข้ม</span></div>
+        <div><strong id="roast-count-light">{{ snapshot.counts.light }}</strong><span>คั่วอ่อน</span></div>
+        <div><strong id="roast-count-medium">{{ snapshot.counts.medium }}</strong><span>คั่วกลาง</span></div>
+        <div><strong id="roast-count-dark">{{ snapshot.counts.dark }}</strong><span>คั่วเข้ม</span></div>
       </div>
-      <p class="hint">เก็บผลวิเคราะห์ {{ snapshot.total }} รายการ</p>
+      <p id="counts-total" class="hint">เก็บผลวิเคราะห์ {{ snapshot.total }} รายการ</p>
     </section>
     <section class="panel">
       <p class="step">รายการล่าสุด</p>
@@ -44,5 +44,6 @@
       {% endif %}
     </section>
   </main>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </body>
 </html>
