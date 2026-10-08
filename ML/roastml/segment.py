@@ -121,6 +121,51 @@ def _center_box(h: int, w: int, frac: float) -> tuple[int, int, int, int]:
     return y0, max(int(h * (1 - frac)), y0 + 1), x0, max(int(w * (1 - frac)), x0 + 1)
 
 
+def to_work(rgb: np.ndarray, cfg: SegConfig) -> tuple[np.ndarray, float]:
+    """ย่อให้ด้านยาว ≤ work_side (INTER_AREA) · คืน (ภาพ uint8, สเกล work/input)"""
+    h0, w0 = rgb.shape[:2]
+    s = min(1.0, cfg.work_side / max(h0, w0))
+    if s < 1:
+        rgb = cv2.resize(rgb, (max(1, round(w0 * s)), max(1, round(h0 * s))), interpolation=cv2.INTER_AREA)
+    return rgb, s
+
+
+@dataclass
+class WhiteBalance:
+    f: np.ndarray            # float32 RGB [0,1] หลัง WB (หรือเดิมถ้าไม่ได้ทำ)
+    lab: np.ndarray          # Lab ของ f
+    bg: np.ndarray           # median Lab ของพื้นหลัง (หลัง WB ถ้าทำ)
+    border_uniform: float    # สัดส่วนพิกเซลขอบที่ ΔE < bg_uniform_de จาก median
+    applied: bool
+
+
+def wb_guard(bg_lab: np.ndarray, border_uniform: float, cfg: SegConfig) -> bool:
+    """พื้นหลังเป็นกลางพอจะใช้เป็น white reference ไหม: สม่ำเสมอ + สว่าง + เกือบไม่มีสี"""
+    return (border_uniform >= cfg.bg_uniform_min and bg_lab[0] >= cfg.wb_min_L
+            and float(np.hypot(bg_lab[1], bg_lab[2])) <= cfg.wb_max_chroma)
+
+
+def background_white_balance(f: np.ndarray, cfg: SegConfig, *, allow: bool = True) -> WhiteBalance:
+    """WB + exposure แบบ von Kries ใน linear RGB จาก "พื้นหลัง" = แถบขอบภาพ (border_frac)
+
+    ใช้ทั้ง segment (pipeline บน Pi) และ box_features (ตอนเทรน) → ภาพเดียวกันได้ gain เดียวกันทั้งสองเส้นทาง
+    ทำเฉพาะเมื่อ allow และ cfg.white_balance และผ่าน wb_guard · ไม่ผ่าน → คืนภาพเดิม applied=False
+    """
+    lab = to_lab(f)
+    bpx = border_pixels(lab, cfg.border_frac)
+    bg = np.median(bpx, axis=0)
+    border_uniform = float(np.mean(np.linalg.norm(bpx - bg, axis=1) < cfg.bg_uniform_de))
+    if not (allow and cfg.white_balance and wb_guard(bg, border_uniform, cfg)):
+        return WhiteBalance(f, lab, bg, border_uniform, False)
+    lin = srgb_to_lin(f)
+    bg_lin = np.median(border_pixels(lin, cfg.border_frac), axis=0)
+    target = float(srgb_to_lin(np.array(cfg.wb_target)))
+    gains = np.clip(target / np.maximum(bg_lin, 1e-4), 1 / cfg.wb_max_gain, cfg.wb_max_gain)
+    f2 = lin_to_srgb(np.clip(lin * gains, 0, 1)).astype(np.float32)
+    lab2 = to_lab(f2)
+    return WhiteBalance(f2, lab2, np.median(border_pixels(lab2, cfg.border_frac), axis=0), border_uniform, True)
+
+
 def bg_distance_mask(lab: np.ndarray, bg: np.ndarray, cfg: SegConfig) -> np.ndarray | None:
     """โหมด full: พิกเซลกลางภาพที่ ΔE จากสีพื้นหลังเกิน threshold (Otsu + floor) แล้วตัด L* สุดขั้ว
     คืน None ถ้าได้พิกเซลน้อยกว่า min_core_px (ภาพแทบไม่มีอะไรต่างจากขอบ)"""
@@ -153,31 +198,14 @@ def segment(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans: bool =
     cfg = cfg or SegConfig()
     if rgb.ndim != 3 or rgb.shape[2] != 3 or min(rgb.shape[:2]) < 8:
         raise ValueError(f"ต้องเป็นภาพ RGB ขนาด ≥ 8 px: {rgb.shape}")
-    h0, w0 = rgb.shape[:2]
-    s = min(1.0, cfg.work_side / max(h0, w0))
-    work = cv2.resize(rgb, (max(1, round(w0 * s)), max(1, round(h0 * s))), interpolation=cv2.INTER_AREA) if s < 1 else rgb
-    f = work.astype(np.float32) / 255.0
-    h, w = f.shape[:2]
+    work, s = to_work(rgb, cfg)
+    h, w = work.shape[:2]
     full_box = (0, 0, w, h)
     notes: list[str] = []
 
-    lab = to_lab(f)
-    bpx = border_pixels(lab, cfg.border_frac)
-    bg = np.median(bpx, axis=0)
-    border_uniform = float(np.mean(np.linalg.norm(bpx - bg, axis=1) < cfg.bg_uniform_de))
-
-    # --- white balance + exposure จากพื้นหลังขาว ---
-    wb = False
-    if (find_beans and cfg.white_balance and border_uniform >= cfg.bg_uniform_min
-            and bg[0] >= cfg.wb_min_L and float(np.hypot(bg[1], bg[2])) <= cfg.wb_max_chroma):
-        lin = srgb_to_lin(f)
-        bg_lin = np.median(border_pixels(lin, cfg.border_frac), axis=0)
-        target = float(srgb_to_lin(np.array(cfg.wb_target)))
-        gains = np.clip(target / np.maximum(bg_lin, 1e-4), 1 / cfg.wb_max_gain, cfg.wb_max_gain)
-        f = lin_to_srgb(np.clip(lin * gains, 0, 1)).astype(np.float32)
-        lab = to_lab(f)
-        bg = np.median(border_pixels(lab, cfg.border_frac), axis=0)
-        wb = True
+    # --- white balance + exposure จากพื้นหลังขาว (ฟังก์ชันกลาง ใช้ร่วมกับ box_features) ---
+    wbr = background_white_balance(work.astype(np.float32) / 255.0, cfg, allow=find_beans)
+    f, lab, bg, border_uniform, wb = wbr.f, wbr.lab, wbr.bg, wbr.border_uniform, wbr.applied
 
     def fallback(mode: str, note: str | None) -> SegResult:
         if note:

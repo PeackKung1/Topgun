@@ -2,7 +2,14 @@
 
 - ภาพ: manifest split=trainval สุ่มต่อ source ของ baseline (ค่าเริ่มต้น 50/source × 4 = 200) · agtron ใช้ไฟล์ภาพเต็มจากมือถือ
   (4000×3000+ = กรณี decode หนักสุด; ใช้วัดเวลาเท่านั้น ไม่ได้ประเมินความแม่น) · อ่าน bytes เข้า RAM ก่อนจับเวลา
-- วัด: wall-clock ต่อภาพ + timing_ms ที่ api รายงาน (decode / ml / total) → p50 / p95 / max ต่อ source และรวม
+- 2 case ของ input:
+    original : ไฟล์ต้นฉบับ
+    web1600  : จำลองที่หน้าเว็บส่งจริง — หมุนตาม EXIF แล้วย่อด้านยาว ≤ 1600 px, JPEG quality 85 (Pillow)
+               (canvas.toBlob(..., 0.85) ของเบราว์เซอร์ใช้ encoder คนละตัว ขนาดไฟล์/คุณภาพจะใกล้เคียง ไม่เท่ากันเป๊ะ)
+- วัด 2 แบบต่อภาพ:
+    (1) end-to-end: predictor.predict_bytes (wall + timing_ms ที่ api รายงาน)
+    (2) แยก stage ด้วยฟังก์ชันชุดเดียวกับ LinearBackend: decode / segment / features / predict
+- p50 / p95 / max ต่อ case × source และรวม
 - ขนาดไฟล์ (KB) และขนาดภาพ · RAM: RSS หลังโหลดโมเดล และ peak RSS ของ process
 - เทียบต้นทุน decode JPEG ภาพใหญ่ (agtron): ไม่ใช้ draft · draft แบบเดิม (กรอบจัตุรัส) · draft ตามสัดส่วน (ปัจจุบัน)
 
@@ -108,47 +115,85 @@ def pick_rows(root: Path, per_source: int) -> list[dict]:
     return out
 
 
+def stage_times(predictor, data: bytes) -> tuple[dict[str, float], str]:
+    """เวลาแต่ละ stage (ms) ด้วยฟังก์ชันเดียวกับ LinearBackend.predict · คืน (เวลา, label ที่ได้)"""
+    from roastml.features import pixel_stats
+    from roastml.segment import segment
+
+    be = predictor.backend
+    t0 = time.perf_counter()
+    img = decode_image(data)
+    rgb = np.asarray(img.image)
+    t1 = time.perf_counter()
+    seg = segment(rgb, be.cfg)
+    t2 = time.perf_counter()
+    x = pixel_stats(seg.lab[seg.pixel_mask])
+    t3 = time.perf_counter()
+    p = be.model.proba(x)[0]
+    t4 = time.perf_counter()
+    ms = {"decode": (t1 - t0) * 1e3, "segment": (t2 - t1) * 1e3, "features": (t3 - t2) * 1e3,
+          "predict": (t4 - t3) * 1e3, "sum": (t4 - t0) * 1e3}
+    return ms, be.model.classes[int(np.argmax(p))]
+
+
+def to_web1600(data: bytes, quality: int = 85) -> bytes:
+    """จำลองหน้าเว็บ: หมุนตาม EXIF → ย่อด้านยาว ≤ 1600 → JPEG (ไม่มี EXIF)"""
+    with Image.open(io.BytesIO(data)) as im:
+        im = ImageOps.exif_transpose(im).convert("RGB")
+        im.thumbnail((1600, 1600))
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=quality)
+    return buf.getvalue()
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-dir", type=Path)
     ap.add_argument("--model", default=str(ML_DIR / "models" / "current"))
     ap.add_argument("--per-source", type=int, default=50)
     ap.add_argument("--host", default="notebook")
+    ap.add_argument("--web-quality", type=int, default=85)
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     import cv2
 
     root = args.data_dir.resolve() if args.data_dir else data_dir()
     rows = pick_rows(root, args.per_source)
-    blobs = [(r["source"], (root / r["path"]).read_bytes()) for r in rows]
-    sizes = []
-    for _, b in blobs:
-        with Image.open(io.BytesIO(b)) as im:
-            sizes.append(im.size)
+    cases = {"original": [(r["source"], (root / r["path"]).read_bytes()) for r in rows]}
+    cases["web1600"] = [(s_, to_web1600(b, args.web_quality)) for s_, b in cases["original"]]
+    sizes = {c: [Image.open(io.BytesIO(b)).size for _, b in blobs] for c, blobs in cases.items()}
 
     mem0 = rss_mb()
     t0 = time.perf_counter()
     predictor = load(args.model)  # รวม warmup
     load_ms = (time.perf_counter() - t0) * 1e3
     mem_loaded = rss_mb()
-    for _, b in blobs[:5]:  # อุ่นเครื่องเพิ่ม (cache ของ OpenCV/Pillow)
+    if not hasattr(predictor.backend, "cfg"):
+        raise SystemExit("bench แยก stage รองรับเฉพาะ backend B0/B1 (LinearBackend)")
+    for _, b in cases["original"][:5]:  # อุ่นเครื่องเพิ่ม (cache ของ OpenCV/Pillow)
         predictor.predict_bytes(b)
 
-    per = defaultdict(lambda: defaultdict(list))
-    statuses = defaultdict(int)
-    for (src, b) in blobs:
-        t = time.perf_counter()
-        r = predictor.predict_bytes(b)
-        wall = (time.perf_counter() - t) * 1e3
-        statuses[r["status"]] += 1
-        for k, v in (("wall", wall), ("decode", r["timing_ms"]["decode"]), ("ml", r["timing_ms"]["ml"]),
-                     ("total", r["timing_ms"]["total"])):
-            per[src][k].append(v)
-            per["ALL"][k].append(v)
+    lat: dict = {}
+    statuses: dict = defaultdict(int)
+    mismatch = 0
+    for case, blobs in cases.items():
+        per = defaultdict(lambda: defaultdict(list))
+        for src_, b in blobs:
+            t = time.perf_counter()
+            r = predictor.predict_bytes(b)
+            wall = (time.perf_counter() - t) * 1e3
+            statuses[f"{case}:{r['status']}"] += 1
+            st, lab = stage_times(predictor, b)
+            mismatch += lab != r["label"]
+            vals = {"wall": wall, "api_decode": r["timing_ms"]["decode"], "api_ml": r["timing_ms"]["ml"]} | st
+            for k, v in vals.items():
+                per[src_][k].append(v)
+                per["ALL"][k].append(v)
+        lat[case] = {s_: {k: stats_ms(v) for k, v in d.items()} for s_, d in per.items()}
     mem_end = rss_mb()
 
-    # decode variants บน JPEG ใหญ่ของ agtron
-    big = [b for (s, b), (w, h) in zip(blobs, sizes) if s == "agtron"]
+    # decode variants บน JPEG ใหญ่ของ agtron (original)
+    big = [b for s_, b in cases["original"] if s_ == "agtron"]
     dec = {}
     for mode in ("none", "square", "aspect"):
         times, shapes = [], defaultdict(int)
@@ -157,9 +202,15 @@ def main(argv: list[str] | None = None) -> int:
             shp = _decode_variant(b, mode)
             times.append((time.perf_counter() - t) * 1e3)
             shapes[f"{shp[0]}x{shp[1]}"] += 1
-        dec[mode] = {"ms": stats_ms(times), "size_after_draft": dict(shapes)}
+        dec[mode] = {"ms": stats_ms(times), "size_after_draft": dict(shapes)} if times else {}
 
-    kb = np.array([len(b) / 1024 for _, b in blobs])
+    def kb_stats(blobs):
+        kb = np.array([len(b) / 1024 for _, b in blobs])
+        return {"p50": round(float(np.percentile(kb, 50)), 1), "p95": round(float(np.percentile(kb, 95)), 1),
+                "max": round(float(kb.max()), 1),
+                "by_source_p50": {s_: round(float(np.median([len(b) / 1024 for ss, b in blobs if ss == s_])), 1)
+                                  for s_ in SOURCES}}
+
     report = {
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
         "host": args.host, "platform": platform.platform(), "processor": platform.processor(),
@@ -167,31 +218,33 @@ def main(argv: list[str] | None = None) -> int:
         "versions": {"roastml": roastml.__version__, "python": platform.python_version(), "numpy": np.__version__,
                      "opencv": cv2.__version__, "pillow": Image.__version__},
         "model": predictor.info()["backend"], "model_load_ms_incl_warmup": round(load_ms, 1),
-        "n_images": len(blobs), "per_source_n": {s: len(per[s]["wall"]) for s in SOURCES},
+        "n_images_per_case": len(rows), "per_source_n": {s_: sum(r["source"] == s_ for r in rows) for s_ in SOURCES},
+        "web_case": {"long_side_max": 1600, "jpeg_quality": args.web_quality, "exif": "หมุนแล้ว ไม่มี EXIF"},
         "statuses": dict(statuses),
-        "latency_ms": {s: {k: stats_ms(v) for k, v in d.items()} for s, d in per.items()},
-        "file_kb": {"p50": round(float(np.percentile(kb, 50)), 1), "p95": round(float(np.percentile(kb, 95)), 1),
-                    "max": round(float(kb.max()), 1)},
-        "file_kb_by_source": {s: round(float(np.median([len(b) / 1024 for ss, b in blobs if ss == s])), 1)
-                              for s in SOURCES},
-        "image_px_by_source": {s: sorted({f"{w}x{h}" for (ss, _), (w, h) in zip(blobs, sizes) if ss == s})[:6]
-                               for s in SOURCES},
-        "ram_mb": {"before_load": mem0, "after_load": mem_loaded, "after_bench": mem_end},
-        "decode_jpeg_agtron": dec,
-        "note": "wall = เวลา predict_bytes ทั้งหมดใน process (ไม่รวมอัปโหลด/HTTP) · เครื่องนี้ไม่ใช่ Pi",
+        "stage_label_mismatch_vs_api": mismatch,
+        "latency_ms": lat,
+        "file_kb": {c: kb_stats(b) for c, b in cases.items()},
+        "image_px_by_source": {c: {s_: sorted({f"{w}x{h}" for (ss, _), (w, h) in zip(cases[c], sizes[c]) if ss == s_})[:6]
+                                   for s_ in SOURCES} for c in cases},
+        "ram_mb": {"before_load": mem0, "after_load": mem_loaded, "after_bench": mem_end,
+                   "note": "RSS รวม bytes ของภาพทดสอบทั้งหมดที่โหลดไว้ใน RAM — ดูส่วนต่างเป็นหลัก"},
+        "decode_jpeg_agtron_original": dec,
+        "note": "wall = เวลา predict_bytes ทั้งหมดใน process (ไม่รวมอัปโหลด/HTTP) · stage วัดอีกรอบแยกกัน · เครื่องนี้ไม่ใช่ Pi",
     }
     RESULTS.mkdir(exist_ok=True)
     out = RESULTS / f"bench_{args.host}.json"
     out.write_text(json.dumps(report, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    a = report["latency_ms"]["ALL"]
-    print(f"n={len(blobs)} wall p50 {a['wall']['p50']} p95 {a['wall']['p95']} max {a['wall']['max']} ms "
-          f"(decode p50 {a['decode']['p50']} · ml p50 {a['ml']['p50']})")
-    for s in SOURCES:
-        L = report["latency_ms"][s]
-        print(f"  {s:10s} wall p50 {L['wall']['p50']:7.1f} p95 {L['wall']['p95']:7.1f} · decode p50 {L['decode']['p50']:6.1f} "
-              f"· ml p50 {L['ml']['p50']:6.1f} · {report['file_kb_by_source'][s]} KB")
-    print("RAM MB:", {k: {kk: (round(vv, 1) if vv else vv) for kk, vv in v.items()} for k, v in report["ram_mb"].items()})
-    print("decode agtron:", {m: (d["ms"]["p50"], d["ms"]["p95"], d["size_after_draft"]) for m, d in dec.items()})
+
+    keys = ("wall", "decode", "segment", "features", "predict")
+    for case in cases:
+        print(f"\n[{case}] file KB p50 {report['file_kb'][case]['p50']} · p50/p95 ms")
+        print("  " + f"{'source':10s} " + " ".join(f"{k:>15s}" for k in keys))
+        for s_ in list(SOURCES) + ["ALL"]:
+            L = lat[case][s_]
+            print("  " + f"{s_:10s} " + " ".join(f"{L[k]['p50']:7.1f}/{L[k]['p95']:7.1f}" for k in keys))
+    print("\nlabel mismatch (stage vs api):", mismatch)
+    print("RAM MB:", {k: {kk: (round(vv, 1) if isinstance(vv, float) else vv) for kk, vv in v.items()}
+                      for k, v in report["ram_mb"].items() if isinstance(v, dict)})
     print(f"→ {out}")
     return 0
 

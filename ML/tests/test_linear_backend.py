@@ -107,3 +107,22 @@ def test_decode_4032x3024_uses_draft_and_respects_max_side():
     im = Image.open(io.BytesIO(buf.getvalue()))
     im.draft("RGB", (1600, 1200))
     assert im.size == (2016, 1512)
+
+
+# ------------------------------------------------------------ tools/bench helpers
+def test_bench_web1600_and_stage_times(tmp_path):
+    from tools.bench import stage_times, to_web1600
+
+    big = io.BytesIO()
+    im = Image.new("RGB", (4032, 3024), (100, 70, 50))
+    exif = im.getexif()
+    exif[0x0112] = 6  # หมุน 90° → หน้าเว็บต้องได้ภาพตั้ง
+    im.save(big, "JPEG", quality=90, exif=exif)
+    web = to_web1600(big.getvalue())
+    out = Image.open(io.BytesIO(web))
+    assert out.format == "JPEG" and out.size == (1200, 1600) and 0x0112 not in out.getexif()
+
+    p = load(write_model(tmp_path / "m"))
+    ms, lab = stage_times(p, jpeg((50, 32, 22)))
+    assert set(ms) == {"decode", "segment", "features", "predict", "sum"} and all(v >= 0 for v in ms.values())
+    assert lab == p.predict_bytes(jpeg((50, 32, 22)))["label"]

@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .segment import SegConfig, SegResult, border_pixels, segment, to_lab
+from .segment import SegConfig, SegResult, background_white_balance, border_pixels, segment, to_lab, to_work
 
 L_BINS = np.linspace(0.0, 100.0, 9)  # histogram L* 8 ช่อง
 STAT_NAMES = ["L_med", "L_mean", "L_p10", "L_p25", "L_p75", "L_p90", "L_std", "L_iqr", "a_med", "b_med", "C_med", "hue"]
@@ -77,20 +77,29 @@ def box_mask(shape: tuple[int, int], boxes, shrink: float = 0.2) -> np.ndarray:
     return m
 
 
-def box_features(rgb: np.ndarray, boxes, cfg: SegConfig | None = None, shrink: float = 0.2) -> tuple[np.ndarray, np.ndarray]:
-    """feature จากพิกเซลใน bbox (label YOLO) — ใช้ตอนเทรน robusta/boos เท่านั้น (บน Pi ไม่มี bbox)
-    หด bbox เข้า `shrink` (ตัดมุมกล่องที่เป็นพื้นหลัง) แล้วตัด L* ตาม trim_lo..trim_hi (เงาร่องระหว่างเมล็ด/specular)
-    ไม่ผ่าน WB (เหมือนโหมด pile) · คืน (x, mask)"""
-    import cv2
+@dataclass
+class BoxFeatures:
+    x: np.ndarray
+    mask: np.ndarray
+    wb_applied: bool
 
+
+def box_features(rgb: np.ndarray, boxes, cfg: SegConfig | None = None, shrink: float = 0.2,
+                 *, white_balance: bool = True) -> BoxFeatures:
+    """feature จากพิกเซลใน bbox (label YOLO) — ใช้ตอนเทรน robusta/boos เท่านั้น (บน Pi ไม่มี bbox)
+
+    1. ย่อ + WB/exposure ด้วย segment.to_work / background_white_balance ตัวเดียวกับ pipeline
+       พื้นหลัง = แถบขอบภาพ (ไม่ใช่ "นอก bbox"): ให้ภาพเดียวกันได้ guard และ gain ตรงกับที่ segment บน Pi คำนวณ
+       ถ้า bbox แตะขอบจนขอบไม่สม่ำเสมอ guard ไม่ผ่านทั้งสองเส้นทางเหมือนกัน
+    2. หด bbox เข้า `shrink` (ตัดมุมกล่องที่เป็นพื้นหลัง) แล้วตัด L* ตาม trim_lo..trim_hi (เงาร่อง/specular)
+    white_balance=False = พฤติกรรมเดิมก่อน 8 ต.ค. (ไว้เทียบ R0)
+    """
     cfg = cfg or SegConfig()
     if not boxes:
         raise ValueError("ไม่มี bbox")
-    h0, w0 = rgb.shape[:2]
-    s = min(1.0, cfg.work_side / max(h0, w0))
-    if s < 1:
-        rgb = cv2.resize(rgb, (max(1, round(w0 * s)), max(1, round(h0 * s))), interpolation=cv2.INTER_AREA)
-    lab = to_lab(rgb.astype(np.float32) / 255.0)
+    work, _ = to_work(rgb, cfg)
+    wbr = background_white_balance(work.astype(np.float32) / 255.0, cfg, allow=white_balance)
+    lab = wbr.lab
     m = box_mask(lab.shape[:2], boxes, shrink)
     if m.sum() < 20:
         m = box_mask(lab.shape[:2], boxes, 0.0)
@@ -101,7 +110,7 @@ def box_features(rgb: np.ndarray, boxes, cfg: SegConfig | None = None, shrink: f
     core = m & (L >= lo) & (L <= hi)
     if core.sum() >= 20:
         m = core
-    return pixel_stats(lab[m]), m
+    return BoxFeatures(pixel_stats(lab[m]), m, wbr.applied)
 
 
 def border_features(rgb: np.ndarray, work_side: int = 400) -> np.ndarray:
