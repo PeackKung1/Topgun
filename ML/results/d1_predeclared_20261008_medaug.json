@@ -1,0 +1,177 @@
+{
+  "search_seed": 20261006,
+  "confirmation_seeds": [
+    20261006,
+    20261007,
+    20261008
+  ],
+  "outer_folds": [
+    "ontoum224",
+    "rf_robusta",
+    "rf_boos",
+    "agtron"
+  ],
+  "training_cap_seed": 20261006,
+  "cap_frames_per_video": 10,
+  "inner_group_guard": "QA preregistered near-duplicate candidate connected components; manifest groups and cap unchanged",
+  "classes": [
+    "light",
+    "medium",
+    "dark"
+  ],
+  "rgb_view_config": {
+    "size": 224,
+    "views": [
+      "full",
+      "smart"
+    ],
+    "view_weights": [
+      0.5,
+      0.5
+    ],
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "pad_rgb": [
+      124,
+      116,
+      104
+    ],
+    "seg_config": {
+      "work_side": 800,
+      "border_frac": 0.04,
+      "bg_uniform_de": 10.0,
+      "bg_uniform_min": 0.6,
+      "white_balance": true,
+      "wb_min_L": 50.0,
+      "wb_max_chroma": 20.0,
+      "wb_target": 0.9,
+      "wb_max_gain": 3.0,
+      "min_contrast": 12.0,
+      "min_area_frac": 0.0004,
+      "max_area_frac": 0.9,
+      "min_rel_area": 0.25,
+      "min_solidity": 0.8,
+      "max_aspect": 3.0,
+      "cluster_area_ratio": 2.5,
+      "cluster_min_solidity": 0.5,
+      "core_frac": 0.25,
+      "min_core_px": 200,
+      "pile_beanlike_min": 0.6,
+      "crop_margin": 0.05,
+      "trim_lo": 15.0,
+      "trim_hi": 98.0,
+      "trim_center": 0.05,
+      "full_trim_lo": 2.0,
+      "full_trim_hi": 90.0
+    }
+  },
+  "training_views": "identical inference-capable full+smart RGB; no annotation bbox crops",
+  "agtron": "mandatory EXIF-oriented ROI; no white balance; never see number labels",
+  "frozen_head_grid": [
+    {
+      "lr": 0.01
+    },
+    {
+      "lr": 0.003
+    }
+  ],
+  "frozen_max_epochs": 40,
+  "finetune_grid": [
+    {
+      "lr": 0.0003,
+      "augmentation": "medium"
+    },
+    {
+      "lr": 0.0001,
+      "augmentation": "medium"
+    }
+  ],
+  "finetune_max_epochs": 6,
+  "patience": 2,
+  "batch_images": 32,
+  "selection": "inner group validation macro-F1 then NLL then earliest epoch/grid order",
+  "temperature_grid": [
+    0.5,
+    0.75,
+    1.0,
+    1.5,
+    2.0,
+    3.0,
+    5.0
+  ],
+  "low_conf_threshold": 0.0,
+  "augmentation_mild": {
+    "rotation_degrees": [
+      -180,
+      180
+    ],
+    "horizontal_vertical_flip": true,
+    "crop_scale": [
+      0.85,
+      1.0
+    ],
+    "exposure_EV": [
+      -0.3,
+      0.3
+    ],
+    "linear_red_blue_gain_log": [
+      -0.08,
+      0.08
+    ],
+    "noise_sigma": 0.005,
+    "blur_probability": 0.15,
+    "JPEG_probability": 0.2,
+    "JPEG_quality": [
+      70,
+      95
+    ]
+  },
+  "forbidden_augmentation": [
+    "hue rotation",
+    "strong saturation",
+    "grayscale",
+    "equalization"
+  ],
+  "qa_rule": "training-only hard exclusions from preregistered QA; holdouts unchanged",
+  "equivalent_qa_arm": "when masks identical, reuse same trained model/probabilities and record equality",
+  "limits": "LOSO source-level convenience dataset; no Pi/E2E/test claim; DINOv2 omitted",
+  "protocol": "medaug_v1",
+  "augmentation_medium": {
+    "rotation_degrees": [
+      -180,
+      180
+    ],
+    "horizontal_vertical_flip": true,
+    "crop_scale": [
+      0.5,
+      1.0
+    ],
+    "exposure_EV": [
+      -0.5,
+      0.5
+    ],
+    "linear_red_blue_gain_log": [
+      -0.2,
+      0.2
+    ],
+    "noise_sigma": 0.01,
+    "blur_probability": 0.3,
+    "JPEG_probability": 0.5,
+    "JPEG_quality": [
+      30,
+      95
+    ]
+  },
+  "families": [
+    "D1_finetune"
+  ],
+  "comparison": "same views, cap, inner groups, outer folds and seeds as groupguard; only fine-tune grid/augmentation/epochs differ"
+}
