@@ -1,6 +1,6 @@
 """Bench end-to-end bytes → dict (decode + smart crop + feature + predict) ผ่าน roastml.api เหมือนที่ FW เรียก
 
-- ภาพ: manifest split=trainval สุ่มต่อ source (ค่าเริ่มต้น 50/source × 5 = 250) · agtron ใช้ไฟล์ภาพเต็มจากมือถือ
+- ภาพ: manifest split=trainval สุ่มต่อ source ของ baseline (ค่าเริ่มต้น 50/source × 4 = 200) · agtron ใช้ไฟล์ภาพเต็มจากมือถือ
   (4000×3000+ = กรณี decode หนักสุด; ใช้วัดเวลาเท่านั้น ไม่ได้ประเมินความแม่น) · อ่าน bytes เข้า RAM ก่อนจับเวลา
 - วัด: wall-clock ต่อภาพ + timing_ms ที่ api รายงาน (decode / ml / total) → p50 / p95 / max ต่อ source และรวม
 - ขนาดไฟล์ (KB) และขนาดภาพ · RAM: RSS หลังโหลดโมเดล และ peak RSS ของ process
@@ -34,7 +34,7 @@ from roastml.paths import data_dir
 ML_DIR = Path(__file__).resolve().parent.parent
 RESULTS = ML_DIR / "results"
 SEED = 20261006
-SOURCES = ("ontoum224", "rf_hendi", "rf_robusta", "rf_boos", "agtron")
+from tools.train_baseline import FOLDS as SOURCES  # source เดียวกับ baseline (ไม่มี rf_hendi)
 
 
 # ---------------------------------------------------------------- RAM

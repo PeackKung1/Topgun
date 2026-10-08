@@ -85,6 +85,7 @@ def test_border_features_len():
 
 # ------------------------------------------------------------ linear_model
 def test_linear_softmax_matches_sklearn():
+    pytest.importorskip("sklearn")  # บน Pi ไม่มี sklearn → skip
     X = RNG.normal(size=(300, len(FEATURES_ALL)))
     y = np.array(["light", "medium", "dark"])[np.digitize(X[:, 0] + 0.3 * X[:, 7], [-0.5, 0.5])]
     names = FEATURE_SETS["Lab"]
@@ -149,13 +150,14 @@ def test_loso_never_trains_on_heldout_source():
 def test_load_rows_excludes_test_and_non_targets(tmp_path):
     cols = ["path", "label", "label_orig", "source", "group", "split", "license", "url", "md5", "phash", "roi",
             "device", "paper_path"]
-    data = [("a", "dark", "trainval"), ("b", "light", "test"), ("c", "green", "trainval"), ("d", "mixed", "trainval"),
-            ("e", "medium", "trainval")]
+    data = [("a", "dark", "trainval", "agtron"), ("b", "light", "test", "agtron"),
+            ("c", "green", "trainval", "ontoum224"), ("d", "mixed", "trainval", "rf_boos"),
+            ("e", "medium", "trainval", "ontoum224"), ("f", "dark", "trainval", "rf_hendi")]  # hendi ถูกตัด
     with open(tmp_path / "manifest.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
-        for p, lab, sp in data:
-            w.writerow({c: "" for c in cols} | {"path": p, "label": lab, "split": sp})
+        for p, lab, sp, src in data:
+            w.writerow({c: "" for c in cols} | {"path": p, "label": lab, "split": sp, "source": src})
     assert [r["path"] for r in tb.load_rows(tmp_path)] == ["a", "e"]
 
 
@@ -172,7 +174,7 @@ def _synthetic_dataset(root):
             "device", "paper_path"]
     color = {"light": (150, 105, 70), "medium": (105, 70, 45), "dark": (60, 38, 25)}
     rows = []
-    for s in tb.FOLDS:
+    for s in tb.FOLDS + list(tb.EXCLUDED_SOURCES):
         for lab, c in color.items():
             for i in range(4):
                 p = f"raw/{s}/{lab}_{i}.jpg"
@@ -197,28 +199,30 @@ def _synthetic_dataset(root):
 
 
 def test_train_baseline_main_end_to_end(tmp_path, monkeypatch):
+    pytest.importorskip("sklearn")  # บน Pi ไม่มี sklearn → skip
     import json
 
     data = tmp_path / "data"
     _synthetic_dataset(data)
     monkeypatch.setattr(tb, "RESULTS", tmp_path / "results")
     monkeypatch.setattr(tb, "MODEL_OUT", tmp_path / "models" / "current")
-    assert tb.main(["--data-dir", str(data), "--workers", "1"]) == 0
+    assert tb.main(["--data-dir", str(data), "--workers", "1", "--export-model", "B1"]) == 0
     rep = json.loads((tmp_path / "results" / "baseline_loso.json").read_text(encoding="utf-8"))
-    assert rep["n_errors"] == 0 and rep["n_images"] == 60  # แถว test ไม่ถูกโหลด
+    assert rep["n_errors"] == 0 and rep["n_images"] == 12 * len(tb.FOLDS)  # ไม่โหลดแถว test และ rf_hendi
     assert rep["n_box_rows_without_bbox"] == 0
     for view in ("bbox", "pipeline"):
         assert set(rep["B0"]["folds"][view]) >= set(tb.FOLDS) and "rf_devlong" not in rep["B0"]["folds"][view]
-        assert "rf_hendi" not in rep["B0"]["folds_no_hendi"][view]
-        assert rep["B1"]["hendi_fold"][view]["n"] == 12
+        assert "rf_hendi" not in rep["B0"]["folds"][view]
     assert {"B0", "B1-small", "B1", "selected", "shortcut_probe"} <= set(rep)
     assert rep["B1"]["agtron_by_value"]  # แยกตามค่า Agtron
     with open(tmp_path / "results" / "baseline_loso.csv", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    assert {(r["eval_view"], r["hendi"]) for r in rows} == {("bbox", "with"), ("bbox", "without"),
-                                                            ("pipeline", "with"), ("pipeline", "without")}
+    assert {r["eval_view"] for r in rows} == {"bbox", "pipeline"}
+    assert not any(r["fold"] == "rf_hendi" for r in rows)
     card = json.loads((tmp_path / "models" / "current" / "model_card.json").read_text(encoding="utf-8"))
-    assert card["backend"] in ("b0_threshold", "b1_linear") and card["low_conf_threshold"] == tb.LOW_CONF_THRESHOLD
+    assert card["backend"] == "b1_linear" and card["feature_set"] == "Lab_hist"  # --export-model B1
+    assert card["low_conf_threshold"] == tb.LOW_CONF_THRESHOLD and "rf_hendi" not in card["loso_folds"]
+    assert rep["selected"]["selected_by"].endswith("B1") and "auto_rule_pick" in rep
     assert (tmp_path / "results" / "baseline_confusion" / "B1_pipeline_agtron.csv").is_file()
 
 

@@ -3,18 +3,19 @@
 
 โปรโตคอล (ml-spec ข้อ 5, 7, 8 + results/split_decisions.md):
 - ข้อมูล: manifest แถว split=trainval และ label ∈ {light, medium, dark} เท่านั้น · **ไม่โหลด split=test เลย**
-- LOSO 5 fold หน่วย = source: ontoum224, rf_hendi, rf_robusta, rf_boos, agtron (5 เครื่อง)
+- LOSO 4 fold หน่วย = source: ontoum224, rf_robusta, rf_boos, agtron (5 เครื่อง)
+  rf_hendi ตัดออกจาก baseline (8 ต.ค.: ทุกภาพอยู่ในเครื่องคั่วเดียว พื้นหลังทายคลาสได้ 0.85, light/medium แยกด้วยสีไม่ได้)
 - รูป: อ่าน bytes → roastml.decode.decode_image (เส้นทางเดียวกับ Pi) แล้วสกัด feature 2 view:
-    train view    : agtron = ROI · rf_robusta/rf_boos = พิกเซลใน bbox YOLO · ontoum224/rf_hendi = smart crop
+    train view    : agtron = ROI · rf_robusta/rf_boos = พิกเซลใน bbox YOLO · ontoum224 = smart crop
     pipeline view : smart-crop pipeline จริงแบบที่ Pi เห็น (agtron ยังเป็น ROI — ห้ามใช้ภาพเต็ม agtron)
   เทรนด้วย train view เสมอ · ประเมิน fold ที่ hold out 2 แบบ: (ก) train view (bbox)  (ข) pipeline view
 - B0: threshold 2 ค่าบน L_med · B1-small: median L*/a*/b*, IQR L*, chroma + LogReg C เล็ก · B1: Lab_hist + LogReg
-- เลือกตัว deploy ด้วย mean LOSO macro-F1 5 fold ของ (ข) pipeline view (= สิ่งที่ deploy เห็นจริง)
+- เลือกตัวที่ดีที่สุดของแต่ละโมเดลด้วย mean LOSO macro-F1 ของ (ข) pipeline view (= สิ่งที่ deploy เห็นจริง)
   ปัด 2 ตำแหน่ง → โมเดลง่ายกว่า → C เล็กกว่า · ตัวเลขของ config ที่ถูกเลือกจึงมองโลกในแง่ดีเล็กน้อย
-- เพิ่ม: LOSO 4 fold แบบไม่มี rf_hendi (ทั้งเทรนและประเมิน)
+- export: --export-model auto (ตามกฎข้างบน) หรือระบุ B0 / B1-small / B1 (ผู้ใช้ตัดสิน 8 ต.ค.: B1)
 - shortcut probe: ทายคลาสจาก "ขอบภาพ" อย่างเดียว ภายในแต่ละ source (StratifiedGroupKFold ตาม group)
 
-ใช้: python -m tools.train_baseline [--workers 8] [--no-export]
+ใช้: python -m tools.train_baseline [--workers 8] [--export-model B1] [--no-export]
 """
 
 from __future__ import annotations
@@ -48,7 +49,10 @@ RESULTS = ML_DIR / "results"
 MODEL_OUT = ML_DIR / "models" / "current"  # gitignored (เทรนรวม agtron license Unknown)
 CLASSES = ["light", "medium", "dark"]          # ลำดับใน report
 ORDINAL = {"dark": 0, "medium": 1, "light": 2}  # สำหรับ B0 (L* ต่ำ = เข้ม)
-FOLDS = ["ontoum224", "rf_hendi", "rf_robusta", "rf_boos", "agtron"]
+FOLDS = ["ontoum224", "rf_robusta", "rf_boos", "agtron"]
+# source ที่ไม่ใช้ใน baseline (ยังอยู่ใน manifest) — results/split_decisions.md
+EXCLUDED_SOURCES = {"rf_hendi": "ภาพในเครื่องคั่วเดียวทั้งชุด · ขอบภาพทายคลาสได้ (probe 0.85) · light≈medium ใน L*"}
+MODELS = ("B0", "B1-small", "B1")
 BOX_SOURCES = ("rf_robusta", "rf_boos")  # มี bbox YOLO → train view ใช้พิกเซลใน bbox
 # (ชื่อโมเดล, feature set, C grid) · ลำดับ = ความซับซ้อน (ใช้ตัดสินเมื่อคะแนนเท่ากัน)
 B1_GRID = [("B1-small", "small", [0.001, 0.01, 0.1]), ("B1", "Lab_hist", [0.01, 0.1, 1.0, 10.0])]
@@ -254,7 +258,7 @@ def load_rows(root: Path) -> list[dict]:
     with open(root / "manifest.csv", newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     # กันพลาด: ไม่แตะ split=test แม้แต่อ่าน feature
-    return [r for r in rows if r["split"] == "trainval" and r["label"] in CLASSES]
+    return [r for r in rows if r["split"] == "trainval" and r["label"] in CLASSES and r["source"] in FOLDS]
 
 
 def attach_boxes(root: Path, rows: list[dict]) -> int:
@@ -274,13 +278,13 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         w.writerows(rows)
 
 
-def _csv_rows(model: str, config: str, view: str, hendi: str, tab: dict, folds: list[str]) -> list[dict]:
+def _csv_rows(model: str, config: str, view: str, tab: dict, folds: list[str]) -> list[dict]:
     out = []
     for fold in folds + ["mean", "pooled"]:
         if fold not in tab:
             continue
         t = tab[fold]
-        row = {"model": model, "config": config, "eval_view": view, "hendi": hendi, "fold": fold,
+        row = {"model": model, "config": config, "eval_view": view, "fold": fold,
                "n": t.get("n", ""), "acc": round(t["acc"], 4), "macro_f1": round(t["macro_f1"], 4),
                "cross_step_rate": round(t["cross_step_rate"], 4)}
         for c in CLASSES:
@@ -296,6 +300,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--data-dir", type=Path)
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
     ap.add_argument("--no-export", action="store_true")
+    ap.add_argument("--export-model", choices=("auto",) + MODELS, default="auto",
+                    help="auto = ตามกฎเลือก · ระบุชื่อ = export ตัวที่ดีที่สุดของโมเดลนั้น (config ยังเลือกด้วย LOSO)")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     import sklearn
@@ -318,14 +324,13 @@ def main(argv: list[str] | None = None) -> int:
     lorig = np.array([r["label_orig"] for r in ok])
     modes = Counter((r["source"], get(r, "mode")) for r in ok)
     print(f"ใช้ได้ {len(ok)} ภาพ · error {len(errs)} · ไม่มี bbox {n_nobox}")
-    folds_nh = [f for f in FOLDS if f != "rf_hendi"]
-    keep_nh = src != "rf_hendi"
 
     report: dict = {
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "protocol": ("LOSO 5 fold (source) บน split=trainval label∈{light,medium,dark}; split=test ไม่ถูกโหลด · "
+        "excluded_sources": EXCLUDED_SOURCES,
+        "protocol": ("LOSO 4 fold (source) บน split=trainval label∈{light,medium,dark}; split=test ไม่ถูกโหลด · "
                      "เทรนด้วย train view (bbox สำหรับ robusta/boos, ROI agtron) · ประเมิน (ก) bbox (ข) pipeline"),
-        "selection_rule": "mean LOSO macro-F1 5 fold ของ pipeline view (ปัด 2 ตำแหน่ง) → โมเดลง่ายกว่า → C เล็กกว่า",
+        "selection_rule": "mean LOSO macro-F1 4 fold ของ pipeline view (ปัด 2 ตำแหน่ง) → โมเดลง่ายกว่า → C เล็กกว่า",
         "seed": SEED,
         "versions": {"roastml": roastml.__version__, "python": platform.python_version(),
                      "numpy": np.__version__, "sklearn": sklearn.__version__,
@@ -338,7 +343,7 @@ def main(argv: list[str] | None = None) -> int:
         "feature_ms_p50_p95": [float(np.percentile([get(r, "ms") for r in ok], q)) for q in (50, 95)] if ok else [],
     }
 
-    # ---------------- ทุก config: LOSO 5 fold (2 view) + LOSO 4 fold ไม่มี hendi (2 view)
+    # ---------------- ทุก config: LOSO (เทรน train view · ประเมิน 2 view)
     def b0_fit(Xa, ya):
         return b0_spec(fit_b0(select(Xa, ["L_med"])[:, 0], ya))
 
@@ -352,39 +357,37 @@ def main(argv: list[str] | None = None) -> int:
     for model, fs, C, complexity, fit in configs:
         t0 = time.time()
         p5 = loso_predict(Xt, y, src, fit, {"bbox": Xt, "pipeline": Xp})
-        p4 = loso_predict(Xt[keep_nh], y[keep_nh], src[keep_nh], fit,
-                          {"bbox": Xt[keep_nh], "pipeline": Xp[keep_nh]}, folds=folds_nh)
         g = {"model": model, "feature_set": fs, "C": C, "complexity": complexity, "pred": p5,
-             "tab": {v: fold_table(y, p5[v], src) for v in p5},
-             "tab_no_hendi": {v: fold_table(y[keep_nh], p4[v], src[keep_nh], folds_nh) for v in p4}}
+             "tab": {v: fold_table(y, p5[v], src) for v in p5}}
         g["score"] = g["tab"]["pipeline"]["mean"]["macro_f1"]
         cands.append(g)
         cfg_name = fs + (f"|C={C}" if C is not None else "")
         for v in ("bbox", "pipeline"):
-            csv_rows += _csv_rows(model, cfg_name, v, "with", g["tab"][v], FOLDS)
-            csv_rows += _csv_rows(model, cfg_name, v, "without", g["tab_no_hendi"][v], folds_nh)
+            csv_rows += _csv_rows(model, cfg_name, v, g["tab"][v], FOLDS)
         tb, tp = g["tab"]["bbox"], g["tab"]["pipeline"]
         print(f"{model:8s} {cfg_name:14s} (ก)bbox {tb['mean']['macro_f1']:.3f} (ข)pipe {tp['mean']['macro_f1']:.3f} | "
               + " ".join(f"{s_}={tb[s_]['macro_f1']:.2f}/{tp[s_]['macro_f1']:.2f}" for s_ in FOLDS if s_ in tb)
-              + f" | no-hendi pipe {g['tab_no_hendi']['pipeline']['mean']['macro_f1']:.3f} ({time.time() - t0:.0f}s)")
+              + f" ({time.time() - t0:.0f}s)")
 
     rank = lambda g: (-round(g["score"], 2), g["complexity"], g["C"] or 0)  # noqa: E731
-    best = sorted(cands, key=rank)[0]
-    per_model_best = {m: sorted([g for g in cands if g["model"] == m], key=rank)[0] for m in ("B0", "B1-small", "B1")}
+    per_model_best = {m: sorted([g for g in cands if g["model"] == m], key=rank)[0] for m in MODELS}
+    auto = sorted(cands, key=rank)[0]
+    best = auto if args.export_model == "auto" else per_model_best[args.export_model]
     report["grid"] = [{"model": g["model"], "feature_set": g["feature_set"], "C": g["C"],
                        "mean_macro_f1": {v: g["tab"][v]["mean"]["macro_f1"] for v in g["tab"]},
-                       "mean_macro_f1_no_hendi": {v: g["tab_no_hendi"][v]["mean"]["macro_f1"] for v in g["tab_no_hendi"]},
                        "per_fold_macro_f1": {v: {s_: g["tab"][v][s_]["macro_f1"] for s_ in FOLDS if s_ in g["tab"][v]}
                                              for v in g["tab"]}}
                       for g in cands]
     for m, g in per_model_best.items():
         report[m] = {"config": {"feature_set": g["feature_set"], "C": g["C"]},
-                     "folds": g["tab"], "folds_no_hendi": g["tab_no_hendi"],
-                     "hendi_fold": {v: g["tab"][v].get("rf_hendi") for v in g["tab"]},
+                     "folds": g["tab"],
                      "agtron_by_value": agtron_breakdown(lorig, g["pred"]["pipeline"], src)}
     report["B0"]["thresholds_per_fold"] = {s_: fit_b0(select(Xt[src != s_], ["L_med"])[:, 0], y[src != s_])
                                            for s_ in FOLDS if (src == s_).any()}
+    report["auto_rule_pick"] = {"model": auto["model"], "feature_set": auto["feature_set"], "C": auto["C"],
+                                "mean_macro_f1_pipeline": auto["score"]}
     report["selected"] = {"model": best["model"], "feature_set": best["feature_set"], "C": best["C"],
+                          "selected_by": "auto" if args.export_model == "auto" else f"ผู้ใช้ระบุ {args.export_model}",
                           "mean_macro_f1_pipeline": best["score"],
                           "mean_macro_f1_bbox": best["tab"]["bbox"]["mean"]["macro_f1"]}
 
@@ -434,9 +437,10 @@ def main(argv: list[str] | None = None) -> int:
             "low_conf_threshold_note": "0 = ตอบ argmax เสมอ (ยังไม่ abstain) · confidence อยู่ใน field แยก",
             "seg_config": cfg.to_dict(), "feature_set": best["feature_set"], "C": best["C"],
             "train": {"split": "trainval", "sources": FOLDS,
-                      "view": "bbox (robusta/boos) · ROI (agtron) · smart crop (ontoum224/hendi)",
+                      "view": "bbox (robusta/boos) · ROI (agtron) · smart crop (ontoum224)",
                       "counts": dict(Counter(y))},
             "loso_mean_macro_f1": {"pipeline": best["score"], "bbox": best["tab"]["bbox"]["mean"]["macro_f1"]},
+            "loso_folds": FOLDS, "excluded_sources": EXCLUDED_SOURCES, "selected_by": report["selected"]["selected_by"],
             "versions": report["versions"],
             "data_license_note": "เทรนรวม agtron (license Unknown) — ใช้ภายใน ห้าม commit",
         }

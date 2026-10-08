@@ -29,13 +29,9 @@ def write_model(d, kind="b1_linear", spec=None, **card_extra):
     if spec is None:
         if kind == "b0_threshold":
             spec = tb.b0_spec((25.0, 40.0))
-        else:  # B1-small ที่แยกตาม L_med ชัดๆ
-            from roastml.features import FEATURES_ALL
-            X = np.zeros((90, len(FEATURES_ALL)))
-            X[:, FEATURES_ALL.index("L_med")] = np.r_[np.full(30, 15.0), np.full(30, 32.0), np.full(30, 50.0)]
-            X += np.random.default_rng(1).normal(0, 1, X.shape)
-            y = np.array(["dark"] * 30 + ["medium"] * 30 + ["light"] * 30)
-            spec = tb.fit_b1(X, y, "small", 1.0)
+        else:  # softmax ที่ใช้ L_med อย่างเดียว เขียนเอง (ไม่พึ่ง sklearn → test รันบน Pi ได้)
+            spec = {"type": "softmax", "classes": ["light", "medium", "dark"], "feature_names": ["L_med"],
+                    "scaler_mean": [32.0], "scaler_scale": [8.0], "W": [[4.0], [0.0], [-4.0]], "b": [-2.0, 2.0, -2.0]}
     (d / "model.json").write_text(json.dumps(spec), encoding="utf-8")
     card = {"backend": kind, "name": f"test-{kind}", "model_file": "model.json",
             "seg_config": SegConfig().to_dict(), "low_conf_threshold": 0.0} | card_extra
