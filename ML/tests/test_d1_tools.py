@@ -1,5 +1,9 @@
 import numpy as np
 
+import pytest
+
+pytest.importorskip("sklearn", reason="training tools need scikit-learn; not installed on the Pi runtime")
+
 from tools.train_d1 import PLAN, augment_one, class_weights, normalise
 
 

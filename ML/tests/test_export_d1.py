@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+pytest.importorskip("sklearn", reason="training tools need scikit-learn; not installed on the Pi runtime")
+
 from roastml.rgb_views import RGBViewConfig, pool_view_probabilities
 from tools.compare_tabular import softmax
 from tools.export_d1 import calibration_ids, export_fp32, normalise_pixels, ort_session, pool_logits, quantize_int8

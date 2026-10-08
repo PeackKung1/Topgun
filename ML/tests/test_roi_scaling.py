@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 import pytest
 
+pytest.importorskip("sklearn", reason="training tools need scikit-learn; not installed on the Pi runtime")
+
 from roastml.decode import DecodedImage
 from roastml.rgb_views import crop_roi
 from tools.compare_roi_scaling import extract_updated, legacy_roi

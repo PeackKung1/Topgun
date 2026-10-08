@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+pytest.importorskip("sklearn", reason="training tools need scikit-learn; not installed on the Pi runtime")
+
 from roastml.features import FEATURES_ALL, FEATURE_SETS
 from roastml.tabular_backend import NumpyTabularModel
 from tools.compare_tabular import (

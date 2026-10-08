@@ -4,6 +4,8 @@ import csv
 import numpy as np
 import pytest
 
+pytest.importorskip("sklearn", reason="training tools need scikit-learn; not installed on the Pi runtime")
+
 from tools import summarize_runs
 from tools.d1_frozen_probe import PLAN as PROBE_PLAN, select
 from tools.train_d1 import AUG_MEDIUM, PLAN, PLAN_MEDAUG, PROTOCOLS, augment_one, augmentation_params
