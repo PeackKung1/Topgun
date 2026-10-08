@@ -63,7 +63,19 @@ class Predictor:
         self._load_ms: float | None = None
 
     # ------------------------------------------------------------------ public
-    def predict_bytes(self, raw: Any, *, source: str = "", roi: str = "") -> dict[str, Any]:
+    def predict_bytes(self, raw: Any) -> dict[str, Any]:
+        """ทางเข้าของ FW (contract v2) — รับ bytes อย่างเดียว ไม่ raise"""
+        return self._safe_predict(raw)
+
+    def predict_dataset(self, raw: Any, *, source: str, roi: str = "") -> dict[str, Any]:
+        """เหมือน predict_bytes + metadata ของ dataset (source, ROI ของ agtron) — สำหรับ tools เท่านั้น
+
+        แยกจาก predict_bytes เพื่อไม่ให้ทางเข้าของ FW มีเส้นทางอื่น (เช่น agtron ข้ามการหาเมล็ด)
+        backend ที่ไม่รองรับ metadata → status "error"
+        """
+        return self._safe_predict(raw, source=source, roi=roi)
+
+    def _safe_predict(self, raw: Any, *, source: str = "", roi: str = "") -> dict[str, Any]:
         t0 = time.perf_counter()
         try:
             return self._predict(raw, t0, source=source, roi=roi)

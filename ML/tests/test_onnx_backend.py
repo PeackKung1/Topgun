@@ -68,9 +68,9 @@ def test_load_class_order_fallback_decode_and_profile(tmp_path, fake_ort):
         assert stages["n_views"] == 2 and all(stages[k] >= 0 for k in ("decode", "views", "model", "total"))
     assert p.predict_bytes(b"corrupt")["status"] == "bad_image"
     assert p.predict_bytes("path")["status"] == "error"
-    assert p.predict_bytes(image_bytes(), source="agtron")["status"] == "error"
-    assert p.predict_bytes(image_bytes(), source="rf_robusta", roi="8 8 88 72")["status"] == "error"
-    assert p.predict_bytes(image_bytes(), source="agtron", roi="8 8 88 72")["label"] == "light"
+    assert p.predict_dataset(image_bytes(), source="agtron")["status"] == "error"
+    assert p.predict_dataset(image_bytes(), source="rf_robusta", roi="8 8 88 72")["status"] == "error"
+    assert p.predict_dataset(image_bytes(), source="agtron", roi="8 8 88 72")["label"] == "light"
 
 
 def test_onnx_thread_safety_and_low_conf_label(tmp_path, fake_ort):

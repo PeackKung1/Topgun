@@ -1,4 +1,4 @@
-"""End-to-end runtime parity: roastml.api.load(dir).predict_bytes(bytes) versus
+"""End-to-end runtime parity: roastml.api.load(dir).predict_dataset(bytes, source, roi) versus
 the offline probabilities recorded for the same images (trainval only).
 
 The offline export verification feeds cached 224px views straight into ORT.
@@ -46,7 +46,7 @@ def main(argv=None) -> int:
     for r in rows:
         m = manifest[r["path"]]
         raw = checked_image_path(root, m).read_bytes()  # refuses anything outside split=trainval
-        res = predictor.predict_bytes(raw, source=m["source"], roi=m.get("roi", ""))
+        res = predictor.predict_dataset(raw, source=m["source"], roi=m.get("roi", ""))
         ref = np.array([float(r[args.prefix + c]) for c in CLASSES])
         got = np.array([res["probs"][c] for c in CLASSES])
         diffs.append(float(np.abs(got - ref).max()))

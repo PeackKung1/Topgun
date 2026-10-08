@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import io
 import json
 import math
@@ -81,6 +82,15 @@ def test_schema_every_field_many_calls(stub):
     raw = img_bytes()
     for _ in range(300):
         assert_valid_result(stub.predict_bytes(raw))
+
+
+def test_fw_entry_takes_bytes_only_and_metadata_is_separate():
+    # FW เรียก predict_bytes(raw) เท่านั้น — metadata ของ dataset อยู่ที่ predict_dataset
+    assert list(inspect.signature(Predictor.predict_bytes).parameters) == ["self", "raw"]
+    p = load("stub", seed=SEED, status_weights={"ok": 1.0})
+    r = p.predict_dataset(img_bytes(), source="agtron", roi="0 0 10 10")  # stub ไม่รองรับ metadata
+    assert_valid_result(r)
+    assert r["status"] == "error"
 
 
 def test_stub_covers_all_statuses_and_warnings(stub):

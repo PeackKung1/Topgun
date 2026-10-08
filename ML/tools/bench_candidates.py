@@ -160,7 +160,7 @@ def benchmark(model: Path, root: Path, rows: list[dict], *, quality: int = 84, h
     load_ms = (time.perf_counter() - t0) * 1000
     mem_loaded = rss_mb()
     for row, raw in original[:5]:
-        predictor.predict_bytes(raw, source=row["source"], roi=row.get("roi", ""))
+        predictor.predict_dataset(raw, source=row["source"], roi=row.get("roi", ""))
     report_cases = {}
     per_image = []
     for name, blobs in (("original", original), ("jpeg1600", web)):
