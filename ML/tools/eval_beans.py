@@ -49,9 +49,30 @@ def would_trigger(prop: dict | None, n: int | None) -> bool:
     return sorted(prop.values(), reverse=True)[1] >= G2["second_share"]
 
 
-def build(out: Path, run: str, extra: dict | None = None) -> dict:
+def check_candidate_dir(out: Path) -> None:
+    """เขียนได้เฉพาะโฟลเดอร์ใหม่/ว่าง หรือ candidate b1_linear_beans เดิม (rerun ทับตัวเองได้)
+
+    กันเขียนทับ models/current, reference_b1_r2, candidates อื่น หรือโฟลเดอร์แม่อย่าง models/
+    """
     if out.resolve() == CURRENT.resolve():
         raise SystemExit("refusing to write models/current")
+    if not out.exists():
+        return
+    if not out.is_dir():
+        raise SystemExit(f"refusing to write {out}: exists and is not a directory")
+    if not any(out.iterdir()):
+        return
+    card_path = out / "model_card.json"
+    try:
+        backend = json.loads(card_path.read_text(encoding="utf-8")).get("backend")
+    except (OSError, ValueError, AttributeError):
+        backend = None
+    if backend != "b1_linear_beans":
+        raise SystemExit(f"refusing to overwrite {out}: not empty and not a b1_linear_beans candidate")
+
+
+def build(out: Path, run: str, extra: dict | None = None) -> dict:
+    check_candidate_dir(out)
     card = json.loads((CURRENT / "model_card.json").read_text(encoding="utf-8"))
     if card.get("backend") != "b1_linear":
         raise SystemExit("models/current is not B1 b1_linear")
