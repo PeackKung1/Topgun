@@ -3,7 +3,9 @@
 ปรับจากโค้ดร่าง (claude-notes/draft_ml/roastml/segment.py) ให้ตรง ml-spec v3:
 - ไม่มีผลลัพธ์ "ไม่พบเมล็ด" เป็นคำตอบ: segment ล้มเหลว → ใช้ภาพเต็ม (mode="full") เสมอ
 - โหมด: "beans" (พื้นหลังสม่ำเสมอ แยกเมล็ดได้) · "pile" (ขอบภาพไม่ใช่พื้นหลัง แต่สีเหมือนกองเมล็ด)
-        · "full" (หาเมล็ดไม่เจอ → ภาพเต็ม + warning no_beans_detected)
+        · "full" (หา contour รูปเมล็ดไม่เจอ → ทั้งภาพ + warning no_beans_detected)
+  โหมด full เลือกพิกเซลที่ "ห่างจากสีพื้นหลัง (median ขอบภาพ)" — ไม่ใช่ตัด percentile
+  (แก้ 8 ต.ค.: เดิมตัด L* ต่ำสุด 15% ทิ้ง บนกระดาษขาวที่มีเมล็ดไม่กี่เมล็ด ส่วนที่ถูกทิ้งคือตัวเมล็ด → ได้กระดาษล้วน)
 - white balance จากพื้นหลังขาว (von Kries ใน linear RGB) เฉพาะเมื่อขอบภาพเป็นพื้นขาวสม่ำเสมอ
 
 แนวคิดเดิมจากร่าง: ประมาณสีพื้นหลังจากขอบภาพ (median Lab) → foreground = ΔE เกิน threshold (Otsu + floor)
@@ -44,6 +46,8 @@ class SegConfig:
     trim_lo: float = 15.0           # โหมด pile/full: ตัดพิกเซลมืดสุด (ร่องเงา) ...
     trim_hi: float = 98.0           # ... และสว่างสุด (specular) ตาม percentile ของ L*
     trim_center: float = 0.05       # โหมด pile/full: ตัดขอบภาพออกด้านละ 5%
+    full_trim_lo: float = 2.0       # โหมด full: ภายใน foreground ตัด L* มืดสุด 2% (noise) ...
+    full_trim_hi: float = 90.0      # ... และสว่างสุด 10% (specular + ขอบเงาจางบนพื้น)
 
     @classmethod
     def from_dict(cls, d: dict | None) -> "SegConfig":
@@ -112,6 +116,29 @@ def trimmed_mask(lab: np.ndarray, cfg: SegConfig) -> np.ndarray:
     return m
 
 
+def _center_box(h: int, w: int, frac: float) -> tuple[int, int, int, int]:
+    y0, x0 = int(h * frac), int(w * frac)
+    return y0, max(int(h * (1 - frac)), y0 + 1), x0, max(int(w * (1 - frac)), x0 + 1)
+
+
+def bg_distance_mask(lab: np.ndarray, bg: np.ndarray, cfg: SegConfig) -> np.ndarray | None:
+    """โหมด full: พิกเซลกลางภาพที่ ΔE จากสีพื้นหลังเกิน threshold (Otsu + floor) แล้วตัด L* สุดขั้ว
+    คืน None ถ้าได้พิกเซลน้อยกว่า min_core_px (ภาพแทบไม่มีอะไรต่างจากขอบ)"""
+    h, w = lab.shape[:2]
+    y0, y1, x0, x1 = _center_box(h, w, cfg.trim_center)
+    dist = np.linalg.norm(lab - bg, axis=2)
+    t_otsu, _ = cv2.threshold(np.clip(dist * 2, 0, 255).astype(np.uint8), 0, 255,
+                              cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    fg = np.zeros((h, w), bool)
+    fg[y0:y1, x0:x1] = dist[y0:y1, x0:x1] > max(t_otsu / 2.0, cfg.min_contrast)
+    if fg.sum() < cfg.min_core_px:
+        return None
+    L = lab[..., 0]
+    lo, hi = np.percentile(L[fg], [cfg.full_trim_lo, cfg.full_trim_hi])
+    m = fg & (L >= lo) & (L <= hi)
+    return m if m.sum() >= cfg.min_core_px else fg
+
+
 def _odd(n: float) -> int:
     n = max(3, int(n))
     return n if n % 2 else n + 1
@@ -155,7 +182,12 @@ def segment(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans: bool =
     def fallback(mode: str, note: str | None) -> SegResult:
         if note:
             notes.append(note)
-        return SegResult(mode, lab, trimmed_mask(lab, cfg), full_box, s, wb, border_uniform, 0, notes)
+        mask = bg_distance_mask(lab, bg, cfg) if mode == "full" else None
+        if mask is None:  # pile หรือ full ที่หา foreground ไม่ได้ → ตัด percentile แบบเดิม
+            mask = trimmed_mask(lab, cfg)
+            if mode == "full":
+                notes.append("full_trimmed")
+        return SegResult(mode, lab, mask, full_box, s, wb, border_uniform, 0, notes)
 
     if not find_beans:
         return fallback("pile", None)

@@ -1,0 +1,51 @@
+{
+ "rf_robusta": {
+  "ALL": {
+   "n": 1046,
+   "median": 0.615,
+   "share_below_0.5": 0.434
+  },
+  "pile": {
+   "n": 538,
+   "median": 0.409,
+   "share_below_0.5": 0.599
+  },
+  "beans": {
+   "n": 298,
+   "median": 0.893,
+   "share_below_0.5": 0.295
+  },
+  "full": {
+   "n": 210,
+   "median": 0.88,
+   "share_below_0.5": 0.21
+  },
+  "full_old_trim": {
+   "n": 210,
+   "median": 0.524,
+   "share_below_0.5": 0.433
+  }
+ },
+ "rf_boos": {
+  "ALL": {
+   "n": 893,
+   "median": 1.0,
+   "share_below_0.5": 0.001
+  },
+  "beans": {
+   "n": 823,
+   "median": 1.0,
+   "share_below_0.5": 0.001
+  },
+  "full": {
+   "n": 70,
+   "median": 1.0,
+   "share_below_0.5": 0.0
+  },
+  "full_old_trim": {
+   "n": 70,
+   "median": 0.015,
+   "share_below_0.5": 1.0
+  }
+ }
+}

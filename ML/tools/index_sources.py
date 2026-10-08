@@ -84,6 +84,25 @@ def read_yolo_names(data_yaml: Path) -> list[str]:
     raise ValueError(f"ไม่พบ names ใน {data_yaml}")
 
 
+def yolo_label_path(img_path: Path) -> Path:
+    """<split>/images/<stem>.<ext> → <split>/labels/<stem>.txt"""
+    img_path = Path(img_path)
+    return img_path.parent.parent / "labels" / (img_path.stem + ".txt")
+
+
+def read_yolo_boxes(img_path: Path) -> list[tuple[int, float, float, float, float]]:
+    """bbox YOLO ของภาพ: [(class_id, cx, cy, w, h)] พิกัดสัมพัทธ์ 0..1 · ไม่มีไฟล์ label → []"""
+    lbl = yolo_label_path(img_path)
+    if not lbl.is_file():
+        return []
+    out = []
+    for line in lbl.read_text(encoding="utf-8").splitlines():
+        parts = line.split()
+        if len(parts) >= 5:
+            out.append((int(parts[0]), *(float(v) for v in parts[1:5])))
+    return out
+
+
 def index_yolo_source(root: Path, source: str) -> list[Item]:
     """โครง <split>/images/<file> + <split>/labels/<stem>.txt"""
     base = root / RAW / source

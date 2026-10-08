@@ -26,10 +26,11 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from roastml.decode import decode_image
-from roastml.features import FEATURES_ALL
+from roastml.features import FEATURES_ALL, box_mask
 from roastml.paths import CONTACT_SHEETS, data_dir
-from roastml.segment import SegConfig, segment
-from tools.train_baseline import CLASSES, FOLDS, extract_features, load_rows
+from roastml.segment import SegConfig, segment, trimmed_mask
+from tools.index_sources import read_yolo_boxes
+from tools.train_baseline import CLASSES, FOLDS, extract_features, load_rows, row_key
 
 RESULTS = Path(__file__).resolve().parent.parent / "results"
 SEED = 20261006
@@ -151,17 +152,46 @@ def boxplot(vals: dict, out: Path) -> None:
     plt.close(fig)
 
 
+def bbox_coverage(root: Path, rows: list[dict], cfg: SegConfig) -> dict:
+    """robusta/boos: สัดส่วนพิกเซลที่ใช้คิด feature (smart-crop pipeline) ที่อยู่ใน bbox เมล็ดจริง (label YOLO)
+    เทียบโหมด full แบบเดิม (ตัด percentile) กับแบบใหม่ (ห่างจากสีพื้นหลัง) บนภาพเดียวกัน"""
+    out = {}
+    for src in ("rf_robusta", "rf_boos"):
+        cov: dict[str, list[float]] = defaultdict(list)
+        for r in (r for r in rows if r["source"] == src):
+            boxes = [b[1:] for b in read_yolo_boxes(root / r["path"])]
+            rgb, _ = load_view(root, r)
+            seg = segment(rgb, cfg)
+            truth = box_mask(seg.pixel_mask.shape, boxes, shrink=0.0)
+            frac = lambda m: float((m & truth).sum() / max(m.sum(), 1))  # noqa: E731
+            cov["ALL"].append(frac(seg.pixel_mask))
+            cov[seg.mode].append(cov["ALL"][-1])
+            if seg.mode == "full":
+                cov["full_old_trim"].append(frac(trimmed_mask(seg.lab, cfg)))
+        out[src] = {k: {"n": len(v), "median": round(float(np.median(v)), 3),
+                        "share_below_0.5": round(float(np.mean(np.array(v) < 0.5)), 3)} for k, v in cov.items()}
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-dir", type=Path)
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
+    ap.add_argument("--bbox-coverage-only", action="store_true",
+                    help="วัดเฉพาะสัดส่วนพิกเซลใน bbox ของ robusta/boos → results/diag_bbox_coverage.json")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     root = args.data_dir.resolve() if args.data_dir else data_dir()
     cfg = SegConfig()
     rows = load_rows(root)
+    if args.bbox_coverage_only:
+        cov = bbox_coverage(root, rows, cfg)
+        RESULTS.mkdir(exist_ok=True)
+        (RESULTS / "diag_bbox_coverage.json").write_text(json.dumps(cov, indent=1) + "\n", encoding="utf-8")
+        print(json.dumps(cov, indent=1))
+        return 0
     feats, _ = extract_features(root, rows, cfg, args.workers)
-    key = lambda r: f"{r['md5']}|{r['roi']}"  # noqa: E731
+    key = row_key
     rows = [r for r in rows if not feats[key(r)]["err"]]
 
     # ---------------- A
