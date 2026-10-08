@@ -28,7 +28,9 @@ from .contract import (
     API_VERSION, LABEL_TH, LABELS, RESULT_KEYS, STATUSES, WARNING_TH, WARNINGS,
     Backend, BackendOutput,
 )
-from .decode import HEIC_SUPPORTED, MAX_BYTES, MAX_SIDE, BadImageError, DecodedImage, decode_image
+from .decode import (
+    HEIC_SUPPORTED, MAX_BYTES, MAX_SIDE, BadImageError, DecodedImage, ImageTooSmallError, decode_image,
+)
 from .stub import SimulatedFailure, StubBackend
 
 __all__ = [
@@ -43,6 +45,7 @@ log = logging.getLogger("roastml")
 DEFAULT_LOW_CONF_THRESHOLD = 0.6
 
 MSG_BAD_IMAGE = "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง"
+MSG_TOO_SMALL = "รูปเล็กเกินไป กรุณาถ่ายหรือเลือกรูปเมล็ดกาแฟที่ชัดและใหญ่ขึ้น"  # status ยังเป็น bad_image
 MSG_ERROR = "ระบบขัดข้องชั่วคราว กรุณาลองส่งรูปใหม่อีกครั้ง"
 
 
@@ -147,7 +150,7 @@ class Predictor:
             img = decode_image(bytes(raw))
         except BadImageError as e:
             log.info("bad_image: %s", e)
-            return self._failure("bad_image", t0, decode_ms=_ms_since(t0))
+            return self._failure("bad_image", t0, decode_ms=_ms_since(t0), message=_bad_image_message(e))
         t_decoded = time.perf_counter()
         decode_ms = (t_decoded - t0) * 1000.0
         if stages is not None:
@@ -158,7 +161,7 @@ class Predictor:
             label, conf, probs = self._check_probs(out)
         except BadImageError as e:
             log.info("bad_image from backend: %s", e)
-            return self._failure("bad_image", t0, decode_ms=decode_ms)
+            return self._failure("bad_image", t0, decode_ms=decode_ms, message=_bad_image_message(e))
         except SimulatedFailure as e:
             log.info("%s", e)
             return self._failure("error", t0, decode_ms=decode_ms)
@@ -217,14 +220,14 @@ class Predictor:
         label = max(LABELS, key=lambda k: vals[k])
         return label, vals[label], vals
 
-    def _failure(self, status: str, t0: float, decode_ms: float) -> dict[str, Any]:
-        """ผลสำหรับ bad_image / error — key ครบ แต่ label/probs เป็น null"""
+    def _failure(self, status: str, t0: float, decode_ms: float, message: str | None = None) -> dict[str, Any]:
+        """ผลสำหรับ bad_image / error — key ครบ แต่ label/probs เป็น null · message = ข้อความแทนค่าเริ่มต้น"""
         total = _ms_since(t0)
         return {
             "status": status,
             "label": None,
             "label_th": None,
-            "message_th": MSG_BAD_IMAGE if status == "bad_image" else MSG_ERROR,
+            "message_th": message or (MSG_BAD_IMAGE if status == "bad_image" else MSG_ERROR),
             "confidence": None,
             "probs": None,
             "warnings": [],
@@ -377,6 +380,10 @@ def _message(status: str, label: str, conf: float, warnings: list[str]) -> str:
     if hints:
         msg += " · " + " · ".join(hints)
     return msg
+
+
+def _bad_image_message(e: BadImageError) -> str:
+    return MSG_TOO_SMALL if isinstance(e, ImageTooSmallError) else MSG_BAD_IMAGE
 
 
 def _hardcoded_error() -> dict[str, Any]:

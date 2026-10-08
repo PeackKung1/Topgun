@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pytest
 from PIL import Image
 
+from roastml import api as api_mod
 from roastml import decode as decode_mod
 from roastml.api import (
     LABELS, RESULT_KEYS, STATUSES, WARNINGS, ModelLoadError, Predictor, load,
@@ -224,8 +225,20 @@ def test_good_inputs_are_not_bad_image(name):
     assert r["status"] == "ok", name
 
 
+TINY_INPUTS = ("tiny_1x1", "tiny_7x7", "thin_after_resize_4000x6")
+
+
+@pytest.mark.parametrize("name", list(BAD_INPUTS))
+@pytest.mark.filterwarnings("ignore::PIL.Image.DecompressionBombWarning")  # too_many_pixels ตั้งใจให้เกิด
+def test_bad_image_message_tiny_vs_unreadable(name):
+    # ภาพเล็กเกิน = เปิดได้แต่ใช้ไม่ได้ → ข้อความให้ถ่ายใหม่ (status ยัง bad_image) · อย่างอื่นใช้ข้อความเดิม
+    r = load("stub", seed=SEED, status_weights={"ok": 1.0}).predict_bytes(BAD_INPUTS[name])
+    assert r["status"] == "bad_image"
+    assert r["message_th"] == (api_mod.MSG_TOO_SMALL if name in TINY_INPUTS else api_mod.MSG_BAD_IMAGE)
+
+
 def test_decode_rejects_short_side_below_min_after_resize():
-    with pytest.raises(BadImageError, match="too_small:1600x3"):
+    with pytest.raises(decode_mod.ImageTooSmallError, match="too_small:1600x3"):
         decode_image(img_bytes((4000, 6), fmt="PNG"))
     assert min(decode_image(img_bytes((8, 8), fmt="PNG")).image.size) == decode_mod.MIN_SIDE
 

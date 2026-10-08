@@ -45,6 +45,10 @@ class BadImageError(Exception):
     """เปิดไฟล์เป็นรูปไม่ได้ (ไฟล์ว่าง / ไม่ใช่รูป / เสีย / ใหญ่เกิน / เล็กเกิน)"""
 
 
+class ImageTooSmallError(BadImageError):
+    """เปิดได้ แต่ด้านสั้นหลังย่อ < MIN_SIDE — api ยังตอบ bad_image แต่ใช้ข้อความแนะนำต่างจากไฟล์เสีย"""
+
+
 @dataclass(frozen=True)
 class DecodedImage:
     image: Image.Image          # RGB, ด้านยาวสุด ≤ MAX_SIDE
@@ -103,7 +107,7 @@ def decode_image(data: bytes, max_side: int = MAX_SIDE) -> DecodedImage:
 
     # เช็คหลังย่อ: ภาพยาวผอม (เช่น 4000×6) ถูก thumbnail จนด้านสั้น < MIN_SIDE ได้
     if min(img.size) < MIN_SIDE:
-        raise BadImageError(f"too_small:{img.size[0]}x{img.size[1]}")
+        raise ImageTooSmallError(f"too_small:{img.size[0]}x{img.size[1]}")
 
     return DecodedImage(image=img, orig_size=orig_size, format=fmt)
 
