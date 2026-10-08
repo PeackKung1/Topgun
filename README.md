@@ -4,7 +4,7 @@
 
 ## Firmware ที่มีใน repo
 
-- `Firmware/app.py` ให้หน้าเว็บ `/`, API `POST /api/predict`, ประวัติ `/market` และ health check `/health`
+- `Firmware/app.py` โหลด `roastml.api.load(ROASTML_MODEL)` ตอนเริ่ม service แล้วส่ง bytes ที่อัปโหลดให้ `predict_bytes(raw)`; ให้หน้าเว็บ `/`, API `POST /api/predict`, ประวัติ `/market` และ health check `/health`
 - หน้าเว็บพยายามย่อรูปเป็น JPEG ด้านยาวไม่เกิน 1600 px; ถ้า browser ย่อไม่ได้จะส่งไฟล์ต้นฉบับแทนเมื่อขนาดไม่เกิน 32 MiB และจับเวลาตั้งแต่เริ่มจนแสดงผลด้วย `performance.now()`
 - `Firmware/mqtt_pub.py` ใส่ผลทำนายลง bounded queue; worker แยกส่ง MQTT ผ่าน HiveMQ Cloud/TLS จึงไม่รอ broker ใน request path
 - `Firmware/service.py` รับ event จาก MQTT ตรวจ contract แล้วบันทึก SQLite โดย `msg_id` เป็น primary key เพื่อกันข้อมูลซ้ำ
@@ -12,9 +12,11 @@
 
 ## สถานะและข้อจำกัด
 
-- `ML/SPEC.md` และ model backend ยังไม่มีใน checkout นี้ การเชื่อมต่ออิง contract ปัจจุบันจาก `ML/roastml/api.py` และ `contract.py` เท่านั้น
-- ค่าเริ่มต้น `ROASTML_MODEL=stub` ใช้เปิดเว็บและลอง flow ได้; ตั้ง path โมเดลจริงหลัง ML มี backend ที่โหลดได้
-- `Firmware/deploy/coffee_service.service` ใช้ `/opt/topgun`, service account `topgun` และ port `8080`; ยืนยันและปรับให้ตรง Pi ก่อนติดตั้ง
+- `ML/SPEC.md` และไฟล์โมเดล `ML/models/current/` ไม่มีใน checkout นี้; Firmware อิง contract ใน `ML/roastml/api.py` และ `contract.py` และค่าเริ่มต้นจะโหลดโมเดลจาก `ML/models/current/`
+- `Firmware/run_local.sh` ใช้ `ML/models/current/` เป็นค่าเริ่มต้น; ตั้ง `ROASTML_MODEL=stub` เองได้เฉพาะทดสอบหน้าเว็บ โดยผลเป็นข้อมูลจำลอง ไม่ใช่การวิเคราะห์จริง
+- หากโมเดลโหลดไม่ได้ เว็บยังเปิดได้ แต่ `/api/predict` และ `/health` จะตอบ 503; ต้องนำโมเดลที่ ML ส่งมาไว้ใน path ที่ `ROASTML_MODEL` ระบุก่อนวิเคราะห์รูปจริง
+- ผลนับรายเมล็ดขึ้นกับ backend ส่ง `beans` กลับมา; backend `linear_backend.py` ใน checkout นี้ยังส่งเฉพาะผลรวมทั้งภาพ จึงยังไม่มีผลแยกทีละเมล็ด
+- `Firmware/deploy/coffee_service.service` ใช้ `/opt/topgun`, service account `topgun` และอ่าน port จาก `TOPGUN_PORT` (ค่าเริ่มต้น `8080`)
 - ตั้ง hotspot ด้วย NetworkManager ต้องระบุ wireless interface และ SSID/password ใน environment บน Pi ก่อนเรียกสคริปต์
 - ค่า HiveMQ host/port/topic/TLS ตั้งต้นอยู่ใน `.env.example`; กำหนด username/password ใน `/etc/topgun/topgun.env` บน Pi และอย่า commit รหัสผ่าน
 - MQTT event queue อยู่ใน RAM และมีขนาดจำกัด จึงไม่เก็บ event ค้างไว้เมื่อเครื่องดับหรือ broker ไม่กลับมา

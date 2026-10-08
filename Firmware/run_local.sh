@@ -6,6 +6,7 @@ PROJECT_DIR="$(dirname "$FIRMWARE_DIR")"
 PYTHON_BIN="${TOPGUN_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
 LOCAL_HOST="${TOPGUN_LOCAL_HOST:-127.0.0.1}"
 LOCAL_PORT="${TOPGUN_PORT:-8080}"
+ROASTML_MODEL="${ROASTML_MODEL:-$PROJECT_DIR/ML/models/current}"
 
 if [[ ! -x "$PYTHON_BIN" ]]; then
   echo "Python environment not found: $PYTHON_BIN" >&2
@@ -22,7 +23,7 @@ export TOPGUN_MQTT_PORT=8883
 export TOPGUN_MQTT_TOPIC="coffee/roast/result"
 export TOPGUN_MQTT_TLS=1
 export TOPGUN_MQTT_ENABLED=1
-export ROASTML_MODEL=stub
+export ROASTML_MODEL
 export TOPGUN_DB_PATH="${TMPDIR:-/tmp}/topgun-local-check.sqlite3"
 export LOG_LEVEL=INFO
 export TOPGUN_LOCAL_HOST="$LOCAL_HOST"
@@ -39,5 +40,10 @@ if [[ "$LOCAL_HOST" == "0.0.0.0" ]]; then
 else
   echo "Starting dashboard at http://127.0.0.1:$LOCAL_PORT (computer only)"
 fi
-echo "Submit one image to publish a stub result to HiveMQ; press Ctrl+C to stop."
+if [[ "$ROASTML_MODEL" == "stub" ]]; then
+  echo "Model: stub (simulated results, not real image analysis)"
+else
+  echo "ML model: $ROASTML_MODEL"
+fi
+echo "Press Ctrl+C to stop."
 "$PYTHON_BIN" -c 'import logging, os; logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"); from waitress import serve; from app import app; serve(app, host=os.getenv("TOPGUN_LOCAL_HOST", "127.0.0.1"), port=int(os.getenv("TOPGUN_PORT", "8080")), threads=4)'
