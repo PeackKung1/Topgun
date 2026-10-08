@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import os
 import sqlite3
 import uuid
@@ -79,17 +80,74 @@ def persist_event(payload: Any, path: str | os.PathLike[str] | None = None) -> b
 
 def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int = 50) -> dict[str, Any]:
     with connect_db(path) as db:
-        counts = {row["label"]: row["n"] for row in db.execute(
-            "SELECT label, COUNT(*) AS n FROM predictions WHERE status IN ('ok','low_confidence') "
-            "AND label IS NOT NULL GROUP BY label"
-        )}
         rows = db.execute(
-            "SELECT created_at, status, label, confidence, model FROM predictions "
-            "ORDER BY created_at DESC LIMIT ?", (limit,),
+            "SELECT created_at, status, result_json FROM predictions "
+            "WHERE status IN ('ok','low_confidence') ORDER BY created_at DESC"
         ).fetchall()
-        total = db.execute("SELECT COUNT(*) FROM predictions").fetchone()[0]
-    return {"counts": {label: counts.get(label, 0) for label in sorted(LABELS)}, "total": total,
-            "recent": [dict(row) for row in rows]}
+
+    counts = {label: 0 for label in LABELS}
+    recent_beans: list[dict[str, Any]] = []
+    bean_total = 0
+    for row in rows:
+        try:
+            result = json.loads(row["result_json"])
+        except (TypeError, json.JSONDecodeError):
+            continue
+
+        beans = result.get("beans")
+        valid_beans = [
+            bean for bean in beans
+            if isinstance(bean, dict) and bean.get("label") in LABELS
+        ] if isinstance(beans, list) else []
+
+        # Use per-bean detections when present. Otherwise use n_beans and
+        # proportions to keep aggregate totals usable for ML backends that
+        # provide class proportions without individual boxes.
+        if valid_beans:
+            per_result_counts = {label: 0 for label in LABELS}
+            for bean in valid_beans:
+                per_result_counts[bean["label"]] += 1
+        else:
+            n_beans = result.get("n_beans")
+            proportions = result.get("proportions")
+            if not isinstance(n_beans, int) or isinstance(n_beans, bool) or n_beans <= 0:
+                continue
+            if not isinstance(proportions, dict) or any(
+                not isinstance(proportions.get(label), (int, float)) for label in LABELS
+            ):
+                continue
+            values = {label: float(proportions[label]) for label in LABELS}
+            if any(not math.isfinite(value) or value < 0 for value in values.values()):
+                continue
+            proportion_total = sum(values.values())
+            if proportion_total <= 0:
+                continue
+            raw = {label: n_beans * values[label] / proportion_total for label in LABELS}
+            per_result_counts = {label: int(raw[label]) for label in LABELS}
+            remainder = n_beans - sum(per_result_counts.values())
+            for label in sorted(LABELS, key=lambda item: raw[item] - per_result_counts[item], reverse=True)[:remainder]:
+                per_result_counts[label] += 1
+
+        for label, count in per_result_counts.items():
+            counts[label] += count
+            bean_total += count
+
+        if valid_beans:
+            for index, bean in enumerate(valid_beans, start=1):
+                recent_beans.append({
+                    "created_at": row["created_at"],
+                    "index": index,
+                    "label": bean["label"],
+                    "confidence": bean.get("conf"),
+                })
+
+    return {
+        "counts": counts,
+        "bean_total": bean_total,
+        # Keep `total` for existing clients; it now means total beans.
+        "total": bean_total,
+        "recent_beans": recent_beans[:limit],
+    }
 
 
 def run_subscriber() -> None:

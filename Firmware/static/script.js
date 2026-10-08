@@ -19,7 +19,7 @@
         if (counter) counter.textContent = snapshot.counts[roast] ?? 0;
       }
       const total = document.querySelector('#counts-total');
-      if (total) total.textContent = `ผลวิเคราะห์ ${snapshot.total} รายการ`;
+      if (total) total.textContent = `เมล็ดทั้งหมด ${snapshot.bean_total ?? snapshot.total ?? 0} เมล็ด`;
     } catch (_error) {
       // Counts remain at their last rendered value while the local service reconnects.
     }
@@ -102,6 +102,20 @@
         list.append(item);
       });
       resultBox.append(list);
+    }
+    if (Array.isArray(data.beans) && data.beans.length) {
+      const beanHeading = document.createElement('h3');
+      beanHeading.textContent = `ผลรายเมล็ด (${data.beans.length} เมล็ด)`;
+      resultBox.append(beanHeading);
+      const beanList = document.createElement('ol');
+      data.beans.forEach((bean, index) => {
+        const item = document.createElement('li');
+        const label = labels[bean.label] || bean.label || 'ยังระบุไม่ได้';
+        const confidence = Number.isFinite(bean.conf) ? ` · ความมั่นใจ ${Math.round(bean.conf * 100)}%` : '';
+        item.textContent = `เมล็ดที่ ${index + 1}: ${label}${confidence}`;
+        beanList.append(item);
+      });
+      resultBox.append(beanList);
     }
   }
 
