@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-08",
+  "status": {
+    "data_model_comparison_complete": true,
+    "notebook_export_verified": "FP32 yes (torch vs ONNX max |dp| <1e-5; api bytes->dict 200/200 label match); INT8 exported but NOT usable (label agreement with FP32 1-78%)",
+    "pi_latency_verified": false,
+    "fw_e2e_verified": false,
+    "frozen_test_evaluated": false
+  },
+  "deploy_decision": "keep B1 R2 reference (models/current, model.json sha256 in bench_20261008_notebook/bench_current.json); no candidate beats it on LOSO",
+  "evidence": {
+    "cleaning": "QA hard exclusions = 0 -> QA arm identical. Selection masks: drop Coffee-Test B1 0.6356 vs 0.6382, strict keep-only B1 0.6093; D1 0.406 / 0.373 vs 0.439. No evidence cleaning helps.",
+    "classifier": "SVM-RBF 0.456, RF 0.454, MLP 0.448 vs B1 0.638 on same 15 features",
+    "cnn_features": "D1 frozen (converged probe) 0.374, fine-tune 0.439+-0.019, medium aug 0.411+-0.042",
+    "source_dependence": "worst folds: B1 rf_robusta 0.385; D1 rf_boos 0.17-0.30 (2 videos/class, strong colour cast)"
+  },
+  "notebook_bench_p95_ms": {
+    "B1_current": {
+      "original": 98.0,
+      "jpeg1600": 60.5
+    },
+    "D1_fp32": {
+      "original": 111.5,
+      "jpeg1600": 110.7
+    },
+    "D1_int8": {
+      "original": 132.2,
+      "jpeg1600": 116.7
+    },
+    "host": "i5-12400F Windows, not Pi evidence"
+  },
+  "fw_review": "origin/main b8d250b+0a07586 (friend) fixed stub-default and health/boot-check findings; ROASTML_MODEL default /opt/topgun/ML/models/current must exist on Pi"
+}

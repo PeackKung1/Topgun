@@ -63,16 +63,33 @@ class Predictor:
         self._load_ms: float | None = None
 
     # ------------------------------------------------------------------ public
-    def predict_bytes(self, raw: Any) -> dict[str, Any]:
+    def predict_bytes(self, raw: Any, *, source: str = "", roi: str = "") -> dict[str, Any]:
         t0 = time.perf_counter()
         try:
-            return self._predict(raw, t0)
+            return self._predict(raw, t0, source=source, roi=roi)
         except Exception:  # ด่านสุดท้าย — ไม่ควรมาถึงตรงนี้
             log.exception("unexpected error in predict_bytes")
             try:
                 return self._failure("error", t0, decode_ms=0.0)
             except Exception:
                 return _hardcoded_error()
+
+    def predict_profile(self, raw: Any, *, source: str = "", roi: str = "") -> tuple[dict, dict]:
+        """Same bytes→dict path, plus per-request stage timings for benchmark tools.
+
+        Profiling does not store mutable timing state on a shared predictor and does
+        not add fields to the FW result contract. Metadata is for dataset evaluators;
+        normal camera requests keep calling predict_bytes(raw).
+        """
+        stages: dict[str, float] = {}
+        t0 = time.perf_counter()
+        try:
+            result = self._predict(raw, t0, source=source, roi=roi, stages=stages)
+        except Exception:
+            log.exception("unexpected error in predict_profile")
+            result = self._failure("error", t0, decode_ms=stages.get("decode", 0.0))
+        stages["total"] = _ms_since(t0)
+        return result, stages
 
     def info(self) -> dict[str, Any]:
         try:
@@ -105,7 +122,8 @@ class Predictor:
         self.backend.warmup(img)
 
     # ----------------------------------------------------------------- internal
-    def _predict(self, raw: Any, t0: float) -> dict[str, Any]:
+    def _predict(self, raw: Any, t0: float, *, source: str = "", roi: str = "",
+                 stages: dict | None = None) -> dict[str, Any]:
         if raw is None:
             return self._failure("bad_image", t0, decode_ms=0.0)
         if not isinstance(raw, (bytes, bytearray, memoryview)):
@@ -120,9 +138,11 @@ class Predictor:
             return self._failure("bad_image", t0, decode_ms=_ms_since(t0))
         t_decoded = time.perf_counter()
         decode_ms = (t_decoded - t0) * 1000.0
+        if stages is not None:
+            stages["decode"] = decode_ms
 
         try:
-            out = self._run_backend(img)
+            out = self._run_backend(img, source=source, roi=roi, stages=stages)
             label, conf, probs = self._check_probs(out)
         except BadImageError as e:
             log.info("bad_image from backend: %s", e)
@@ -152,11 +172,22 @@ class Predictor:
             "model": self.backend.name,
         }
 
-    def _run_backend(self, img: DecodedImage) -> BackendOutput:
+    def _run_backend(self, img: DecodedImage, *, source: str = "", roi: str = "",
+                     stages: dict | None = None) -> BackendOutput:
+        def run():
+            if stages is not None and hasattr(self.backend, "predict_profile"):
+                out, measured = self.backend.predict_profile(img, source=source, roi=roi)
+                stages.update(measured)
+                return out
+            if source or roi:
+                if not hasattr(self.backend, "predict_with_metadata"):
+                    raise ValueError("backend does not support dataset metadata")
+                return self.backend.predict_with_metadata(img, source=source, roi=roi)
+            return self.backend.predict(img)
         if self._backend_lock is None:
-            return self.backend.predict(img)
+            return run()
         with self._backend_lock:
-            return self.backend.predict(img)
+            return run()
 
     @staticmethod
     def _check_probs(out: BackendOutput) -> tuple[str, float, dict[str, float]]:
@@ -249,7 +280,19 @@ def _load_model_dir(path: Path, backend_kwargs: dict[str, Any]) -> tuple[Backend
         if backend_kwargs:
             raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
         return backend, threshold
-    # TODO(M5/M6): ลงทะเบียน backend onnx ที่นี่
+    if backend_type in ("onnx_rgb", "tabular_json"):
+        if backend_kwargs:
+            raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
+        try:
+            if backend_type == "onnx_rgb":
+                from .onnx_backend import OnnxBackend
+                backend = OnnxBackend(path, card)
+            else:
+                from .tabular_backend import TabularBackend
+                backend = TabularBackend(path, card)
+            return backend, float(threshold)
+        except (ImportError, OSError, ValueError, KeyError, TypeError, RuntimeError) as e:
+            raise ModelLoadError(f"โหลดโมเดล {backend_type} จาก {path} ไม่ได้: {e}") from e
     raise ModelLoadError(
         f"ยังไม่มี backend '{backend_type}' (จาก {card_path}) — ระหว่างนี้ใช้ load('stub')"
     )

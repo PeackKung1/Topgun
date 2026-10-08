@@ -1,0 +1,177 @@
+{
+  "rules": {
+    "drop_not_contract_class": "label is green/empty/mixed (not light/medium/dark): mixed roast or not roasted",
+    "drop_roaster_interior": "rf_hendi: beans inside a roaster drum, dim light, machine parts dominate",
+    "keep_phone_hd": "agtron: original phone photos (iPhone 11/8, Redmi 5A, Galaxy A72, Mi 9; ~12 MP), close-up bean pile, mandatory ROI",
+    "keep_single_bean_plain": "ontoum224: one bean on plain white background (224 px only, not HD)",
+    "review_color_cast_few_beans": "rf_boos: 3-6 beans on white, but video frames stretched to 640 px with a strong blue/grey cast; only 2 videos per class",
+    "keep_multi_bean_clear": "rf_robusta album photo where segmentation found beans or a pile: many beans, clearly visible (416 px stretched, varied containers)",
+    "review_cluttered_scene": "rf_robusta album photo where segmentation fell back to the full frame (coloured plate/cloth). Contact sheet: most are clear multi-bean photos (keepable); a few red-checkered-cloth photos look like greenish/mixed beans -> review those",
+    "review_label_ambiguous_video": "rf_robusta 'Coffee-Test' video (one video for all labels): bowl from above, beans small; 'light' frames look medium-brown; some frames show no bowl (hand/empty table/black bars) -> needs user decision"
+  },
+  "ledger_sha256": "cc36b8515c5a227165373253ec86b3fcd0647aaf70208ef17df39e9acf1ab456",
+  "selection_csv": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\data\\cache\\dataset_selection_20261008.csv",
+  "selection_sha256": "68528298e46605bfd40ad30c04aa03af11f29a96c2610292b0c84b883e6faa7b",
+  "counts": [
+    {
+      "source": "agtron",
+      "label": "dark",
+      "category": "keep_phone_hd",
+      "n": 255
+    },
+    {
+      "source": "agtron",
+      "label": "light",
+      "category": "keep_phone_hd",
+      "n": 76
+    },
+    {
+      "source": "agtron",
+      "label": "medium",
+      "category": "keep_phone_hd",
+      "n": 230
+    },
+    {
+      "source": "ontoum224",
+      "label": "dark",
+      "category": "keep_single_bean_plain",
+      "n": 295
+    },
+    {
+      "source": "ontoum224",
+      "label": "green",
+      "category": "drop_not_contract_class",
+      "n": 299
+    },
+    {
+      "source": "ontoum224",
+      "label": "light",
+      "category": "keep_single_bean_plain",
+      "n": 300
+    },
+    {
+      "source": "ontoum224",
+      "label": "medium",
+      "category": "keep_single_bean_plain",
+      "n": 300
+    },
+    {
+      "source": "rf_boos",
+      "label": "dark",
+      "category": "review_color_cast_few_beans",
+      "n": 298
+    },
+    {
+      "source": "rf_boos",
+      "label": "light",
+      "category": "review_color_cast_few_beans",
+      "n": 297
+    },
+    {
+      "source": "rf_boos",
+      "label": "medium",
+      "category": "review_color_cast_few_beans",
+      "n": 298
+    },
+    {
+      "source": "rf_boos",
+      "label": "mixed",
+      "category": "drop_not_contract_class",
+      "n": 102
+    },
+    {
+      "source": "rf_hendi",
+      "label": "dark",
+      "category": "drop_roaster_interior",
+      "n": 519
+    },
+    {
+      "source": "rf_hendi",
+      "label": "empty",
+      "category": "drop_not_contract_class",
+      "n": 305
+    },
+    {
+      "source": "rf_hendi",
+      "label": "green",
+      "category": "drop_not_contract_class",
+      "n": 340
+    },
+    {
+      "source": "rf_hendi",
+      "label": "light",
+      "category": "drop_roaster_interior",
+      "n": 433
+    },
+    {
+      "source": "rf_hendi",
+      "label": "medium",
+      "category": "drop_roaster_interior",
+      "n": 560
+    },
+    {
+      "source": "rf_robusta",
+      "label": "dark",
+      "category": "keep_multi_bean_clear",
+      "n": 330
+    },
+    {
+      "source": "rf_robusta",
+      "label": "dark",
+      "category": "review_cluttered_scene",
+      "n": 112
+    },
+    {
+      "source": "rf_robusta",
+      "label": "dark",
+      "category": "review_label_ambiguous_video",
+      "n": 58
+    },
+    {
+      "source": "rf_robusta",
+      "label": "green",
+      "category": "drop_not_contract_class",
+      "n": 452
+    },
+    {
+      "source": "rf_robusta",
+      "label": "light",
+      "category": "review_label_ambiguous_video",
+      "n": 67
+    },
+    {
+      "source": "rf_robusta",
+      "label": "medium",
+      "category": "keep_multi_bean_clear",
+      "n": 329
+    },
+    {
+      "source": "rf_robusta",
+      "label": "medium",
+      "category": "review_cluttered_scene",
+      "n": 96
+    },
+    {
+      "source": "rf_robusta",
+      "label": "medium",
+      "category": "review_label_ambiguous_video",
+      "n": 54
+    },
+    {
+      "source": "rf_robusta",
+      "label": "mixed",
+      "category": "drop_not_contract_class",
+      "n": 981
+    }
+  ],
+  "reference_pool_by_category": {
+    "keep_single_bean_plain": 895,
+    "keep_multi_bean_clear": 659,
+    "review_label_ambiguous_video": 179,
+    "review_cluttered_scene": 208,
+    "review_color_cast_few_beans": 893,
+    "keep_phone_hd": 561
+  },
+  "applied_to_training": false,
+  "note": "proposal only; no file deleted; frozen test not read"
+}
