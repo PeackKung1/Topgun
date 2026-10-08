@@ -24,12 +24,18 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
     )
     app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
 
+    model_load_error: str | None = None
     if predictor is None:
-        # ML package is installed from ../ML; only load once while the service starts.
-        from roastml.api import load
+        try:
+            # ML package is installed from ../ML; only load once while the service starts.
+            from roastml.api import load
 
-        predictor = load(os.getenv("ROASTML_MODEL", "stub"))
+            predictor = load(os.getenv("ROASTML_MODEL", "/opt/topgun/ML/models/current"))
+        except Exception as exc:
+            model_load_error = f"{type(exc).__name__}: {exc}"
+            LOG.exception("ML model failed to load; keeping the web service available without predictions")
     app.extensions["roastml_predictor"] = predictor
+    app.extensions["roastml_load_error"] = model_load_error
 
     if start_background and os.getenv("TOPGUN_MQTT_ENABLED", "1").lower() not in {"0", "false", "no"}:
         start_publisher()
@@ -43,6 +49,9 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
 
     @app.post("/api/predict")
     def predict():
+        if app.extensions.get("roastml_load_error"):
+            return jsonify({"error": "โมเดล ML ยังโหลดไม่สำเร็จ ระบบยังไม่พร้อมวิเคราะห์รูป"}), 503
+
         uploaded = request.files.get("image") or request.files.get("file")
         if uploaded is None:
             return jsonify({"error": "กรุณาเลือกไฟล์รูปก่อนส่ง"}), 400
@@ -65,8 +74,20 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
 
     @app.get("/health")
     def health():
+        if app.extensions.get("roastml_load_error"):
+            return jsonify({
+                "status": "error",
+                "error": "ML model failed to load",
+                "ml": {"model": "unavailable"},
+            }), 503
         try:
             info = predictor.info()
+            if info.get("model") == "stub":
+                return jsonify({
+                    "status": "error",
+                    "error": "stub model is not allowed for a healthy service",
+                    "ml": info,
+                }), 503
             return jsonify({"status": "ok", "ml": info}), 200
         except Exception:
             LOG.exception("health check failed")

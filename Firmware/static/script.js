@@ -8,6 +8,7 @@
   const preview = document.querySelector('#preview');
   const fileInfo = document.querySelector('#file-info');
   const labels = { light: 'คั่วอ่อน', medium: 'คั่วกลาง', dark: 'คั่วเข้ม' };
+  const maxUploadBytes = 32 * 1024 * 1024;
 
   async function refreshCounts() {
     try {
@@ -94,15 +95,6 @@
     timing.className = 'timing';
     timing.textContent = `ตั้งแต่เริ่มส่งรูปจนแสดงผล ${elapsedMs.toFixed(0)} ms`;
     resultBox.append(timing);
-    if (Array.isArray(data.warnings) && data.warnings.length) {
-      const list = document.createElement('ul');
-      data.warnings.forEach(warning => {
-        const item = document.createElement('li');
-        item.textContent = warning;
-        list.append(item);
-      });
-      resultBox.append(list);
-    }
     if (Array.isArray(data.beans) && data.beans.length) {
       const beanHeading = document.createElement('h3');
       beanHeading.textContent = `ผลรายเมล็ด (${data.beans.length} เมล็ด)`;
@@ -146,12 +138,27 @@
     if (!selectedFile) return;
     button.disabled = true;
     resultBox.hidden = true;
+    if (selectedFile.size > maxUploadBytes) {
+      showError('ไฟล์ใหญ่เกิน 32 MiB กรุณาเลือกรูปที่เล็กกว่านี้');
+      button.disabled = false;
+      return;
+    }
     progress.textContent = 'กำลังย่อรูปและวิเคราะห์…';
     const started = performance.now();
     try {
-      const compressed = await compressImage(selectedFile);
+      let uploadFile;
+      let uploadName;
+      try {
+        uploadFile = await compressImage(selectedFile);
+        uploadName = 'coffee.jpg';
+      } catch (_resizeError) {
+        // HEIC and some mobile formats cannot be decoded by the browser; ML can decode the original.
+        uploadFile = selectedFile;
+        uploadName = selectedFile.name || 'coffee-image';
+        progress.textContent = 'เบราว์เซอร์ย่อรูปไม่ได้ กำลังส่งไฟล์ต้นฉบับ (ไม่เกิน 32 MB)…';
+      }
       const body = new FormData();
-      body.append('image', compressed, 'coffee.jpg');
+      body.append('image', uploadFile, uploadName);
       const response = await fetch('/api/predict', { method: 'POST', body });
       const data = await response.json().catch(() => ({}));
       const elapsedMs = performance.now() - started;
