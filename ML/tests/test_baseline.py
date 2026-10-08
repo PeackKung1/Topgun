@@ -210,20 +210,50 @@ def test_train_baseline_main_end_to_end(tmp_path, monkeypatch):
     rep = json.loads((tmp_path / "results" / "baseline_loso.json").read_text(encoding="utf-8"))
     assert rep["n_errors"] == 0 and rep["n_images"] == 12 * len(tb.FOLDS)  # ไม่โหลดแถว test และ rf_hendi
     assert rep["n_box_rows_without_bbox"] == 0
+    assert set(rep["by_run"]) == set(tb.RUNS)
     for view in ("bbox", "pipeline"):
-        assert set(rep["B0"]["folds"][view]) >= set(tb.FOLDS) and "rf_devlong" not in rep["B0"]["folds"][view]
-        assert "rf_hendi" not in rep["B0"]["folds"][view]
-    assert {"B0", "B1-small", "B1", "selected", "shortcut_probe"} <= set(rep)
-    assert rep["B1"]["agtron_by_value"]  # แยกตามค่า Agtron
+        f = rep["by_run"]["R1"]["B0"]["folds"][view]
+        assert set(f) >= set(tb.FOLDS) and "rf_devlong" not in f and "rf_hendi" not in f
+    assert {"by_run", "decision", "selected", "shortcut_probe", "wb_guard"} <= set(rep)
+    assert rep["by_run"]["R2"]["B1"]["agtron_by_value"]  # แยกตามค่า Agtron
+    assert rep["wb_guard"]["rf_robusta"]["n"] == 12 and "box_wb_not_applied_pct" in rep["wb_guard"]["rf_robusta"]
+    assert isinstance(rep["decision"]["r1_kept"], bool)
     with open(tmp_path / "results" / "baseline_loso.csv", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    assert {r["eval_view"] for r in rows} == {"bbox", "pipeline"}
+    assert {r["eval_view"] for r in rows} == {"bbox", "pipeline"} and {r["run"] for r in rows} == set(tb.RUNS)
     assert not any(r["fold"] == "rf_hendi" for r in rows)
     card = json.loads((tmp_path / "models" / "current" / "model_card.json").read_text(encoding="utf-8"))
     assert card["backend"] == "b1_linear" and card["feature_set"] == "Lab_hist"  # --export-model B1
     assert card["low_conf_threshold"] == tb.LOW_CONF_THRESHOLD and "rf_hendi" not in card["loso_folds"]
-    assert rep["selected"]["selected_by"].endswith("B1") and "auto_rule_pick" in rep
-    assert (tmp_path / "results" / "baseline_confusion" / "B1_pipeline_agtron.csv").is_file()
+    assert rep["selected"]["selected_by"].endswith("B1") and rep["selected"]["run"] in ("R1", "R2")
+    assert (tmp_path / "results" / "baseline_confusion" / "R1_B1_pipeline_agtron.csv").is_file()
+
+
+def test_video_cap_mask():
+    groups = np.array(["s:video:A"] * 25 + ["s:video:B"] * 4 + ["s:file:x"] * 3)
+    paths = np.array([f"p{i:03d}" for i in range(len(groups))])
+    m = tb.video_cap_mask(groups, paths, cap=10, seed=1)
+    assert m[:25].sum() == 10 and m[25:29].all() and m[29:].all()
+    np.testing.assert_array_equal(m, tb.video_cap_mask(groups, paths, cap=10, seed=1))  # ทำซ้ำได้
+    # ลำดับแถวไม่มีผล (เรียงตาม path ก่อนสุ่ม)
+    perm = np.random.default_rng(0).permutation(len(groups))
+    m2 = tb.video_cap_mask(groups[perm], paths[perm], cap=10, seed=1)
+    assert set(paths[perm][m2]) == set(paths[m])
+
+
+def test_loso_train_mask_limits_training_rows():
+    src = np.array(["ontoum224"] * 4 + ["agtron"] * 4)
+    X = np.zeros((8, len(FEATURES_ALL)))
+    X[:, 0] = np.arange(8)
+    y = np.array(["dark", "medium", "light", "dark"] * 2)
+    seen = []
+
+    def fit(Xt, yt):
+        seen.append(set(Xt[:, 0].astype(int)))
+        return tb.b0_spec((1.5, 2.5))
+
+    tb.loso_predict(X, y, src, fit, train_mask=np.array([True, False, True, True, True, False, True, True]))
+    assert seen == [{4, 6, 7}, {0, 2, 3}]
 
 
 # ------------------------------------------------------------ โหมด full (แก้ 8 ต.ค.): เลือกพิกเซลที่ห่างจากพื้นหลัง
@@ -244,3 +274,42 @@ def test_full_mode_picks_beans_not_paper():
 def test_full_mode_blank_image_falls_back_to_trim():
     r = segment(np.full((300, 300, 3), 240, np.uint8))
     assert r.mode == "full" and "full_trimmed" in r.notes and r.pixel_mask.any()
+
+
+# ------------------------------------------------------------ box_features ใช้ WB ตัวเดียวกับ segment (8 ต.ค.)
+def _bean_on_paper(paper, bean=(95, 62, 40), size=(480, 640), seed=3):
+    """เมล็ดเดียวขนาดใหญ่กลางภาพบนกระดาษ · คืน (ภาพ, bbox สัมพัทธ์ cx, cy, w, h)"""
+    r = np.random.default_rng(seed)
+    h, w = size
+    img = np.full((h, w, 3), paper, np.float32) + r.normal(0, 2, (h, w, 3))
+    m = np.zeros((h, w), np.uint8)
+    cv2.ellipse(m, (w // 2, h // 2), (110, 75), 0, 0, 360, 1, -1)
+    beanpx = np.array(bean, np.float32) + r.normal(0, 8, (h, w, 3))
+    img[m.astype(bool)] = beanpx[m.astype(bool)]
+    return np.clip(img, 0, 255).astype(np.uint8), [(0.5, 0.5, 220 / w, 150 / h)]
+
+
+def test_box_features_matches_smart_crop_when_crop_equals_bbox():
+    from roastml.features import box_features
+
+    img, boxes = _bean_on_paper((205, 195, 175))  # กระดาษอมเหลือง/ทึม: ผ่าน guard แต่ต้อง WB
+    pipe = image_features(img)
+    assert pipe.seg.mode == "beans" and pipe.seg.wb_applied
+    bx = box_features(img, boxes)
+    assert bx.wb_applied
+    names = ["L_med", "a_med", "b_med"]
+    d = {n: abs(select(pipe.x, [n])[0] - select(bx.x, [n])[0]) for n in names}
+    assert all(v < 2.0 for v in d.values()), d  # tolerance 2 หน่วย Lab
+    # ถ้าไม่ WB ใน box_features (พฤติกรรมเดิม) ต่างจาก pipeline เกิน tolerance → test นี้มีความหมาย
+    raw = box_features(img, boxes, white_balance=False)
+    assert abs(select(pipe.x, ["L_med"])[0] - select(raw.x, ["L_med"])[0]) > 2.0
+
+
+def test_box_features_no_wb_on_colored_background():
+    from roastml.features import box_features
+
+    img, boxes = _bean_on_paper((60, 160, 60))  # พื้นเขียว: chroma สูง ไม่ผ่าน guard
+    bx = box_features(img, boxes)
+    assert not bx.wb_applied
+    np.testing.assert_allclose(bx.x, box_features(img, boxes, white_balance=False).x)
+    assert not image_features(img).seg.wb_applied  # pipeline ก็ไม่ WB เหมือนกัน
