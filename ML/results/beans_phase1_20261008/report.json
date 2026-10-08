@@ -1,0 +1,320 @@
+{
+ "single_level": {
+  "ontoum224": {
+   "n": 895,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.0,
+   "n_beans_reported_rate": 1.0,
+   "images_with_vote": 895,
+   "vote_differs_from_b1_among_voted": 0.0,
+   "vote_differs_from_b1_all_images": 0.0
+  },
+  "rf_robusta": {
+   "n": 1046,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.05640535372848948,
+   "n_beans_reported_rate": 0.28489483747609945,
+   "images_with_vote": 251,
+   "vote_differs_from_b1_among_voted": 0.17928286852589642,
+   "vote_differs_from_b1_all_images": 0.043021032504780114
+  },
+  "rf_boos": {
+   "n": 893,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.07054871220604703,
+   "n_beans_reported_rate": 0.921612541993281,
+   "images_with_vote": 782,
+   "vote_differs_from_b1_among_voted": 0.09462915601023018,
+   "vote_differs_from_b1_all_images": 0.08286674132138858
+  },
+  "agtron": {
+   "n": 561,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.0,
+   "n_beans_reported_rate": 0.0,
+   "images_with_vote": 0,
+   "vote_differs_from_b1_among_voted": null,
+   "vote_differs_from_b1_all_images": 0.0
+  },
+  "rf_hendi": {
+   "n": 1512,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.0,
+   "n_beans_reported_rate": 0.0,
+   "images_with_vote": 0,
+   "vote_differs_from_b1_among_voted": null,
+   "vote_differs_from_b1_all_images": 0.0
+  },
+  "ALL": {
+   "n": 4907,
+   "label_flip_rate": 0.0,
+   "b1_probs_warnings_bitwise_equal": true,
+   "mixed_roast_emitted": 0,
+   "counterfactual_false_mixed_rate_G2": 0.024862441410230283,
+   "n_beans_reported_rate": 0.4108416547788873,
+   "images_with_vote": 1928,
+   "vote_differs_from_b1_among_voted": 0.061721991701244816,
+   "vote_differs_from_b1_all_images": 0.024251069900142655
+  }
+ },
+ "count": {
+  "rf_boos_all_modes_null_as_0": {
+   "n": 893,
+   "MAE": 0.4333706606942889,
+   "median_rel_err": 0.0,
+   "within_20pct_or_2": 0.9227323628219485,
+   "null_n_beans_rate": 0.07838745800671892
+  },
+  "rf_boos_beans_mode": {
+   "n": 823,
+   "MAE": 0.181044957472661,
+   "median_rel_err": 0.0,
+   "within_20pct_or_2": 1.0,
+   "null_n_beans_rate": 0.0
+  },
+  "note": "rf_robusta boxes are region boxes, not beans -> no count GT; no GT for dense piles"
+ },
+ "mixed": {
+  "n_images": 102,
+  "groups": "1 video (rf_boos mixed)",
+  "with_proportions": 102,
+  "L1_median": 0.33333333333333337,
+  "L1_mean": 0.24771241830065366,
+  "dominant_acc": 0.38235294117647056,
+  "counterfactual_trigger_rate_G2": 0.9313725490196079,
+  "mixed_roast_emitted": 0,
+  "caveat": "in-sample: deployed B1 was trained with rf_boos frames"
+ },
+ "seconds": 396.17867000000115,
+ "loso_vote": {
+  "b1_mean_macro_f1": 0.6381973706626417,
+  "vote_mean_macro_f1": 0.6519548368365566,
+  "b1_pooled_macro_f1": 0.6646302333540495,
+  "vote_pooled_macro_f1": 0.671890261540221,
+  "per_fold": {
+   "ontoum224": {
+    "b1": 0.8901939363964617,
+    "vote": 0.8901939363964617
+   },
+   "rf_robusta": {
+    "b1": 0.3845173667974892,
+    "vote": 0.38055467208752924
+   },
+   "rf_boos": {
+    "b1": 0.6661269149074026,
+    "vote": 0.7251194743130226
+   },
+   "agtron": {
+    "b1": 0.611951264549213,
+    "vote": 0.611951264549213
+   }
+  },
+  "images_with_vote": 1941,
+  "n": 3395,
+  "note": "B1 fold models refit (C=0.01, R2 cap) from cached features; no vote -> B1 label"
+ },
+ "candidate": {
+  "dir": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\topgun-ml-pipeline-ca5c0d\\ML\\models\\bean_candidate",
+  "model_json_md5": "c821d094464ce7c18198754f4e0e8fbe"
+ },
+ "examples": {
+  "single_bean_ontoum224": {
+   "path": "raw/ontoum224/train/Medium/medium (1).png",
+   "result": {
+    "status": "ok",
+    "label": "medium",
+    "label_th": "คั่วกลาง",
+    "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 64%)",
+    "confidence": 0.6413,
+    "probs": {
+     "light": 0.2179,
+     "medium": 0.6413,
+     "dark": 0.1409
+    },
+    "warnings": [],
+    "n_beans": 1,
+    "proportions": {
+     "light": 0.0,
+     "medium": 1.0,
+     "dark": 0.0
+    },
+    "beans": [
+     {
+      "bbox": [
+       55,
+       57,
+       117,
+       135
+      ],
+      "label": "medium",
+      "conf": 0.6413
+     }
+    ],
+    "timing_ms": {
+     "decode": 1.1,
+     "ml": 9.9,
+     "total": 11.0
+    },
+    "model": "b1-Lab_hist-C0.01-R2+beans"
+   }
+  },
+  "few_beans_rf_boos": {
+   "path": "raw/rf_boos/test/images/Darkest-1-_mp4-0015_jpg.rf.801b6acb332d93aff7bbf5b79c2a9e14.jpg",
+   "result": {
+    "status": "ok",
+    "label": "dark",
+    "label_th": "คั่วเข้ม",
+    "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 88%)",
+    "confidence": 0.8835,
+    "probs": {
+     "light": 0.0037,
+     "medium": 0.1128,
+     "dark": 0.8835
+    },
+    "warnings": [],
+    "n_beans": 3,
+    "proportions": {
+     "light": 0.0,
+     "medium": 0.0,
+     "dark": 1.0
+    },
+    "beans": [
+     {
+      "bbox": [
+       272,
+       386,
+       87,
+       145
+      ],
+      "label": "dark",
+      "conf": 0.9081
+     },
+     {
+      "bbox": [
+       158,
+       268,
+       108,
+       115
+      ],
+      "label": "dark",
+      "conf": 0.9284
+     },
+     {
+      "bbox": [
+       318,
+       256,
+       127,
+       118
+      ],
+      "label": "dark",
+      "conf": 0.7729
+     }
+    ],
+    "timing_ms": {
+     "decode": 2.6,
+     "ml": 87.0,
+     "total": 89.7
+    },
+    "model": "b1-Lab_hist-C0.01-R2+beans"
+   }
+  },
+  "pile_rf_robusta": {
+   "path": "raw/rf_robusta/test/images/4620693218556181706-802ff9e98addd7a9a529dfa5c7cdfcc5-22031109_JPG.rf.4041870028147a42852b2590d1b98cf8.jpg",
+   "result": {
+    "status": "ok",
+    "label": "medium",
+    "label_th": "คั่วกลาง",
+    "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 64%)",
+    "confidence": 0.6358,
+    "probs": {
+     "light": 0.0391,
+     "medium": 0.6358,
+     "dark": 0.3251
+    },
+    "warnings": [],
+    "n_beans": null,
+    "proportions": null,
+    "beans": [],
+    "timing_ms": {
+     "decode": 0.7,
+     "ml": 12.8,
+     "total": 13.6
+    },
+    "model": "b1-Lab_hist-C0.01-R2+beans"
+   }
+  },
+  "empty_rf_hendi": {
+   "path": "raw/rf_hendi/train/Empty/20240817_154323_001_jpg.rf.161638a959c4167660b83c82dd343027.jpg",
+   "result": {
+    "status": "ok",
+    "label": "dark",
+    "label_th": "คั่วเข้ม",
+    "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 93%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น",
+    "confidence": 0.9272,
+    "probs": {
+     "light": 0.0018,
+     "medium": 0.0711,
+     "dark": 0.9272
+    },
+    "warnings": [
+     "no_beans_detected"
+    ],
+    "n_beans": null,
+    "proportions": null,
+    "beans": [],
+    "timing_ms": {
+     "decode": 2.0,
+     "ml": 33.7,
+     "total": 35.7
+    },
+    "model": "b1-Lab_hist-C0.01-R2+beans"
+   }
+  },
+  "broken_bytes": {
+   "path": null,
+   "result": {
+    "status": "bad_image",
+    "label": null,
+    "label_th": null,
+    "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+    "confidence": null,
+    "probs": null,
+    "warnings": [],
+    "n_beans": null,
+    "proportions": null,
+    "beans": [],
+    "timing_ms": {
+     "decode": 41.0,
+     "ml": 0.0,
+     "total": 41.0
+    },
+    "model": "b1-Lab_hist-C0.01-R2+beans"
+   }
+  }
+ },
+ "current_md5_before_after": [
+  {
+   "model.json": "c821d094464ce7c18198754f4e0e8fbe",
+   "model_card.json": "127899f3d3d8a00799b9535ca7e12ee8"
+  },
+  {
+   "model.json": "c821d094464ce7c18198754f4e0e8fbe",
+   "model_card.json": "127899f3d3d8a00799b9535ca7e12ee8"
+  }
+ ],
+ "versions": {
+  "python": "3.14.3",
+  "numpy": "2.5.3"
+ },
+ "frozen_test_loaded": false
+}
