@@ -1,0 +1,408 @@
+{
+ "model": {
+  "artifact_sha256": "134fa0306e19760d17d485d61137bbd001b15357c7c86bddf692c7ffd19054ec",
+  "files": {
+   "model.json": {
+    "sha256": "e8b351df3b9f7de244521bacde570090ac05f9f0965862c351b4bb13d63dd87b",
+    "bytes": 2289
+   },
+   "model_card.json": {
+    "sha256": "eebc4817ceea73fc45eb18281e0c05bfe9eb9a7253fcbd79aa97bc4c2ffcbe0c",
+    "bytes": 8920
+   }
+  },
+  "size_bytes": 11209,
+  "card": {
+   "backend": "b1_linear_beans",
+   "name": "b1-Lab_hist-C0.01-R2+beans",
+   "model_file": "model.json",
+   "created": "2026-10-08 14:23:12",
+   "low_conf_threshold": 0.0,
+   "low_conf_threshold_note": "0 = \u0e15\u0e2d\u0e1a argmax \u0e40\u0e2a\u0e21\u0e2d (\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48 abstain) \u00b7 confidence \u0e2d\u0e22\u0e39\u0e48\u0e43\u0e19 field \u0e41\u0e22\u0e01",
+   "seg_config": {
+    "work_side": 800,
+    "border_frac": 0.04,
+    "bg_uniform_de": 10.0,
+    "bg_uniform_min": 0.6,
+    "white_balance": true,
+    "wb_min_L": 50.0,
+    "wb_max_chroma": 20.0,
+    "wb_target": 0.9,
+    "wb_max_gain": 3.0,
+    "min_contrast": 12.0,
+    "min_area_frac": 0.0004,
+    "max_area_frac": 0.9,
+    "min_rel_area": 0.25,
+    "min_solidity": 0.8,
+    "max_aspect": 3.0,
+    "cluster_area_ratio": 2.5,
+    "cluster_min_solidity": 0.5,
+    "core_frac": 0.25,
+    "min_core_px": 200,
+    "pile_beanlike_min": 0.6,
+    "crop_margin": 0.05,
+    "trim_lo": 15.0,
+    "trim_hi": 98.0,
+    "trim_center": 0.05,
+    "full_trim_lo": 2.0,
+    "full_trim_hi": 90.0
+   },
+   "feature_set": "Lab_hist",
+   "C": 0.01,
+   "run": "R2",
+   "train": {
+    "split": "trainval",
+    "sources": [
+     "ontoum224",
+     "rf_robusta",
+     "rf_boos",
+     "agtron"
+    ],
+    "rows": 2393,
+    "view": "bbox (robusta/boos) \u00b7 ROI (agtron) \u00b7 smart crop (ontoum224) \u00b7 R1 + \u0e40\u0e17\u0e23\u0e19\u0e44\u0e21\u0e48\u0e40\u0e01\u0e34\u0e19 10 \u0e40\u0e1f\u0e23\u0e21/\u0e27\u0e34\u0e14\u0e35\u0e42\u0e2d (\u0e1b\u0e23\u0e30\u0e40\u0e21\u0e34\u0e19\u0e17\u0e38\u0e01\u0e40\u0e1f\u0e23\u0e21)",
+    "counts": {
+     "dark": 1015,
+     "light": 399,
+     "medium": 979
+    }
+   },
+   "loso_mean_macro_f1": {
+    "pipeline": 0.6381973706626417,
+    "bbox": 0.6774059546653926
+   },
+   "loso_folds": [
+    "ontoum224",
+    "rf_robusta",
+    "rf_boos",
+    "agtron"
+   ],
+   "excluded_sources": {
+    "rf_hendi": "\u0e20\u0e32\u0e1e\u0e43\u0e19\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e04\u0e31\u0e48\u0e27\u0e40\u0e14\u0e35\u0e22\u0e27\u0e17\u0e31\u0e49\u0e07\u0e0a\u0e38\u0e14 \u00b7 \u0e02\u0e2d\u0e1a\u0e20\u0e32\u0e1e\u0e17\u0e32\u0e22\u0e04\u0e25\u0e32\u0e2a\u0e44\u0e14\u0e49 (probe 0.85) \u00b7 light\u2248medium \u0e43\u0e19 L*"
+   },
+   "selected_by": "auto",
+   "versions": {
+    "roastml": "0.1.0",
+    "python": "3.14.3",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.1",
+    "opencv": "5.0.0",
+    "pillow": "12.3.0"
+   },
+   "data_license_note": "\u0e40\u0e17\u0e23\u0e19\u0e23\u0e27\u0e21 agtron (license Unknown) \u2014 \u0e43\u0e0a\u0e49\u0e20\u0e32\u0e22\u0e43\u0e19 \u0e2b\u0e49\u0e32\u0e21 commit",
+   "run_description": "R1 + \u0e40\u0e17\u0e23\u0e19\u0e44\u0e21\u0e48\u0e40\u0e01\u0e34\u0e19 10 \u0e40\u0e1f\u0e23\u0e21/\u0e27\u0e34\u0e14\u0e35\u0e42\u0e2d (\u0e1b\u0e23\u0e30\u0e40\u0e21\u0e34\u0e19\u0e17\u0e38\u0e01\u0e40\u0e1f\u0e23\u0e21)",
+   "selection": {
+    "rule": "\u0e40\u0e01\u0e47\u0e1a R1 \u0e40\u0e27\u0e49\u0e19\u0e41\u0e15\u0e48 best mean (\u0e02) \u0e02\u0e2d\u0e07 R1 < R0 - 0.03 \u00b7 \u0e41\u0e25\u0e49\u0e27\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e15\u0e31\u0e27 deploy \u0e08\u0e32\u0e01 pool \u0e14\u0e49\u0e27\u0e22 mean (\u0e02) \u0e1b\u0e31\u0e14 2 \u0e15\u0e33\u0e41\u0e2b\u0e19\u0e48\u0e07 \u2192 \u0e42\u0e21\u0e40\u0e14\u0e25\u0e07\u0e48\u0e32\u0e22\u0e01\u0e27\u0e48\u0e32 \u2192 C \u0e40\u0e25\u0e47\u0e01\u0e01\u0e27\u0e48\u0e32 \u2192 run \u0e01\u0e48\u0e2d\u0e19",
+    "selected_by": "auto",
+    "best_mean_pipeline_by_run": {
+     "R0": {
+      "model": "B1",
+      "feature_set": "Lab_hist",
+      "C": 0.01,
+      "score": 0.5886696267060649
+     },
+     "R1": {
+      "model": "B1",
+      "feature_set": "Lab_hist",
+      "C": 0.01,
+      "score": 0.6188334061566934
+     },
+     "R2": {
+      "model": "B1",
+      "feature_set": "Lab_hist",
+      "C": 0.01,
+      "score": 0.6381973706626417
+     }
+    },
+    "r1_minus_r0": 0.0302,
+    "r1_kept": true
+   },
+   "loso": {
+    "folds": [
+     "ontoum224",
+     "rf_robusta",
+     "rf_boos",
+     "agtron"
+    ],
+    "eval_views": {
+     "bbox": "(\u0e01) train view: bbox robusta/boos \u00b7 ROI agtron \u00b7 smart crop ontoum224",
+     "pipeline": "(\u0e02) smart-crop pipeline \u0e41\u0e1a\u0e1a\u0e17\u0e35\u0e48 Pi \u0e40\u0e2b\u0e47\u0e19 (agtron = ROI)"
+    },
+    "bbox": {
+     "ontoum224": {
+      "macro_f1": 0.8902,
+      "acc": 0.8916,
+      "cross_step_rate": 0.0022,
+      "n": 895,
+      "f1_per_class": {
+       "light": 0.9446,
+       "medium": 0.833,
+       "dark": 0.8929
+      }
+     },
+     "rf_robusta": {
+      "macro_f1": 0.4438,
+      "acc": 0.5956,
+      "cross_step_rate": 0.0105,
+      "n": 1046,
+      "f1_per_class": {
+       "light": 0.1081,
+       "medium": 0.4579,
+       "dark": 0.7655
+      }
+     },
+     "rf_boos": {
+      "macro_f1": 0.7637,
+      "acc": 0.7648,
+      "cross_step_rate": 0.0437,
+      "n": 893,
+      "f1_per_class": {
+       "light": 0.7976,
+       "medium": 0.6995,
+       "dark": 0.7939
+      }
+     },
+     "agtron": {
+      "macro_f1": 0.612,
+      "acc": 0.6114,
+      "cross_step_rate": 0.0,
+      "n": 561,
+      "f1_per_class": {
+       "light": 0.6753,
+       "medium": 0.6518,
+       "dark": 0.5088
+      }
+     },
+     "mean": {
+      "macro_f1": 0.6774,
+      "acc": 0.7159,
+      "cross_step_rate": 0.0141
+     },
+     "pooled": {
+      "macro_f1": 0.7243,
+      "acc": 0.7208,
+      "cross_step_rate": 0.0153,
+      "n": 3395,
+      "f1_per_class": {
+       "light": 0.7588,
+       "medium": 0.645,
+       "dark": 0.7691
+      }
+     }
+    },
+    "pipeline": {
+     "ontoum224": {
+      "macro_f1": 0.8902,
+      "acc": 0.8916,
+      "cross_step_rate": 0.0022,
+      "n": 895,
+      "f1_per_class": {
+       "light": 0.9446,
+       "medium": 0.833,
+       "dark": 0.8929
+      }
+     },
+     "rf_robusta": {
+      "macro_f1": 0.3845,
+      "acc": 0.4704,
+      "cross_step_rate": 0.0612,
+      "n": 1046,
+      "f1_per_class": {
+       "light": 0.1085,
+       "medium": 0.508,
+       "dark": 0.537
+      }
+     },
+     "rf_boos": {
+      "macro_f1": 0.6661,
+      "acc": 0.6775,
+      "cross_step_rate": 0.0437,
+      "n": 893,
+      "f1_per_class": {
+       "light": 0.6829,
+       "medium": 0.5514,
+       "dark": 0.7641
+      }
+     },
+     "agtron": {
+      "macro_f1": 0.612,
+      "acc": 0.6114,
+      "cross_step_rate": 0.0,
+      "n": 561,
+      "f1_per_class": {
+       "light": 0.6753,
+       "medium": 0.6518,
+       "dark": 0.5088
+      }
+     },
+     "mean": {
+      "macro_f1": 0.6382,
+      "acc": 0.6627,
+      "cross_step_rate": 0.0268
+     },
+     "pooled": {
+      "macro_f1": 0.6646,
+      "acc": 0.6592,
+      "cross_step_rate": 0.0309,
+      "n": 3395,
+      "f1_per_class": {
+       "light": 0.6906,
+       "medium": 0.6169,
+       "dark": 0.6864
+      }
+     }
+    },
+    "agtron_by_value_pipeline": {
+     "agtron_75": {
+      "light": 52,
+      "medium": 24,
+      "dark": 0
+     },
+     "agtron_65": {
+      "light": 26,
+      "medium": 106,
+      "dark": 0
+     },
+     "agtron_55": {
+      "light": 0,
+      "medium": 98,
+      "dark": 0
+     },
+     "agtron_45": {
+      "light": 0,
+      "medium": 69,
+      "dark": 0
+     },
+     "agtron_35": {
+      "light": 0,
+      "medium": 89,
+      "dark": 8
+     },
+     "agtron_25": {
+      "light": 0,
+      "medium": 10,
+      "dark": 79
+     }
+    }
+   },
+   "limitations": [
+    "(a) fold agtron \u0e16\u0e39\u0e01\u0e43\u0e0a\u0e49\u0e17\u0e33 error analysis (agtron 25 \u2192 light) \u0e01\u0e48\u0e2d\u0e19\u0e41\u0e01\u0e49 WB \u0e43\u0e19 box_features \u2192 \u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 agtron \u0e43\u0e19 LOSO \u0e21\u0e2d\u0e07\u0e42\u0e25\u0e01\u0e43\u0e19\u0e41\u0e07\u0e48\u0e14\u0e35",
+    "(b) \u0e16\u0e49\u0e32\u0e44\u0e21\u0e48\u0e19\u0e31\u0e1a fold agtron, R1 \u0e14\u0e35\u0e01\u0e27\u0e48\u0e32 R2: mean (\u0e02) 3 fold R1 = 0.6718 vs R2 = 0.6469 \u00b7 \u0e01\u0e0e auto (\u0e23\u0e27\u0e21 agtron) \u0e40\u0e25\u0e37\u0e2d\u0e01 R2",
+    "(c) rf_robusta 82.7% \u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e44\u0e21\u0e48\u0e1c\u0e48\u0e32\u0e19 guard \u2192 \u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e17\u0e33 WB (\u0e1e\u0e37\u0e49\u0e19\u0e2b\u0e25\u0e31\u0e07\u0e44\u0e21\u0e48\u0e2a\u0e21\u0e48\u0e33\u0e40\u0e2a\u0e21\u0e2d/\u0e21\u0e35\u0e2a\u0e35) \u0e17\u0e31\u0e49\u0e07\u0e15\u0e2d\u0e19\u0e40\u0e17\u0e23\u0e19\u0e41\u0e25\u0e30\u0e1a\u0e19 Pi",
+    "(d) \u0e15\u0e31\u0e14 rf_hendi (\u0e20\u0e32\u0e1e\u0e43\u0e19\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e04\u0e31\u0e48\u0e27\u0e40\u0e14\u0e35\u0e22\u0e27\u0e17\u0e31\u0e49\u0e07\u0e0a\u0e38\u0e14 \u00b7 \u0e02\u0e2d\u0e1a\u0e20\u0e32\u0e1e\u0e17\u0e32\u0e22\u0e04\u0e25\u0e32\u0e2a\u0e44\u0e14\u0e49 (probe 0.85) \u00b7 light\u2248medium \u0e43\u0e19 L*) \u0e2d\u0e2d\u0e01\u0e08\u0e32\u0e01\u0e01\u0e32\u0e23\u0e40\u0e17\u0e23\u0e19\u0e41\u0e25\u0e30 LOSO",
+    "(e) \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 agtron-test \u2014 \u0e23\u0e31\u0e19\u0e04\u0e23\u0e31\u0e49\u0e07\u0e40\u0e14\u0e35\u0e22\u0e27\u0e15\u0e2d\u0e19 freeze \u0e14\u0e49\u0e27\u0e22 tools/eval_test.py \u0e40\u0e21\u0e37\u0e48\u0e2d\u0e1c\u0e39\u0e49\u0e43\u0e0a\u0e49\u0e2a\u0e31\u0e48\u0e07",
+    "\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14\u0e21\u0e32\u0e08\u0e32\u0e01\u0e2d\u0e34\u0e19\u0e40\u0e17\u0e2d\u0e23\u0e4c\u0e40\u0e19\u0e47\u0e15 \u0e44\u0e21\u0e48\u0e21\u0e35\u0e23\u0e39\u0e1b\u0e16\u0e48\u0e32\u0e22\u0e40\u0e2d\u0e07 (ml-spec \u0e02\u0e49\u0e2d 5) \u00b7 \u0e23\u0e39\u0e1b\u0e08\u0e32\u0e01\u0e21\u0e37\u0e2d\u0e16\u0e37\u0e2d\u0e2d\u0e32\u0e08\u0e32\u0e23\u0e22\u0e4c\u0e2d\u0e32\u0e08\u0e15\u0e48\u0e32\u0e07\u0e08\u0e32\u0e01\u0e17\u0e38\u0e01 source",
+    "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49\u0e27\u0e31\u0e14 latency/RAM \u0e1a\u0e19 Pi \u0e08\u0e23\u0e34\u0e07 (bench \u0e21\u0e35\u0e41\u0e15\u0e48 notebook)"
+   ],
+   "test": {
+    "agtron_test": "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e23\u0e31\u0e19",
+    "devices": "0:iPhone 12, 3:Motorola X4 (split=test \u0e41\u0e0a\u0e48\u0e41\u0e02\u0e47\u0e07)"
+   },
+   "card_updated": "2026-10-08 14:29:00",
+   "card_source": "tools/model_card.py \u0e08\u0e32\u0e01 results/baseline_loso.json 2026-10-08 14:23:12",
+   "bean_counting": {
+    "budget_ms": 100.0,
+    "max_blobs": 150
+   },
+   "bean_validation": "experimental, not validated: per-bean accuracy ~0.62 in-sample on rf_boos GT boxes; counting checked only on few beans on plain white background (rf_boos, 2-6 beans); no mixed_roast warning and no label override",
+   "bean_run": "beans_phase1_20261008",
+   "base_model_md5": "c821d094464ce7c18198754f4e0e8fbe",
+   "base_card_md5": "127899f3d3d8a00799b9535ca7e12ee8",
+   "model_json_md5": "c821d094464ce7c18198754f4e0e8fbe",
+   "measured": {
+    "b1_identical_all_single_level_trainval": true,
+    "counterfactual_false_mixed_rate_G2": 0.024862441410230283,
+    "count_rf_boos_beans_mode": {
+     "n": 823,
+     "MAE": 0.181044957472661,
+     "median_rel_err": 0.0,
+     "within_20pct_or_2": 1.0,
+     "null_n_beans_rate": 0.0
+    },
+    "report": "ML/results/beans_phase1_20261008/report.json"
+   }
+  }
+ },
+ "host": "Intel64 Family 6 Model 151 Stepping 5, GenuineIntel",
+ "python": "3.14.3",
+ "densest_n_beans": [
+  18,
+  18,
+  17,
+  17,
+  17,
+  16,
+  16,
+  15,
+  15,
+  13
+ ],
+ "cases": {
+  "densest_original": {
+   "n_calls": 150,
+   "p50": 19.438849998550722,
+   "p95": 37.80391000145755,
+   "max": 39.96270000061486,
+   "n_beans_seen": [
+    13,
+    15,
+    16,
+    17,
+    18
+   ],
+   "null_n_beans": 0
+  },
+  "densest_jpeg1600": {
+   "n_calls": 150,
+   "p50": 19.313199998578057,
+   "p95": 38.030499998058076,
+   "max": 43.46049999730894,
+   "n_beans_seen": [
+    15,
+    16,
+    17,
+    18,
+    20
+   ],
+   "null_n_beans": 0
+  },
+  "synthetic_50": {
+   "n_calls": 3,
+   "p50": 98.67619999567978,
+   "p95": 101.86003999697277,
+   "max": 102.21379999711644,
+   "n_beans_seen": [
+    50
+   ],
+   "null_n_beans": 0
+  },
+  "synthetic_100": {
+   "n_calls": 3,
+   "p50": 108.89080000197282,
+   "p95": 110.46823000360746,
+   "max": 110.64350000378909,
+   "n_beans_seen": [
+    100
+   ],
+   "null_n_beans": 0
+  },
+  "synthetic_150": {
+   "n_calls": 3,
+   "p50": 115.27639999985695,
+   "p95": 116.33290999670862,
+   "max": 116.45029999635881,
+   "n_beans_seen": [
+    150
+   ],
+   "null_n_beans": 0
+  },
+  "synthetic_200": {
+   "n_calls": 3,
+   "p50": 96.74640000594081,
+   "p95": 97.18109999594162,
+   "max": 97.2293999948306,
+   "n_beans_seen": [],
+   "null_n_beans": 3
+  }
+ },
+ "note": "notebook latency, not Pi evidence; trainval only"
+}

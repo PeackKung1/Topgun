@@ -280,6 +280,15 @@ def _load_model_dir(path: Path, backend_kwargs: dict[str, Any]) -> tuple[Backend
         if backend_kwargs:
             raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
         return backend, threshold
+    if backend_type == "b1_linear_beans":
+        # B1 เดิม + นับเมล็ด/ระดับคั่วรายเมล็ด (ส่วนเสริม) — ไม่แตะ branch b1_linear ข้างบน
+        if backend_kwargs:
+            raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
+        try:
+            from .bean_backend import BeanLinearBackend
+            return BeanLinearBackend(path, card), float(threshold)
+        except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
+            raise ModelLoadError(f"โหลดโมเดล {backend_type} จาก {path} ไม่ได้: {e}") from e
     if backend_type in ("onnx_rgb", "tabular_json"):
         if backend_kwargs:
             raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
@@ -319,9 +328,17 @@ def _clean_warnings(warnings: Any) -> list[str]:
 
 
 def _clean_proportions(p: dict[str, float] | None) -> dict[str, float] | None:
+    """ปัด 4 ตำแหน่ง แล้วให้คลาสที่มากสุดรับเศษ → ผลรวม = 1 (contract) แม้ 1/3 + 1/3 + 1/3"""
     if p is None:
         return None
-    return {k: round(float(p.get(k, 0.0)), 4) for k in LABELS}
+    vals = {k: max(0.0, float(p.get(k, 0.0))) for k in LABELS}
+    total = sum(vals.values())
+    if not math.isfinite(total) or total <= 0:
+        return None
+    out = {k: round(v / total, 4) for k, v in vals.items()}
+    top = max(LABELS, key=lambda k: out[k])
+    out[top] = round(1.0 - sum(v for k, v in out.items() if k != top), 4)
+    return out
 
 
 def _clean_beans(beans: Any) -> list[dict[str, Any]]:
