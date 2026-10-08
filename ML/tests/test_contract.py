@@ -161,6 +161,10 @@ BAD_INPUTS = {
     "eps": b"%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 10 10\n",
     "too_many_bytes": b"\xff\xd8" + b"\x00" * (decode_mod.MAX_BYTES + 1),
     "too_many_pixels": _huge_dims_png(),
+    # ด้านสั้นหลังย่อ < MIN_SIDE: ไม่มีข้อมูลพอจำแนก (เดิมได้ label มั่นใจแบบไร้ความหมาย)
+    "tiny_1x1": img_bytes((1, 1), fmt="PNG"),
+    "tiny_7x7": img_bytes((7, 7), fmt="PNG"),
+    "thin_after_resize_4000x6": img_bytes((4000, 6), fmt="PNG"),  # thumbnail → 1600×3
 }
 
 
@@ -197,7 +201,7 @@ GOOD_INPUTS = {
     "gif": lambda: img_bytes(fmt="GIF", mode="P", color=1),
     "webp": lambda: img_bytes(fmt="WEBP"),
     "bmp": lambda: img_bytes(fmt="BMP"),
-    "tiny_1x1": lambda: img_bytes((1, 1)),
+    "min_side_8x8": lambda: img_bytes((8, 8), fmt="PNG"),  # ขอบล่างของ MIN_SIDE ยังใช้ได้
     "large_jpeg_4000x3000": lambda: img_bytes((4000, 3000), quality=90),
 }
 
@@ -208,6 +212,12 @@ def test_good_inputs_are_not_bad_image(name):
     r = p.predict_bytes(GOOD_INPUTS[name]())
     assert_valid_result(r)
     assert r["status"] == "ok", name
+
+
+def test_decode_rejects_short_side_below_min_after_resize():
+    with pytest.raises(BadImageError, match="too_small:1600x3"):
+        decode_image(img_bytes((4000, 6), fmt="PNG"))
+    assert min(decode_image(img_bytes((8, 8), fmt="PNG")).image.size) == decode_mod.MIN_SIDE
 
 
 def test_decode_downscales_large_image():

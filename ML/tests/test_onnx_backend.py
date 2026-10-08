@@ -129,9 +129,11 @@ def test_numpy_mlp_forest_and_bad_trees():
         NumpyTabularModel(common | {"type": "forest", "trees": [tree | {"children_left": [0, -1, -1]}]})
 
 
-@pytest.mark.parametrize("size", [(1, 1), (7, 7), (1, 4000)])
+@pytest.mark.parametrize("size,status", [((1, 1), "bad_image"), ((7, 7), "bad_image"),
+                                         ((1, 4000), "bad_image"), ((8, 8), "ok")])
 @pytest.mark.parametrize("backend", ["b1_linear", "tabular_json"])
-def test_tiny_usable_images_keep_a_label(tmp_path, size, backend):
+def test_tiny_images_are_bad_image(tmp_path, size, status, backend):
+    # ด้านสั้นหลัง decode < MIN_SIDE → bad_image ที่ decode (ไม่ขยายภาพแล้วเดา label)
     model = write_model(tmp_path / "m", "b1_linear")
     if backend == "tabular_json":
         card = json.loads((model / "model_card.json").read_text()); card["backend"] = backend
@@ -140,7 +142,8 @@ def test_tiny_usable_images_keep_a_label(tmp_path, size, backend):
     buf = io.BytesIO(); Image.new("RGB", size, (100, 65, 40)).save(buf, "PNG")
     result = predictor.predict_bytes(buf.getvalue())
     assert_valid_result(result)
-    assert result["status"] == "ok" and result["label"] is not None
+    assert result["status"] == status
+    assert (result["label"] is None) == (status == "bad_image")
 
 
 def test_real_onnx_export_parity_synthetic(tmp_path):
