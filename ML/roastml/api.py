@@ -237,7 +237,19 @@ def _load_model_dir(path: Path, backend_kwargs: dict[str, Any]) -> tuple[Backend
         raise ModelLoadError(f"อ่าน {card_path} ไม่ได้: {e}") from e
 
     backend_type = card.get("backend")
-    # TODO(M5/M6): ลงทะเบียน backend จริง (baseline B1, onnx) ที่นี่
+    threshold = card.get("low_conf_threshold", DEFAULT_LOW_CONF_THRESHOLD)
+    if backend_type in ("b1_linear", "b0_threshold"):
+        from .linear_backend import LinearBackend
+
+        try:
+            backend = LinearBackend(path, card)
+            threshold = float(threshold)
+        except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
+            raise ModelLoadError(f"โหลดโมเดล {backend_type} จาก {path} ไม่ได้: {e}") from e
+        if backend_kwargs:
+            raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
+        return backend, threshold
+    # TODO(M5/M6): ลงทะเบียน backend onnx ที่นี่
     raise ModelLoadError(
         f"ยังไม่มี backend '{backend_type}' (จาก {card_path}) — ระหว่างนี้ใช้ load('stub')"
     )

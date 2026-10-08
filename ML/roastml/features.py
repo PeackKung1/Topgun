@@ -63,6 +63,47 @@ def image_features(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans:
     return ImageFeatures(x, seg, (time.perf_counter() - t0) * 1e3)
 
 
+def box_mask(shape: tuple[int, int], boxes, shrink: float = 0.2) -> np.ndarray:
+    """union ของ bbox (cx, cy, w, h สัมพัทธ์ 0..1) ที่หดเข้าแต่ละด้าน `shrink` ของความกว้าง/สูง → bool (h, w)"""
+    h, w = shape
+    m = np.zeros((h, w), bool)
+    for cx, cy, bw, bh in boxes:
+        x0, x1 = (cx - bw * (0.5 - shrink)) * w, (cx + bw * (0.5 - shrink)) * w
+        y0, y1 = (cy - bh * (0.5 - shrink)) * h, (cy + bh * (0.5 - shrink)) * h
+        xa, xb = max(0, int(np.floor(x0))), min(w, int(np.ceil(x1)))
+        ya, yb = max(0, int(np.floor(y0))), min(h, int(np.ceil(y1)))
+        if xb > xa and yb > ya:
+            m[ya:yb, xa:xb] = True
+    return m
+
+
+def box_features(rgb: np.ndarray, boxes, cfg: SegConfig | None = None, shrink: float = 0.2) -> tuple[np.ndarray, np.ndarray]:
+    """feature จากพิกเซลใน bbox (label YOLO) — ใช้ตอนเทรน robusta/boos เท่านั้น (บน Pi ไม่มี bbox)
+    หด bbox เข้า `shrink` (ตัดมุมกล่องที่เป็นพื้นหลัง) แล้วตัด L* ตาม trim_lo..trim_hi (เงาร่องระหว่างเมล็ด/specular)
+    ไม่ผ่าน WB (เหมือนโหมด pile) · คืน (x, mask)"""
+    import cv2
+
+    cfg = cfg or SegConfig()
+    if not boxes:
+        raise ValueError("ไม่มี bbox")
+    h0, w0 = rgb.shape[:2]
+    s = min(1.0, cfg.work_side / max(h0, w0))
+    if s < 1:
+        rgb = cv2.resize(rgb, (max(1, round(w0 * s)), max(1, round(h0 * s))), interpolation=cv2.INTER_AREA)
+    lab = to_lab(rgb.astype(np.float32) / 255.0)
+    m = box_mask(lab.shape[:2], boxes, shrink)
+    if m.sum() < 20:
+        m = box_mask(lab.shape[:2], boxes, 0.0)
+    if not m.any():
+        raise ValueError("bbox อยู่นอกภาพ")
+    L = lab[..., 0]
+    lo, hi = np.percentile(L[m], [cfg.trim_lo, cfg.trim_hi])
+    core = m & (L >= lo) & (L <= hi)
+    if core.sum() >= 20:
+        m = core
+    return pixel_stats(lab[m]), m
+
+
 def border_features(rgb: np.ndarray, work_side: int = 400) -> np.ndarray:
     """สถิติ Lab ของแถบขอบภาพ (BORDER_FRAC) — ไม่ผ่าน WB · ใช้เฉพาะ shortcut probe"""
     import cv2

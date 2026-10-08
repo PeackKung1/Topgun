@@ -79,8 +79,7 @@ def decode_image(data: bytes, max_side: int = MAX_SIDE) -> DecodedImage:
         fmt = img.format or "?"
 
         if fmt == "JPEG":
-            # decode ที่ 1/2, 1/4, 1/8 โดยยังได้ขนาด ≥ max_side (ขอเป็นกรอบสี่เหลี่ยมจัตุรัส ทิศไม่มีผล)
-            img.draft("RGB", (max_side, max_side))
+            img.draft("RGB", draft_target(w, h, max_side))
         img.load()  # decode จริงตรงนี้ — ไฟล์เสีย/ตัดท่อนจะ error ตรงนี้
     except BadImageError:
         raise
@@ -100,6 +99,19 @@ def decode_image(data: bytes, max_side: int = MAX_SIDE) -> DecodedImage:
         raise BadImageError(f"convert_failed:{type(e).__name__}") from e
 
     return DecodedImage(image=img, orig_size=orig_size, format=fmt)
+
+
+def draft_target(w: int, h: int, max_side: int) -> tuple[int, int]:
+    """ขนาดที่ขอจาก JPEG draft: กรอบตามสัดส่วนภาพที่ด้านยาว = max_side
+
+    Pillow เลือกสเกล 1/2, 1/4, 1/8 ที่ผลยัง ≥ ขนาดที่ขอทั้งสองด้าน
+    เดิมขอ (max_side, max_side) → ภาพ 4032×3024 ด้านสั้น 3024 < 2×1600 จึงไม่ถูกย่อเลย
+    (วัดด้วย Pillow 12.3.0, 8 ต.ค.: ขอตามสัดส่วนได้ 2016×1512 · load 40 → 27 ms)
+    """
+    long_side = max(w, h)
+    if long_side <= max_side:
+        return (w, h)
+    return (max(1, w * max_side // long_side), max(1, h * max_side // long_side))
 
 
 def _read_orientation(img: Image.Image) -> int:
