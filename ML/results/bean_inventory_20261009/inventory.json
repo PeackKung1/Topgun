@@ -1,0 +1,167 @@
+{
+ "definition": "- ภาพระดับเดียว = label ∈ light/medium/dark (ไม่รวม mixed/green/empty)\n- \"แยกเมล็ดได้\" = segment(find_beans=True) ได้ mode=beans และตัวนับ contour (ไม่ใช้ edge) ได้ ≥ 1 เมล็ด\n  และไม่มี blob ที่พื้นที่ bbox > 2.5× median ของภาพนั้น (= ไม่มีกลุ่มเมล็ดแตะกัน)\n  rf_boos มี GT box รายเมล็ด → ต้องนับได้เท่ากับ GT ด้วย\n- จำนวนเมล็ด: rf_boos = จำนวน GT box · source อื่น = จำนวน contour ในภาพที่แยกได้ (ไม่มี GT รายเมล็ด)\n- ขนาดเมล็ด = sqrt(w*h) ของ bbox (px ในภาพ decode ≤1600 px) และสัดส่วนต่อด้านสั้นของภาพ\n- agtron: ใช้ ROI crop บังคับ แล้วลอง find_beans=True (pipeline จริงใช้ find_beans=False)\n- rf_robusta: box YOLO เป็นกรอบพื้นที่ ไม่ใช่รายเมล็ด → รายงานจำนวน box แยก ไม่นับเป็นเมล็ด",
+ "frozen_test_loaded": false,
+ "seg_config_from": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-seed-count-91d3d9\\ML\\models\\bean_candidate\\model_card.json",
+ "sources": {
+  "ontoum224": {
+   "single_level_images": 895,
+   "separable_images": 895,
+   "separable_by_label": {
+    "light": 300,
+    "medium": 300,
+    "dark": 295
+   },
+   "beans_total_in_separable": 895,
+   "bean_size_px": {
+    "p10": 121.197,
+    "median": 136.015,
+    "p90": 151.134
+   },
+   "bean_size_rel_short_side": {
+    "p10": 0.541,
+    "median": 0.607,
+    "p90": 0.675
+   },
+   "size_source": "contour bbox",
+   "mode_counts": {
+    "beans": 895,
+    "pile": 0,
+    "full": 0
+   },
+   "images_with_cluster_blob": 0,
+   "image_short_side_px": {
+    "p10": 224.0,
+    "median": 224.0,
+    "p90": 224.0
+   }
+  },
+  "rf_boos": {
+   "single_level_images": 893,
+   "separable_images": 674,
+   "separable_by_label": {
+    "light": 254,
+    "medium": 125,
+    "dark": 295
+   },
+   "beans_total_in_separable": 2147,
+   "bean_size_px": {
+    "p10": 99.321,
+    "median": 114.129,
+    "p90": 130.854
+   },
+   "bean_size_rel_short_side": {
+    "p10": 0.155,
+    "median": 0.178,
+    "p90": 0.204
+   },
+   "size_source": "GT box",
+   "mode_counts": {
+    "beans": 823,
+    "pile": 0,
+    "full": 70
+   },
+   "images_with_cluster_blob": 141,
+   "image_short_side_px": {
+    "p10": 640.0,
+    "median": 640.0,
+    "p90": 640.0
+   },
+   "gt_boxes_all_single_level": 2965
+  },
+  "rf_robusta": {
+   "single_level_images": 1046,
+   "separable_images": 182,
+   "separable_by_label": {
+    "light": 50,
+    "medium": 60,
+    "dark": 72
+   },
+   "beans_total_in_separable": 261,
+   "bean_size_px": {
+    "p10": 34.986,
+    "median": 183.78,
+    "p90": 268.872
+   },
+   "bean_size_rel_short_side": {
+    "p10": 0.084,
+    "median": 0.442,
+    "p90": 0.646
+   },
+   "size_source": "contour bbox",
+   "mode_counts": {
+    "beans": 298,
+    "pile": 538,
+    "full": 210
+   },
+   "images_with_cluster_blob": 116,
+   "image_short_side_px": {
+    "p10": 416.0,
+    "median": 416.0,
+    "p90": 416.0
+   },
+   "yolo_region_boxes_per_image": {
+    "p10": 1.0,
+    "median": 1.0,
+    "p90": 1.0
+   },
+   "note": "YOLO boxes = กรอบพื้นที่ (ไม่ใช่รายเมล็ด)"
+  },
+  "rf_hendi": {
+   "single_level_images": 1512,
+   "separable_images": 0,
+   "separable_by_label": {
+    "light": 0,
+    "medium": 0,
+    "dark": 0
+   },
+   "beans_total_in_separable": 0,
+   "bean_size_px": null,
+   "bean_size_rel_short_side": null,
+   "size_source": "contour bbox",
+   "mode_counts": {
+    "beans": 0,
+    "pile": 1507,
+    "full": 5
+   },
+   "images_with_cluster_blob": 0,
+   "image_short_side_px": {
+    "p10": 640.0,
+    "median": 640.0,
+    "p90": 640.0
+   }
+  },
+  "agtron": {
+   "single_level_images": 561,
+   "separable_images": 16,
+   "separable_by_label": {
+    "light": 2,
+    "medium": 1,
+    "dark": 13
+   },
+   "beans_total_in_separable": 108,
+   "bean_size_px": {
+    "p10": 10.392,
+    "median": 18.248,
+    "p90": 36.04
+   },
+   "bean_size_rel_short_side": {
+    "p10": 0.034,
+    "median": 0.058,
+    "p90": 0.115
+   },
+   "size_source": "contour bbox",
+   "mode_counts": {
+    "beans": 211,
+    "pile": 346,
+    "full": 4
+   },
+   "images_with_cluster_blob": 195,
+   "image_short_side_px": {
+    "p10": 308.0,
+    "median": 350.0,
+    "p90": 387.0
+   }
+  }
+ },
+ "seconds": 248.1
+}

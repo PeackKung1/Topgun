@@ -1,0 +1,59 @@
+{
+ "name": "prereg_perbean_v2",
+ "status": "DRAFT - awaiting user approval; no P1 experiment has been run",
+ "written": "2026-10-09",
+ "requirement": "per-bean roast class (light/medium/dark) + count of visible beans; flat/touching/pile scenes; mixed roasts in one image; every bean counts 1; full system < 1 s on Raspberry Pi 5 CPU; classical CV (OpenCV + numpy) + linear classifier only",
+ "count_definition": "count only beans with >= half of the bean visible; occluded beans cannot be counted -> warning count_visible_only",
+ "data": {
+  "count_test": "$ROAST_DATA_DIR/count_test/count_test.csv (not in git): 25 existing trainval images + 15 web slots; split dev 15 / frozen 25 fixed at group level with seed 20261009 before counting (tools/make_count_test.py)",
+  "rf_boos_gt": "rf_boos trainval, YOLO per-bean boxes; mode from segment() with the deployed seg_config",
+  "empty": "rf_hendi label=empty, 305 trainval images",
+  "single_roast_loso": "LOSO folds ontoum224, rf_robusta, rf_boos, agtron (rf_hendi excluded as in B1 R2); trainval only",
+  "frozen_rules": "split=test (manifest) and count_test split=frozen are never used to choose a model, threshold, parameter or epoch; frozen is evaluated once, after the deploy choice, and reported as-is"
+ },
+ "gates": {
+  "count": {
+   "flat": {"metric": "MAE per image on count_test dev (selection) / frozen (report)", "threshold": "<= 0.5"},
+   "touching": {"metric": "MAPE = mean(|pred - gt| / gt) per image", "threshold": "<= 0.10"},
+   "pile": {"metric": "MAPE per image", "threshold": "<= 0.25"},
+   "rf_boos_beans_mode": {"metric": "MAE over all trainval rf_boos images whose segment mode = beans", "threshold": "<= 0.25"},
+   "empty": {"metric": "fraction of rf_hendi empty images with n_beans == 0", "threshold": ">= 0.95", "null_policy": "n_beans null counts as FAIL (counting must always answer) - user to confirm"},
+   "null_policy": "for every count metric n_beans = null is scored as pred = 0"
+  },
+  "per_bean": {
+   "single_roast_macro_f1": {
+    "unit": "every detected bean in a single-roast image has true label = image label; per-fold macro-F1 over beans, each bean weighted 1/(beans in its image) so every image counts equally (unweighted also reported)",
+    "baseline": "B1 broadcast: every detected bean gets the B1 image-level label of its image (same beans, same fold model)",
+    "threshold": "for every LOSO fold: F1(candidate) >= F1(B1 broadcast) - 0.02 (paired per fold; all folds must pass)"
+   },
+   "cross_step": {"metric": "share of beans whose true label is light or dark predicted as the opposite extreme, pooled over folds, image-weighted", "threshold": "<= 0.05"},
+   "mixed_dev": {
+    "metric": "per-image per-class count error = sum_c |pred_c - gt_c| over light/medium/dark, mean over count_test dev images with >= 2 roast classes",
+    "threshold": "candidate < B1 broadcast (strictly lower mean); reported with paired per-image differences",
+    "secondary_report_only": "rf_boos Mixed video (102 frames, YOLO labels, in-sample for B1)"
+   }
+  },
+  "time": {
+   "ml_pi5": {"metric": "bytes->dict p95 on Raspberry Pi 5, JPEG <= 1600 px", "sets": ["200 random trainval images (seed 20261009)", "worst case: images with ~300 visible beans (real if counted, else synthetic)"], "threshold": "p95 <= 500 ms on each set"},
+   "e2e": {"metric": "phone select/shoot done -> result shown, FW measures (acceptance A2: 20 images x 2 phones)", "threshold": "p95 <= 1000 ms"},
+   "notebook_proxy": "until the Pi is available a notebook p95 is reported but never counts as a pass"
+  }
+ },
+ "deploy_rule": [
+  "1. eligible = passes every count gate on count_test dev + rf_boos + empty, every per-bean gate, and the Pi time gate",
+  "2. among eligible: lowest pile MAPE on count_test dev; within 0.02 of each other -> lower Pi p95; still tied -> fewer parameters/simpler code",
+  "3. then evaluate frozen once and report every gate as pass/fail; no reselection after frozen",
+  "4. if no candidate is eligible: deploy the best-on-dev candidate only with the user's explicit decision, keep warnings count_visible_only + bean_count_estimated, and report the failed gates; never describe it as improved"
+ ],
+ "comparison_rules": [
+  "declare criteria before every run; compare paired per fold (per-bean) or per image (count)",
+  "count_test n is small (dev 15) -> report 95% bootstrap CI (10000 resamples, seed 20261009) for every count metric; a point estimate passing with a CI that crosses the threshold is reported as such",
+  "never write 'improved' unless the predeclared gate is passed"
+ ],
+ "known_constraints_found_before_run": [
+  "bean_backend max_blobs = 150 < 300-bean worst case -> must be raised or counting returns null on large piles",
+  "bean_backend budget_ms = 100 drops per-bean results on time (measured on notebook) -> results depend on machine load; a Pi will drop more",
+  "count_test touching images from existing data are all in frozen (one rf_boos video) -> dev touching comes only from web slots",
+  "all existing count_test images are from trainval sources used to train B1 -> per-class counts on them are in-sample for B1"
+ ]
+}

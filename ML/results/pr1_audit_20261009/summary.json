@@ -1,0 +1,340 @@
+{
+ "rule": "trainval only; split=test never loaded; same model dir for both versions",
+ "runs": {
+  "old": {
+   "tag": "old",
+   "rev": "75ea419",
+   "roastml_file": "C:\\Users\\Sh\\AppData\\Local\\Temp\\claude\\C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-seed-count-91d3d9\\3047293f-1a43-4719-b8d7-7b7e97960518\\scratchpad\\old\\ML\\roastml\\__init__.py",
+   "n": 3286,
+   "seconds": 131.4850467000033,
+   "python": "3.14.3",
+   "numpy": "2.5.3"
+  },
+  "new": {
+   "tag": "new",
+   "rev": "53f8389",
+   "roastml_file": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-seed-count-91d3d9\\ML\\roastml\\__init__.py",
+   "n": 3286,
+   "seconds": 205.9424431999978,
+   "python": "3.14.3",
+   "numpy": "2.5.3"
+  }
+ },
+ "old": {
+  "count_rf_boos": {
+   "all": {
+    "n": 995,
+    "MAE_null_as_0": 0.39,
+    "MAPE": 0.111,
+    "null_rate": 0.07,
+    "over_rate": 0.009,
+    "under_rate": 0.211,
+    "gt_median": 3.0,
+    "gt_max": 6
+   },
+   "mode_beans": {
+    "n": 925,
+    "MAE_null_as_0": 0.162,
+    "MAPE": 0.044,
+    "null_rate": 0.0,
+    "over_rate": 0.01,
+    "under_rate": 0.151,
+    "gt_median": 3.0,
+    "gt_max": 6
+   },
+   "mode_pile": {
+    "n": 0
+   },
+   "mode_full": {
+    "n": 70,
+    "MAE_null_as_0": 3.4,
+    "MAPE": 1.0,
+    "null_rate": 1.0,
+    "over_rate": 0.0,
+    "under_rate": 1.0,
+    "gt_median": 3.0,
+    "gt_max": 4
+   },
+   "mixed_only": {
+    "n": 102,
+    "MAE_null_as_0": 0.01,
+    "MAPE": 0.002,
+    "null_rate": 0.0,
+    "over_rate": 0.01,
+    "under_rate": 0.0,
+    "gt_median": 6.0,
+    "gt_max": 6
+   }
+  },
+  "single_bean": {
+   "rf_boos_gt1": {
+    "n": 1,
+    "n_beans_hist": {
+     "3": 1
+    }
+   },
+   "ontoum224": {
+    "n": 895,
+    "n_beans_hist": {
+     "1": 895
+    },
+    "exactly_1_rate": 1.0,
+    "mean_n_beans_null_as_0": 1.0
+   }
+  },
+  "dup_boxes_iou_gt_0.7": {
+   "images_with_boxes": 2250,
+   "images_with_dup": 0,
+   "dup_pairs_total": 0,
+   "by_source": {
+    "ontoum224": {
+     "images_with_dup": 0,
+     "pairs": 0
+    },
+    "rf_boos": {
+     "images_with_dup": 0,
+     "pairs": 0
+    },
+    "rf_robusta": {
+     "images_with_dup": 0,
+     "pairs": 0
+    }
+   }
+  },
+  "empty_rf_hendi": {
+   "n": 305,
+   "n_beans_gt0": 0,
+   "n_beans_eq0_or_null_rate": 1.0,
+   "no_beans_detected": 305,
+   "mode": {
+    "full": 305
+   }
+  },
+  "green_not_empty": {
+   "ontoum224": {
+    "n": 299,
+    "n_beans_gt0": 299,
+    "no_beans_detected": 0
+   },
+   "rf_hendi": {
+    "n": 340,
+    "n_beans_gt0": 0,
+    "no_beans_detected": 44
+   },
+   "rf_robusta": {
+    "n": 452,
+    "n_beans_gt0": 131,
+    "no_beans_detected": 123
+   }
+  },
+  "estimated_rate_by_source": {
+   "ontoum224": 0.0,
+   "rf_boos": 0.0,
+   "rf_hendi": 0.0,
+   "rf_robusta": 0.0
+  }
+ },
+ "new": {
+  "count_rf_boos": {
+   "all": {
+    "n": 995,
+    "MAE_null_as_0": 0.399,
+    "MAPE": 0.114,
+    "null_rate": 0.007,
+    "over_rate": 0.079,
+    "under_rate": 0.147,
+    "gt_median": 3.0,
+    "gt_max": 6
+   },
+   "mode_beans": {
+    "n": 925,
+    "MAE_null_as_0": 0.19,
+    "MAPE": 0.051,
+    "null_rate": 0.008,
+    "over_rate": 0.01,
+    "under_rate": 0.158,
+    "gt_median": 3.0,
+    "gt_max": 6
+   },
+   "mode_pile": {
+    "n": 0
+   },
+   "mode_full": {
+    "n": 70,
+    "MAE_null_as_0": 3.157,
+    "MAPE": 0.942,
+    "null_rate": 0.0,
+    "over_rate": 1.0,
+    "under_rate": 0.0,
+    "gt_median": 3.0,
+    "gt_max": 4
+   },
+   "mixed_only": {
+    "n": 102,
+    "MAE_null_as_0": 0.01,
+    "MAPE": 0.002,
+    "null_rate": 0.0,
+    "over_rate": 0.01,
+    "under_rate": 0.0,
+    "gt_median": 6.0,
+    "gt_max": 6
+   }
+  },
+  "single_bean": {
+   "rf_boos_gt1": {
+    "n": 1,
+    "n_beans_hist": {
+     "3": 1
+    }
+   },
+   "ontoum224": {
+    "n": 895,
+    "n_beans_hist": {
+     "1": 16,
+     "3": 32,
+     "4": 29,
+     "5": 48,
+     ">20": 101,
+     ">5": 669
+    },
+    "exactly_1_rate": 0.018,
+    "mean_n_beans_null_as_0": 11.96
+   }
+  },
+  "dup_boxes_iou_gt_0.7": {
+   "images_with_boxes": 3208,
+   "images_with_dup": 152,
+   "dup_pairs_total": 346,
+   "by_source": {
+    "ontoum224": {
+     "images_with_dup": 1,
+     "pairs": 1
+    },
+    "rf_boos": {
+     "images_with_dup": 70,
+     "pairs": 218
+    },
+    "rf_hendi": {
+     "images_with_dup": 70,
+     "pairs": 115
+    },
+    "rf_robusta": {
+     "images_with_dup": 11,
+     "pairs": 12
+    }
+   }
+  },
+  "empty_rf_hendi": {
+   "n": 305,
+   "n_beans_gt0": 242,
+   "n_beans_eq0_or_null_rate": 0.207,
+   "no_beans_detected": 63,
+   "mode": {
+    "full": 305
+   }
+  },
+  "green_not_empty": {
+   "ontoum224": {
+    "n": 299,
+    "n_beans_gt0": 299,
+    "no_beans_detected": 0
+   },
+   "rf_hendi": {
+    "n": 340,
+    "n_beans_gt0": 340,
+    "no_beans_detected": 0
+   },
+   "rf_robusta": {
+    "n": 452,
+    "n_beans_gt0": 444,
+    "no_beans_detected": 1
+   }
+  },
+  "estimated_rate_by_source": {
+   "ontoum224": 0.972,
+   "rf_boos": 0.07,
+   "rf_hendi": 0.902,
+   "rf_robusta": 0.861
+  }
+ },
+ "edge_replaced_contour": {
+  "images": 1228,
+  "by_source": {
+   "ontoum224": 1160,
+   "rf_robusta": 68
+  },
+  "rf_boos_error_on_replaced": null
+ },
+ "n_beans_changed": {
+  "images": 2200,
+  "by_source": {
+   "ontoum224": 1160,
+   "rf_boos": 77,
+   "rf_hendi": 582,
+   "rf_robusta": 381
+  },
+  "null_to_value": 965
+ },
+ "no_beans_detected_lost": {
+  "images": 478,
+  "by_source_label": {
+   "rf_boos/light": 39,
+   "rf_boos/medium": 31,
+   "rf_hendi/empty": 242,
+   "rf_hendi/green": 44,
+   "rf_robusta/green": 122
+  }
+ },
+ "latency_ms": {
+  "old": {
+   "original": {
+    "n_calls": 540,
+    "p50": 30.9,
+    "p95": 126.2,
+    "max": 215.8
+   },
+   "web1600": {
+    "n_calls": 540,
+    "p50": 34.3,
+    "p95": 133.0,
+    "max": 225.7
+   }
+  },
+  "new": {
+   "original": {
+    "n_calls": 540,
+    "p50": 99.5,
+    "p95": 162.4,
+    "max": 289.3
+   },
+   "web1600": {
+    "n_calls": 540,
+    "p50": 97.5,
+    "p95": 156.5,
+    "max": 275.6
+   }
+  }
+ },
+ "latency_runs": {
+  "old": {
+   "tag": "old",
+   "rev": "75ea419",
+   "roastml_file": "C:\\Users\\Sh\\AppData\\Local\\Temp\\claude\\C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-seed-count-91d3d9\\3047293f-1a43-4719-b8d7-7b7e97960518\\scratchpad\\old\\ML\\roastml\\__init__.py",
+   "n_images": 180,
+   "repeat": 3,
+   "seed": 20261009,
+   "per_source": 40,
+   "host": "Intel64 Family 6 Model 151 Stepping 5, GenuineIntel"
+  },
+  "new": {
+   "tag": "new",
+   "rev": "53f8389",
+   "roastml_file": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-seed-count-91d3d9\\ML\\roastml\\__init__.py",
+   "n_images": 180,
+   "repeat": 3,
+   "seed": 20261009,
+   "per_source": 40,
+   "host": "Intel64 Family 6 Model 151 Stepping 5, GenuineIntel"
+  }
+ }
+}
