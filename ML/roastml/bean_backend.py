@@ -28,9 +28,8 @@ from .segment import segment
 log = logging.getLogger("roastml")
 
 DEFAULT_BEAN_COUNTING = {"budget_ms": 100.0, "max_blobs": MAX_BLOBS}
-VALIDATION_NOTE = ("experimental, not validated: per-bean accuracy ~0.62 in-sample on rf_boos GT boxes; "
-                   "counting checked only on few beans on plain white background (rf_boos, 2-6 beans); "
-                   "no mixed_roast warning and no label override")
+VALIDATION_NOTE = ("experimental: edge-contour bean counts are estimates and have not been validated against dense-pile ground truth; "
+                   "per-bean accuracy ~0.62 in-sample on rf_boos GT boxes; no mixed_roast warning and no label override")
 
 
 class BeanLinearBackend(LinearBackend):
@@ -74,24 +73,27 @@ class BeanLinearBackend(LinearBackend):
         p = self.model.proba(x)[0]
         t3 = time.perf_counter()
         probs = {c: float(p[i]) for i, c in enumerate(self.model.classes)}
-        warnings = ["no_beans_detected"] if seg.mode == "full" else []
-        out = BackendOutput(probs=probs, warnings=warnings)
+        out = BackendOutput(probs=probs)
         # --- ส่วนเสริม: ล้มได้ แต่ห้ามกระทบผล B1 (G5) · แก้ได้แค่ n_beans/proportions/beans ---
         try:
             if self.enabled:
-                self._add_beans(out, seg)
+                self._add_beans(out, seg, rgb)
         except Exception:
             log.exception("bean counting failed; returning image-level B1 result")
             out.n_beans, out.proportions, out.beans = None, None, []
+        if seg.mode == "full" and out.n_beans is None:
+            out.warnings.append("no_beans_detected")
         t4 = time.perf_counter()
         return out, {"views": (t1 - t0) * 1000, "features": (t2 - t1) * 1000,
                      "model": (t3 - t2) * 1000, "beans": (t4 - t3) * 1000, "n_views": 1}
 
-    def _add_beans(self, out: BackendOutput, seg) -> None:
+    def _add_beans(self, out: BackendOutput, seg, seg_rgb: np.ndarray) -> None:
         t0 = time.perf_counter()
-        beans = split_beans(seg, self.cfg)
+        beans = split_beans(seg, self.cfg, rgb=seg_rgb)
         if not beans:
-            return  # pile/full หรือหา blob ไม่ได้ → n_beans None
+            return  # ภาพไม่เห็นขอบเมล็ดชัดพอ → n_beans None
+        if any(bean.estimated for bean in beans):
+            out.warnings.append("bean_count_estimated")
         if len(beans) > self.max_blobs:
             # G3 cap: ไม่จัดคลาสรายเมล็ด · contract กำหนด n_beans == len(beans) จึงคืน null ทั้งชุด
             log.info("bean count %d exceeds cap %d; bean fields left null", len(beans), self.max_blobs)
@@ -113,6 +115,6 @@ class BeanLinearBackend(LinearBackend):
         base = super().info()
         base.update({"backend": "b1_linear_beans", "beans_enabled": self.enabled,
                      "bean_budget_ms": self.budget_ms, "max_blobs": self.max_blobs,
-                     "n_beans_scope": "beans mode only (plain background); pile/full -> null",
+                     "n_beans_scope": "edge contours estimate visible beans in beans/pile/full modes; occluded beans cannot be inferred",
                      "bean_validation": VALIDATION_NOTE})
         return base

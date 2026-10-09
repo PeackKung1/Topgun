@@ -20,7 +20,11 @@
         if (counter) counter.textContent = snapshot.counts[roast] ?? 0;
       }
       const total = document.querySelector('#counts-total');
-      if (total) total.textContent = `เมล็ดทั้งหมด ${snapshot.bean_total ?? snapshot.total ?? 0} เมล็ด`;
+      if (total) {
+        const estimated = Number(snapshot.estimated_results) || 0;
+        const note = estimated ? ` · มีค่าประมาณ ${estimated} รูป` : '';
+        total.textContent = `เมล็ดทั้งหมด ${snapshot.bean_total ?? snapshot.total ?? 0} เมล็ด${note}`;
+      }
     } catch (_error) {
       // Counts remain at their last rendered value while the local service reconnects.
     }

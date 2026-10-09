@@ -88,6 +88,7 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
     counts = {label: 0 for label in LABELS}
     recent_beans: list[dict[str, Any]] = []
     bean_total = 0
+    estimated_results = 0
     for row in rows:
         try:
             result = json.loads(row["result_json"])
@@ -100,34 +101,46 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
             if isinstance(bean, dict) and bean.get("label") in LABELS
         ] if isinstance(beans, list) else []
 
-        # Use per-bean detections when present. Otherwise use n_beans and
-        # proportions to keep aggregate totals usable for ML backends that
-        # provide class proportions without individual boxes.
-        if valid_beans:
+        # Prefer per-bean detections when they account for the full aggregate.
+        # If only some detections are present, fall back to n_beans/proportions
+        # so the market totals do not silently drop the unlisted beans.
+        n_beans = result.get("n_beans")
+        proportions = result.get("proportions")
+        aggregate_counts = None
+        if isinstance(n_beans, int) and not isinstance(n_beans, bool) and n_beans > 0:
+            if isinstance(proportions, dict) and all(
+                isinstance(proportions.get(label), (int, float)) and not isinstance(proportions.get(label), bool)
+                for label in LABELS
+            ):
+                values = {label: float(proportions[label]) for label in LABELS}
+                if all(math.isfinite(value) and value >= 0 for value in values.values()):
+                    proportion_total = sum(values.values())
+                    if proportion_total > 0:
+                        raw = {label: n_beans * values[label] / proportion_total for label in LABELS}
+                        aggregate_counts = {label: int(raw[label]) for label in LABELS}
+                        remainder = n_beans - sum(aggregate_counts.values())
+                        for label in sorted(
+                            LABELS,
+                            key=lambda item: raw[item] - aggregate_counts[item],
+                            reverse=True,
+                        )[:remainder]:
+                            aggregate_counts[label] += 1
+
+        if valid_beans and (aggregate_counts is None or len(valid_beans) == n_beans):
+            per_result_counts = {label: 0 for label in LABELS}
+            for bean in valid_beans:
+                per_result_counts[bean["label"]] += 1
+        elif aggregate_counts is not None:
+            per_result_counts = aggregate_counts
+        elif valid_beans:
             per_result_counts = {label: 0 for label in LABELS}
             for bean in valid_beans:
                 per_result_counts[bean["label"]] += 1
         else:
-            n_beans = result.get("n_beans")
-            proportions = result.get("proportions")
-            if not isinstance(n_beans, int) or isinstance(n_beans, bool) or n_beans <= 0:
-                continue
-            if not isinstance(proportions, dict) or any(
-                not isinstance(proportions.get(label), (int, float)) for label in LABELS
-            ):
-                continue
-            values = {label: float(proportions[label]) for label in LABELS}
-            if any(not math.isfinite(value) or value < 0 for value in values.values()):
-                continue
-            proportion_total = sum(values.values())
-            if proportion_total <= 0:
-                continue
-            raw = {label: n_beans * values[label] / proportion_total for label in LABELS}
-            per_result_counts = {label: int(raw[label]) for label in LABELS}
-            remainder = n_beans - sum(per_result_counts.values())
-            for label in sorted(LABELS, key=lambda item: raw[item] - per_result_counts[item], reverse=True)[:remainder]:
-                per_result_counts[label] += 1
+            continue
 
+        if isinstance(result.get("warnings"), list) and "bean_count_estimated" in result["warnings"]:
+            estimated_results += 1
         for label, count in per_result_counts.items():
             counts[label] += count
             bean_total += count
@@ -146,6 +159,7 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
         "bean_total": bean_total,
         # Keep `total` for existing clients; it now means total beans.
         "total": bean_total,
+        "estimated_results": estimated_results,
         "recent_beans": recent_beans[:limit],
     }
 
