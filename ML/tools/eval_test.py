@@ -57,7 +57,7 @@ def predict_row(predictor, root: Path, row: dict, *, confirmed: bool = False) ->
     path = (root / row["path"]).resolve()
     if not path.is_relative_to(root.resolve()):
         raise ValueError("manifest image path escapes data root")
-    result = predictor.predict_bytes(path.read_bytes(), source=row["source"], roi=row.get("roi", ""))
+    result = predictor.predict_dataset(path.read_bytes(), source=row["source"], roi=row.get("roi", ""))
     if result["label"] not in LABELS or result["probs"] is None:
         raise RuntimeError(f"model failed frozen image: {row['path']}: {result['status']}")
     return result

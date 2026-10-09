@@ -27,3 +27,22 @@ local_paths.json
 
 # --- โมเดลที่เทรนด้วย agtron (license Unknown) ห้ามขึ้น git — ส่งเข้า Pi ด้วย scp/USB ---
 models/
+
+# --- ผลรายภาพ/รายแถวจาก tools (ใหญ่ · สร้างซ้ำได้จาก plan/config + seed ในโฟลเดอร์ run) ---
+# เข้า git เฉพาะ summary/status/plan/selection ขนาดเล็ก · ต้องการไฟล์ไหนจริงๆ ใช้ git add -f ทีละไฟล์
+# (ไฟล์ที่ track อยู่แล้วไม่ถูกกระทบ)
+results/**/*.partial.json
+results/**/per_image.csv
+results/**/predictions.csv
+results/**/predictions_*.csv
+results/**/*_predictions.csv
+results/**/prediction_delta_by_image.csv
+results/**/training_mask_*.csv
+results/**/training_masks.json
+results/**/*_training_pool.csv
+# metrics_*.json เก็บ folds รายภาพ (~0.8 MB/ไฟล์ × 100+ ไฟล์)
+results/**/metrics_*.json
+# mask รายแถวของ dataset_selection (~1 MB/ไฟล์)
+results/dataset_selection_*/mask_*.json
+# report ของ D1 รวมผลรายภาพทุก arm (3–5 MB) · ตัวเลขสรุปอยู่ใน results/summary_*/
+results/d1_*/report.json

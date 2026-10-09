@@ -4,7 +4,7 @@
 → JPEG ใช้ draft (decode ที่สเกลเล็กลง เร็ว + ใช้ RAM น้อย) → แก้ทิศตาม EXIF
 → แปลงเป็น RGB (โปร่งใส = พื้นขาว) → ย่อด้านยาวสุดให้ ≤ MAX_SIDE
 
-เปิดไม่ได้ทุกกรณี → BadImageError (api แปลงเป็น status "bad_image")
+เปิดไม่ได้ทุกกรณี หรือด้านสั้นหลังย่อ < MIN_SIDE → BadImageError (api แปลงเป็น status "bad_image")
 """
 
 from __future__ import annotations
@@ -20,6 +20,9 @@ log = logging.getLogger("roastml")
 MAX_SIDE = 1600                 # ด้านยาวสุดหลัง decode (ml-spec ข้อ 1)
 MAX_BYTES = 32 * 1024 * 1024    # ไฟล์ใหญ่กว่านี้ไม่เปิด (FW ควรตั้ง MAX_CONTENT_LENGTH ไว้ใกล้เคียงกัน)
 MAX_PIXELS = 80_000_000         # กัน decompression bomb (ต่ำกว่าเกณฑ์เตือนของ Pillow ~89 MP)
+# ด้านสั้นขั้นต่ำหลังย่อ = ขั้นต่ำของ segment() · เล็กกว่านี้ไม่มีข้อมูลพอจำแนก → bad_image
+# (เดิม B1 ขยายภาพแล้วตอบมั่นใจ เช่น ภาพขาว 1×1 → dark 0.94) · trainval ทั้งหมดด้านสั้น ≥ 224 px
+MIN_SIDE = 8
 
 # จำกัด format: กันไม่ให้ Pillow เรียก plugin ที่เสี่ยง เช่น EPS (เรียก Ghostscript)
 ALLOWED_FORMATS = ["JPEG", "PNG", "WEBP", "GIF", "BMP", "TIFF", "AVIF"]
@@ -39,7 +42,11 @@ _EXIF_ORIENTATION_TAG = 0x0112
 
 
 class BadImageError(Exception):
-    """เปิดไฟล์เป็นรูปไม่ได้ (ไฟล์ว่าง / ไม่ใช่รูป / เสีย / ใหญ่เกิน)"""
+    """เปิดไฟล์เป็นรูปไม่ได้ (ไฟล์ว่าง / ไม่ใช่รูป / เสีย / ใหญ่เกิน / เล็กเกิน)"""
+
+
+class ImageTooSmallError(BadImageError):
+    """เปิดได้ แต่ด้านสั้นหลังย่อ < MIN_SIDE — api ยังตอบ bad_image แต่ใช้ข้อความแนะนำต่างจากไฟล์เสีย"""
 
 
 @dataclass(frozen=True)
@@ -97,6 +104,10 @@ def decode_image(data: bytes, max_side: int = MAX_SIDE) -> DecodedImage:
             img.thumbnail((max_side, max_side))
     except Exception as e:
         raise BadImageError(f"convert_failed:{type(e).__name__}") from e
+
+    # เช็คหลังย่อ: ภาพยาวผอม (เช่น 4000×6) ถูก thumbnail จนด้านสั้น < MIN_SIDE ได้
+    if min(img.size) < MIN_SIDE:
+        raise ImageTooSmallError(f"too_small:{img.size[0]}x{img.size[1]}")
 
     return DecodedImage(image=img, orig_size=orig_size, format=fmt)
 
