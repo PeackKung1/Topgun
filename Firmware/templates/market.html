@@ -21,7 +21,7 @@
         <div><strong id="roast-count-medium">{{ snapshot.counts.medium }}</strong><span>คั่วกลาง</span></div>
         <div><strong id="roast-count-dark">{{ snapshot.counts.dark }}</strong><span>คั่วเข้ม</span></div>
       </div>
-      <p id="counts-total" class="hint">นับได้ทั้งหมด {{ snapshot.bean_total }} เมล็ด</p>
+      <p id="counts-total" class="hint">นับได้ทั้งหมด {{ snapshot.bean_total }} เมล็ด{% if snapshot.estimated_results %} · มีค่าประมาณ {{ snapshot.estimated_results }} รูป{% endif %}</p>
     </section>
     <section class="panel">
       <p class="step">ผลจำแนกรายเมล็ดล่าสุด</p>
