@@ -16,6 +16,16 @@ ROOT = Path(__file__).resolve().parent
 MAX_UPLOAD_BYTES = int(os.getenv("TOPGUN_MAX_UPLOAD_BYTES", str(32 * 1024 * 1024)))
 
 
+def mqtt_result(result: dict) -> dict:
+    """Small aggregate event; publisher still runs in its existing queue/thread."""
+    event = {k: v for k, v in result.items() if k != "beans"}
+    if result.get("schema_version") != 3:
+        # Old subscriber contract expects this key. Aggregate proportions remain
+        # usable for historical v2 events, without sending detection arrays.
+        event["beans"] = []
+    return event
+
+
 def create_app(predictor: Any | None = None, *, start_background: bool = True) -> Flask:
     app = Flask(
         __name__,
@@ -62,8 +72,13 @@ def create_app(predictor: Any | None = None, *, start_background: bool = True) -
         if len(raw) > MAX_UPLOAD_BYTES:
             return jsonify({"error": "ไฟล์ใหญ่เกินกำหนด กรุณาเลือกรูปใหม่"}), 413
 
-        result = predictor.predict_bytes(raw)
-        event = {**result}
+        # Optional model variant chosen on the dashboard (names come from /health -> ml.backend.variants).
+        variant = (request.form.get("variant") or "").strip() or None
+        if variant is not None and (len(variant) > 32 or not variant.isascii() or not variant.replace("_", "").isalnum()):
+            return jsonify({"error": "ตัวเลือกโมเดลไม่ถูกต้อง"}), 400
+
+        result = predictor.predict_bytes(raw, variant=variant) if variant else predictor.predict_bytes(raw)
+        event = mqtt_result(result)
         try:
             enqueue_prediction(event)
         except Exception:

@@ -7,6 +7,8 @@ import logging
 import math
 import os
 import sqlite3
+import threading
+import time
 import uuid
 from pathlib import Path
 from typing import Any
@@ -18,6 +20,8 @@ RESULT_KEYS = {
     "status", "label", "label_th", "message_th", "confidence", "probs", "warnings",
     "n_beans", "proportions", "beans", "timing_ms", "model",
 }
+V3_KEYS = RESULT_KEYS | {"schema_version", "counts", "count_method", "image_size"}
+_DB_INIT_LOCK = threading.Lock()
 
 
 def database_path() -> Path:
@@ -29,7 +33,25 @@ def connect_db(path: str | os.PathLike[str] | None = None) -> sqlite3.Connection
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(db_path, timeout=5)
     db.row_factory = sqlite3.Row
-    db.execute("PRAGMA journal_mode=WAL")
+    # WAL setup does not consistently honor busy_timeout on a brand-new DB.
+    # Serialize threads and retry briefly for a simultaneous subscriber process.
+    deadline = time.monotonic() + 5
+    with _DB_INIT_LOCK:
+        while True:
+            try:
+                _initialize_db(db)
+                return db
+            except sqlite3.OperationalError as exc:
+                db.rollback()
+                if "locked" not in str(exc).lower() or time.monotonic() >= deadline:
+                    db.close()
+                    raise
+                time.sleep(.01)
+
+
+def _initialize_db(db: sqlite3.Connection) -> None:
+    if db.execute("PRAGMA journal_mode").fetchone()[0] != "wal":
+        db.execute("PRAGMA journal_mode=WAL")
     db.execute("""CREATE TABLE IF NOT EXISTS predictions (
         msg_id TEXT PRIMARY KEY,
         created_at TEXT NOT NULL,
@@ -39,8 +61,11 @@ def connect_db(path: str | os.PathLike[str] | None = None) -> sqlite3.Connection
         model TEXT NOT NULL,
         result_json TEXT NOT NULL
     )""")
+    # Serialize first-start migrations across concurrent web/subscriber calls.
+    db.execute("BEGIN IMMEDIATE")
+    if "estimated" not in {r[1] for r in db.execute("PRAGMA table_info(predictions)")}:
+        db.execute("ALTER TABLE predictions ADD COLUMN estimated INTEGER NOT NULL DEFAULT 0")
     db.commit()
-    return db
 
 
 def validate_event(payload: Any) -> tuple[str, str, dict[str, Any]]:
@@ -53,7 +78,11 @@ def validate_event(payload: Any) -> tuple[str, str, dict[str, Any]]:
         raise ValueError("invalid msg_id") from exc
     if not isinstance(created_at, str) or len(created_at) > 40:
         raise ValueError("invalid created_at")
-    if not isinstance(result, dict) or set(result) != RESULT_KEYS:
+    if not isinstance(result, dict):
+        raise ValueError("result must be an object")
+    v3 = result.get("schema_version") == 3
+    allowed = (V3_KEYS, V3_KEYS - {"beans"}) if v3 else (RESULT_KEYS,)
+    if set(result) not in allowed:
         raise ValueError("result fields do not match roastml contract")
     if result["status"] not in STATUSES:
         raise ValueError("invalid status")
@@ -63,17 +92,75 @@ def validate_event(payload: Any) -> tuple[str, str, dict[str, Any]]:
         raise ValueError("failure result must not have a label")
     if not isinstance(result["message_th"], str) or not isinstance(result["model"], str):
         raise ValueError("invalid message/model")
+    if v3:
+        _validate_v3(result)
     return str(msg_id), created_at, result
+
+
+def _validated_counts(result: dict) -> dict[str, int] | None:
+    """Counts present means authoritative: never reconstruct from proportions."""
+    counts, n = result.get("counts"), result.get("n_beans")
+    if counts is None and n is None:
+        return None
+    if not isinstance(n, int) or isinstance(n, bool) or n < 0:
+        raise ValueError("invalid n_beans")
+    if not isinstance(counts, dict) or set(counts) != LABELS or any(
+        not isinstance(v, int) or isinstance(v, bool) or v < 0 for v in counts.values()
+    ) or sum(counts.values()) != n:
+        raise ValueError("counts must sum to n_beans")
+    return counts
+
+
+def _is_estimated(result: dict) -> bool:
+    return result.get("count_method") == "estimated" or "bean_count_estimated" in (result.get("warnings") or [])
+
+
+def _validate_v3(result: dict) -> None:
+    if type(result["schema_version"]) is not int:
+        raise ValueError("invalid schema_version")
+    counts = _validated_counts(result)
+    warnings = result["warnings"]
+    if not isinstance(warnings, list) or any(not isinstance(w, str) for w in warnings):
+        raise ValueError("invalid warnings")
+    size = result["image_size"]
+    if size is not None and (not isinstance(size, list) or len(size) != 2 or any(
+        not isinstance(v, int) or isinstance(v, bool) or v < 1 for v in size
+    )):
+        raise ValueError("invalid image_size")
+    if counts is None:
+        if result["count_method"] is not None or result.get("beans"):
+            raise ValueError("unavailable counting must be null")
+        return
+    method = result["count_method"]
+    if method not in {"exact", "estimated"} or (method == "estimated") != ("bean_count_estimated" in warnings):
+        raise ValueError("count_method/warning mismatch")
+    n = result["n_beans"]
+    if result["status"] not in {"ok", "low_confidence"}:
+        raise ValueError("failure result cannot contain counts")
+    if n and counts[result["label"]] != max(counts.values()):
+        raise ValueError("label must be a count majority")
+    if (not n and "no_beans_detected" not in warnings) or (
+        sum(v > 0 for v in counts.values()) > 1 and "mixed_roast" not in warnings
+    ):
+        raise ValueError("missing count warning")
+    if "beans" in result:
+        beans = result["beans"]
+        if not isinstance(beans, list) or len(beans) != n:
+            raise ValueError("beans length must equal n_beans")
+        if any(not isinstance(b, dict) or b.get("label") not in LABELS for b in beans):
+            raise ValueError("invalid bean labels")
+        if counts != {c: sum(b["label"] == c for b in beans) for c in LABELS}:
+            raise ValueError("bean labels disagree with counts")
 
 
 def persist_event(payload: Any, path: str | os.PathLike[str] | None = None) -> bool:
     msg_id, created_at, result = validate_event(payload)
     with connect_db(path) as db:
         cursor = db.execute(
-            "INSERT OR IGNORE INTO predictions(msg_id, created_at, status, label, confidence, model, result_json) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO predictions(msg_id, created_at, status, label, confidence, model, result_json, estimated) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (msg_id, created_at, result["status"], result["label"], result["confidence"], result["model"],
-             json.dumps(result, ensure_ascii=False, allow_nan=False)),
+             json.dumps(result, ensure_ascii=False, allow_nan=False), int(_is_estimated(result))),
         )
         return cursor.rowcount == 1
 
@@ -89,10 +176,14 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
     recent_beans: list[dict[str, Any]] = []
     bean_total = 0
     estimated_results = 0
+    visible_only_results = 0
+    recent_results: list[dict[str, Any]] = []
     for row in rows:
         try:
             result = json.loads(row["result_json"])
         except (TypeError, json.JSONDecodeError):
+            continue
+        if not isinstance(result, dict):
             continue
 
         beans = result.get("beans")
@@ -107,7 +198,7 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
         n_beans = result.get("n_beans")
         proportions = result.get("proportions")
         aggregate_counts = None
-        if isinstance(n_beans, int) and not isinstance(n_beans, bool) and n_beans > 0:
+        if "counts" not in result and isinstance(n_beans, int) and not isinstance(n_beans, bool) and n_beans > 0:
             if isinstance(proportions, dict) and all(
                 isinstance(proportions.get(label), (int, float)) and not isinstance(proportions.get(label), bool)
                 for label in LABELS
@@ -126,7 +217,15 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
                         )[:remainder]:
                             aggregate_counts[label] += 1
 
-        if valid_beans and (aggregate_counts is None or len(valid_beans) == n_beans):
+        if "counts" in result:
+            # Includes zero and null: neither may fall back to rounded proportions.
+            try:
+                per_result_counts = _validated_counts(result)
+            except ValueError:
+                continue
+            if per_result_counts is None:
+                continue
+        elif valid_beans and (aggregate_counts is None or len(valid_beans) == n_beans):
             per_result_counts = {label: 0 for label in LABELS}
             for bean in valid_beans:
                 per_result_counts[bean["label"]] += 1
@@ -139,11 +238,17 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
         else:
             continue
 
-        if isinstance(result.get("warnings"), list) and "bean_count_estimated" in result["warnings"]:
+        estimated = _is_estimated(result)
+        visible_only = "count_visible_only" in (result.get("warnings") or [])
+        if estimated:
             estimated_results += 1
+        visible_only_results += int(visible_only)
         for label, count in per_result_counts.items():
             counts[label] += count
             bean_total += count
+        if len(recent_results) < limit:
+            recent_results.append({"created_at": row["created_at"], "n_beans": sum(per_result_counts.values()),
+                                   "counts": per_result_counts, "estimated": estimated, "count_visible_only": visible_only})
 
         if valid_beans:
             for index, bean in enumerate(valid_beans, start=1):
@@ -160,6 +265,8 @@ def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int 
         # Keep `total` for existing clients; it now means total beans.
         "total": bean_total,
         "estimated_results": estimated_results,
+        "visible_only_results": visible_only_results,
+        "recent_results": recent_results,
         "recent_beans": recent_beans[:limit],
     }
 

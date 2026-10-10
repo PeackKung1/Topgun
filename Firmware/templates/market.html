@@ -24,23 +24,23 @@
       <p id="counts-total" class="hint">นับได้ทั้งหมด {{ snapshot.bean_total }} เมล็ด{% if snapshot.estimated_results %} · มีค่าประมาณ {{ snapshot.estimated_results }} รูป{% endif %}</p>
     </section>
     <section class="panel">
-      <p class="step">ผลจำแนกรายเมล็ดล่าสุด</p>
-      {% if snapshot.recent_beans %}
+      <p class="step">ผลล่าสุดต่อภาพ</p>
+      {% if snapshot.recent_results %}
       <div class="table-wrap"><table>
-        <thead><tr><th>เวลา</th><th>เมล็ด</th><th>ระดับคั่ว</th><th>ความมั่นใจ</th></tr></thead>
+        <thead><tr><th>เวลา</th><th>รวม</th><th>อ่อน</th><th>กลาง</th><th>เข้ม</th><th>การนับ</th></tr></thead>
         <tbody>
-        {% for row in snapshot.recent_beans %}
+        {% for row in snapshot.recent_results %}
           <tr>
             <td>{{ row.created_at }}</td>
-            <td>{{ row.index }}</td>
-            <td>{{ {'light':'คั่วอ่อน','medium':'คั่วกลาง','dark':'คั่วเข้ม'}.get(row.label, '—') }}</td>
-            <td>{{ ('%.0f'|format(row.confidence * 100)) ~ '%' if row.confidence is not none else '—' }}</td>
+            <td>{{ row.n_beans }}</td>
+            <td>{{ row.counts.light }}</td><td>{{ row.counts.medium }}</td><td>{{ row.counts.dark }}</td>
+            <td>{% if row.estimated %}ค่าประมาณ{% endif %}{% if row.count_visible_only %} · นับเฉพาะที่มองเห็น{% endif %}{% if not row.estimated and not row.count_visible_only %}นับรายเมล็ด{% endif %}</td>
           </tr>
         {% endfor %}
         </tbody>
       </table></div>
       {% else %}
-      <p class="empty">ยังไม่มีข้อมูลจำแนกรายเมล็ดจาก ML</p>
+      <p class="empty">ยังไม่มีผลวิเคราะห์ที่มีจำนวนเมล็ด</p>
       {% endif %}
     </section>
   </main>

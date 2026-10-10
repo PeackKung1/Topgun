@@ -17,13 +17,14 @@
 
     <section class="panel intro">
       <p class="step">วิธีใช้งาน</p>
-      <h2>ถ่ายรูปเมล็ดกาแฟให้เห็นชัด</h2>
+      <h2>เลือกรูปแล้วดูผลรายเมล็ด</h2>
       <ol>
-        <li>วางเมล็ดบนพื้นเรียบ แสงสว่างและสีไม่เพี้ยน</li>
-        <li>ถ่ายให้เห็นเมล็ดชัด ไม่เบลอ แล้วเลือกรูปจากมือถือ</li>
-        <li>กดวิเคราะห์ ระบบจะแสดงระดับคั่วและความมั่นใจ</li>
+        <li>เลือกรูปหรือถ่ายภาพเมล็ดกาแฟ</li>
+        <li>กดวิเคราะห์ ดูจำนวนและระดับคั่วในภาพ</li>
+        <li>เปิด/ปิดกรอบเพื่อดูตำแหน่งเมล็ดที่นับได้</li>
       </ol>
       <p class="hint">รองรับ JPG, PNG และ HEIC · ระบบย่อรูปก่อนอัปโหลด</p>
+      <p class="hint">แนะนำ: วางบนพื้นเรียบสีอ่อน เกลี่ยเมล็ดไม่ให้ซ้อน และถ่ายจากด้านบน เพื่อให้เห็นเมล็ดชัดขึ้น</p>
     </section>
 
     <section class="panel counts-panel" aria-live="polite">
@@ -43,9 +44,20 @@
         </label>
         <input id="image-input" name="image" type="file" accept="image/*,.heic,.heif" required>
         <figure id="preview-wrap" class="preview-wrap" hidden>
-          <img id="preview" alt="ตัวอย่างรูปเมล็ดกาแฟ">
+          <canvas id="preview" width="600" height="400" role="img" aria-label="รูปเมล็ดกาแฟพร้อมกรอบตามระดับคั่ว"></canvas>
+          <div class="overlay-controls">
+            <button id="overlay-toggle" type="button" aria-pressed="true" disabled>ซ่อนกรอบ</button>
+            <div id="overlay-legend" class="overlay-legend" hidden>
+              <span class="roast-light">L · คั่วอ่อน</span><span class="roast-medium">M · คั่วกลาง</span><span class="roast-dark">D · คั่วเข้ม</span>
+            </div>
+          </div>
           <figcaption id="file-info"></figcaption>
         </figure>
+        <fieldset id="variant-picker" class="variant-picker" hidden>
+          <legend>วิธีตัดสินระดับคั่วรายเมล็ด</legend>
+          <div id="variant-options" class="variant-options"></div>
+          <p class="hint">เปลี่ยนตัวเลือกหลังวิเคราะห์แล้ว ระบบจะวิเคราะห์รูปเดิมซ้ำให้ทันที</p>
+        </fieldset>
         <button id="submit-button" class="button" type="submit" disabled>วิเคราะห์ระดับคั่ว</button>
       </form>
       <p id="progress" class="progress" role="status" aria-live="polite"></p>
