@@ -1,0 +1,639 @@
+{
+  "detector": "models\\yolo_bean_20261010\\holdout_boos_v2\\bean.onnx",
+  "det_config": {
+    "conf": 0.25,
+    "iou": 0.7,
+    "max_det": 1000,
+    "pre_nms_top": 4000,
+    "threads": 1,
+    "tile": false,
+    "tile_overlap": 0.2,
+    "container_min": 5,
+    "container_area_ratio": 4.0
+  },
+  "note": "v2 detector: synthetic scenes from ontoum224 cutouts only (close-up scenes added after v1 split single beans) + rf_hendi Empty tune-half negatives; rf_boos/agtron/rf_robusta never seen; ontoum224 is the sprite source. Third run on these dev sets (after adding mask box features and the container-box rule); earlier runs gave the same rf_boos/ontoum/Empty counts",
+  "images": 4052,
+  "count": {
+    "rf_boos_all": {
+      "n": 598,
+      "MAE": {
+        "n": 598,
+        "value": 0.14046822742474915,
+        "ci95": [
+          0.11036789297658862,
+          0.17224080267558528
+        ]
+      },
+      "exact_rate": 0.8745819397993311,
+      "over_rate": 0.02508361204013378,
+      "under_rate": 0.10033444816053512
+    },
+    "rf_boos_by_group": {
+      "rf_boos:video:Darkest-1-": {
+        "n": 199,
+        "MAE": {
+          "n": 199,
+          "value": 0.010050251256281407,
+          "ci95": [
+            0.0,
+            0.02512562814070352
+          ]
+        },
+        "exact_rate": 0.9899497487437185,
+        "over_rate": 0.010050251256281407,
+        "under_rate": 0.0
+      },
+      "rf_boos:video:Lightest-1-": {
+        "n": 198,
+        "MAE": {
+          "n": 198,
+          "value": 0.20202020202020202,
+          "ci95": [
+            0.1414141414141414,
+            0.26275252525252346
+          ]
+        },
+        "exact_rate": 0.8181818181818182,
+        "over_rate": 0.010101010101010102,
+        "under_rate": 0.1717171717171717
+      },
+      "rf_boos:video:Mixed": {
+        "n": 102,
+        "MAE": {
+          "n": 102,
+          "value": 0.28431372549019607,
+          "ci95": [
+            0.18627450980392157,
+            0.38235294117647056
+          ]
+        },
+        "exact_rate": 0.7450980392156863,
+        "over_rate": 0.0,
+        "under_rate": 0.2549019607843137
+      },
+      "rf_boos:video:WhatsApp-Video-2026-05-19-at-9_15_06-PM": {
+        "n": 99,
+        "MAE": {
+          "n": 99,
+          "value": 0.13131313131313133,
+          "ci95": [
+            0.06060606060606061,
+            0.21212121212121213
+          ]
+        },
+        "exact_rate": 0.8888888888888888,
+        "over_rate": 0.1111111111111111,
+        "under_rate": 0.0
+      }
+    },
+    "ontoum224": {
+      "n": 895,
+      "MAE": {
+        "n": 895,
+        "value": 0.01005586592178771,
+        "ci95": [
+          0.004469273743016759,
+          0.01675977653631285
+        ]
+      },
+      "exact_rate": 0.9899441340782122,
+      "over_rate": 0.01005586592178771,
+      "under_rate": 0.0
+    },
+    "empty_report_half": {
+      "n": 160,
+      "zero_rate": {
+        "n": 160,
+        "value": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "count_dev_flat": {
+      "n": 3,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "agtron_n_distribution(no GT)": {
+      "images": 372,
+      "p5_p25_p50_p75_p95": [
+        139.1,
+        181.0,
+        197.5,
+        212.25,
+        239.0
+      ],
+      "zero": 0,
+      "one": 0,
+      "max": 256
+    },
+    "rf_robusta_n_distribution(no GT)": {
+      "images": 2027,
+      "p5_p25_p50_p75_p95": [
+        1.0,
+        2.0,
+        3.0,
+        8.0,
+        137.0
+      ],
+      "zero": 87,
+      "one": 273,
+      "max": 347
+    }
+  },
+  "folds": {
+    "ontoum224": {
+      "images": 895,
+      "zero_detection_images": 0,
+      "paired": {
+        "B1 broadcast": {
+          "macro_f1": 0.8578504440917203,
+          "f1_per_class": {
+            "light": 0.9047619047619048,
+            "medium": 0.7721280602636534,
+            "dark": 0.8966613672496025
+          },
+          "light_dark_rate": 0.0033613445378151263,
+          "image_weight_sum": 895.0,
+          "beans": 904,
+          "cm": [
+            [
+              285.0,
+              15.0,
+              0.0
+            ],
+            [
+              43.0,
+              205.0,
+              52.0
+            ],
+            [
+              2.0,
+              11.0,
+              282.0
+            ]
+          ]
+        },
+        "det+B1 per box": {
+          "macro_f1": 0.7006282482057345,
+          "f1_per_class": {
+            "light": 0.7603626943005182,
+            "medium": 0.47415730337078654,
+            "dark": 0.8673647469458988
+          },
+          "light_dark_rate": 0.0226890756302521,
+          "image_weight_sum": 895.0,
+          "beans": 904,
+          "cm": [
+            [
+              293.5,
+              6.0,
+              0.5
+            ],
+            [
+              165.5,
+              105.5,
+              29.0
+            ],
+            [
+              13.0,
+              33.5,
+              248.5
+            ]
+          ]
+        },
+        "det+B1+group": {
+          "macro_f1": 0.6998920806632003,
+          "f1_per_class": {
+            "light": 0.7598705501618123,
+            "medium": 0.47244094488188976,
+            "dark": 0.8673647469458988
+          },
+          "light_dark_rate": 0.0226890756302521,
+          "image_weight_sum": 895.0,
+          "beans": 904,
+          "cm": [
+            [
+              293.5,
+              6.0,
+              0.5
+            ],
+            [
+              166.0,
+              105.0,
+              29.0
+            ],
+            [
+              13.0,
+              33.5,
+              248.5
+            ]
+          ]
+        }
+      },
+      "group_config": {
+        "min_L_gap": 24.0,
+        "max_k": 3
+      },
+      "single_roast_images_split_by_group": 2,
+      "delta": {
+        "det+B1 per box": -0.15722219588598574,
+        "det+B1+group": -0.15795836342852
+      },
+      "noninferiority_pass": {
+        "det+B1 per box": false,
+        "det+B1+group": false
+      }
+    },
+    "rf_robusta": {
+      "images": 1046,
+      "zero_detection_images": 53,
+      "paired": {
+        "B1 broadcast": {
+          "macro_f1": 0.3724014173021859,
+          "f1_per_class": {
+            "light": 0.10276679841897234,
+            "medium": 0.5025641025641026,
+            "dark": 0.5118733509234829
+          },
+          "light_dark_rate": 0.10707456978967497,
+          "image_weight_sum": 993.0,
+          "beans": 39160,
+          "cm": [
+            [
+              13.0,
+              54.0,
+              0.0
+            ],
+            [
+              117.00000000000001,
+              245.0,
+              108.0
+            ],
+            [
+              56.00000000000001,
+              206.0,
+              194.0
+            ]
+          ]
+        },
+        "det+B1 per box": {
+          "macro_f1": 0.43065776403447137,
+          "f1_per_class": {
+            "light": 0.16449114758810746,
+            "medium": 0.41299508950636354,
+            "dark": 0.7144870550089432
+          },
+          "light_dark_rate": 0.08002755566188671,
+          "image_weight_sum": 993.0,
+          "beans": 39160,
+          "cm": [
+            [
+              26.999999999999996,
+              40.0,
+              0.0
+            ],
+            [
+              192.4307319469425,
+              157.11842830762407,
+              120.4508397454334
+            ],
+            [
+              41.85441161116675,
+              93.75467793400914,
+              320.3909104548241
+            ]
+          ]
+        },
+        "det+B1+group": {
+          "macro_f1": 0.4154167798698632,
+          "f1_per_class": {
+            "light": 0.143445029705451,
+            "medium": 0.38717441850853834,
+            "dark": 0.7156308913956004
+          },
+          "light_dark_rate": 0.08700724027919703,
+          "image_weight_sum": 993.0,
+          "beans": 39160,
+          "cm": [
+            [
+              24.416666666666664,
+              40.66666666666667,
+              1.9166666666666665
+            ],
+            [
+              205.42759662120397,
+              144.25009560169514,
+              120.32230777710085
+            ],
+            [
+              43.58811999935338,
+              90.22593676310322,
+              322.18594323754337
+            ]
+          ]
+        }
+      },
+      "group_config": {
+        "min_L_gap": 16.0,
+        "max_k": 3
+      },
+      "single_roast_images_split_by_group": 389,
+      "delta": {
+        "det+B1 per box": 0.05825634673228547,
+        "det+B1+group": 0.043015362567677295
+      },
+      "noninferiority_pass": {
+        "det+B1 per box": true,
+        "det+B1+group": true
+      }
+    },
+    "rf_boos": {
+      "images": 496,
+      "zero_detection_images": 0,
+      "paired": {
+        "B1 broadcast": {
+          "macro_f1": 0.6233713998419881,
+          "f1_per_class": {
+            "light": 0.8717948717948718,
+            "medium": 0.0,
+            "dark": 0.9983193277310924
+          },
+          "light_dark_rate": 0.0,
+          "image_weight_sum": 496.00000000000006,
+          "beans": 1461,
+          "cm": [
+            [
+              153.0,
+              45.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              297.0
+            ]
+          ]
+        },
+        "det+B1 per box": {
+          "macro_f1": 0.6046107571601324,
+          "f1_per_class": {
+            "light": 0.9622682660850601,
+            "medium": 0.0,
+            "dark": 0.8515640053953369
+          },
+          "light_dark_rate": 0.0005040322580645161,
+          "image_weight_sum": 496.00000000000006,
+          "beans": 1461,
+          "cm": [
+            [
+              183.83333333333331,
+              14.166666666666668,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.25,
+              76.78333333333333,
+              220.9666666666667
+            ]
+          ]
+        },
+        "det+B1+group": {
+          "macro_f1": 0.6391371936290411,
+          "f1_per_class": {
+            "light": 0.9942929613189601,
+            "medium": 0.0,
+            "dark": 0.9231186195681633
+          },
+          "light_dark_rate": 0.0005040322580645161,
+          "image_weight_sum": 496.00000000000006,
+          "beans": 1461,
+          "cm": [
+            [
+              196.0,
+              2.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.25,
+              42.3,
+              255.45000000000002
+            ]
+          ]
+        }
+      },
+      "group_config": {
+        "min_L_gap": 24.0,
+        "max_k": 3
+      },
+      "single_roast_images_split_by_group": 9,
+      "delta": {
+        "det+B1 per box": -0.018760642681855733,
+        "det+B1+group": 0.015765793787053006
+      },
+      "noninferiority_pass": {
+        "det+B1 per box": true,
+        "det+B1+group": true
+      }
+    },
+    "agtron": {
+      "images": 372,
+      "zero_detection_images": 0,
+      "paired": {
+        "B1 broadcast": {
+          "macro_f1": 0.5322381437063918,
+          "f1_per_class": {
+            "light": 0.448,
+            "medium": 0.5639686684073107,
+            "dark": 0.5847457627118644
+          },
+          "light_dark_rate": 0.0,
+          "image_weight_sum": 372.0,
+          "beans": 72426,
+          "cm": [
+            [
+              28.0,
+              22.0,
+              0.0
+            ],
+            [
+              47.0,
+              108.0,
+              0.9999999999999998
+            ],
+            [
+              0.0,
+              97.0,
+              69.0
+            ]
+          ]
+        },
+        "det+B1 per box": {
+          "macro_f1": 0.35280185437790396,
+          "f1_per_class": {
+            "light": 0.3855075063755707,
+            "medium": 0.3466314487488667,
+            "dark": 0.32626660800927454
+          },
+          "light_dark_rate": 0.061055994218647346,
+          "image_weight_sum": 372.0,
+          "beans": 72426,
+          "cm": [
+            [
+              37.61636032122811,
+              12.14217992213364,
+              0.24145975663825486
+            ],
+            [
+              94.58941909440313,
+              60.50832777532675,
+              0.9022531302701285
+            ],
+            [
+              12.946634994589571,
+              120.47146605146409,
+              32.581898953946336
+            ]
+          ]
+        },
+        "det+B1+group": {
+          "macro_f1": 0.3121334110946296,
+          "f1_per_class": {
+            "light": 0.4112905873931545,
+            "medium": 0.24565695958365713,
+            "dark": 0.27945268630707715
+          },
+          "light_dark_rate": 0.009712521233128116,
+          "image_weight_sum": 372.0,
+          "beans": 72426,
+          "cm": [
+            [
+              43.0,
+              7.0,
+              0.0
+            ],
+            [
+              114.0,
+              42.0,
+              0.0
+            ],
+            [
+              2.097904586355673,
+              136.94024114913896,
+              26.961854264505376
+            ]
+          ]
+        }
+      },
+      "group_config": {
+        "min_L_gap": 24.0,
+        "max_k": 3
+      },
+      "single_roast_images_split_by_group": 6,
+      "delta": {
+        "det+B1 per box": -0.17943628932848782,
+        "det+B1+group": -0.22010473261176217
+      },
+      "noninferiority_pass": {
+        "det+B1 per box": false,
+        "det+B1+group": false
+      }
+    }
+  },
+  "pooled_light_dark_rate": {
+    "B1 broadcast": 0.03169398907103826,
+    "det+B1 per box": 0.03759153353136316,
+    "det+B1+group": 0.033526060793647935
+  },
+  "mixed_rf_boos": {
+    "n": 102,
+    "error_per_image": {
+      "B1 broadcast": {
+        "n": 102,
+        "value": 7.735294117647059,
+        "ci95": [
+          7.627450980392157,
+          7.8431372549019605
+        ]
+      },
+      "det+B1 per box": {
+        "n": 102,
+        "value": 1.2450980392156863,
+        "ci95": [
+          1.0490196078431373,
+          1.4313725490196079
+        ]
+      },
+      "det+B1+group": {
+        "n": 102,
+        "value": 7.284313725490196,
+        "ci95": [
+          7.0,
+          7.53921568627451
+        ]
+      }
+    }
+  },
+  "gates": {
+    "boos_mae": {
+      "value": 0.14046822742474915,
+      "gate": 0.25
+    },
+    "flat_mae_dev(n=3)": {
+      "value": 0.0,
+      "gate": 0.5
+    },
+    "empty_zero_rate": {
+      "value": 1.0,
+      "gate": 0.95
+    },
+    "cross_extreme_rate": {
+      "value": {
+        "det+B1 per box": 0.03759153353136316,
+        "det+B1+group": 0.033526060793647935
+      },
+      "gate": 0.05
+    },
+    "fold_noninferiority": {
+      "ontoum224": {
+        "det+B1 per box": false,
+        "det+B1+group": false
+      },
+      "rf_robusta": {
+        "det+B1 per box": true,
+        "det+B1+group": true
+      },
+      "rf_boos": {
+        "det+B1 per box": true,
+        "det+B1+group": true
+      },
+      "agtron": {
+        "det+B1 per box": false,
+        "det+B1+group": false
+      }
+    },
+    "touching_mape": "unmeasured (no GT)",
+    "pile_mape": "unmeasured (no GT)",
+    "pi_p95_ms": "unmeasured"
+  }
+}

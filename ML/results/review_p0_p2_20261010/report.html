@@ -1,0 +1,290 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ตรวจอิสระ P0–P2 · 10 ต.ค. 2569</title><style>
+:root{--bg:#fbfaf7;--fg:#1d1c1a;--mut:#6b675f;--line:#dedad1;--card:#fff;--pass:#1f7a4d;--fail:#b3261e;--unv:#8a6100;--code:#f1eee7}
+@media (prefers-color-scheme:dark){:root{--bg:#161513;--fg:#ece9e2;--mut:#a39e93;--line:#34322d;--card:#1e1d1a;--pass:#5fd39a;--fail:#ff8a80;--unv:#f2c14e;--code:#26241f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "Sarabun","Noto Sans Thai",system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:28px 16px 80px}h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:34px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+h3{font-size:16px;margin:20px 0 6px}p{margin:6px 0}.mut{color:var(--mut)}.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--card)}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--code);font-weight:600;white-space:nowrap}td{font-variant-numeric:tabular-nums}
+.b{display:inline-block;padding:1px 8px;border-radius:10px;font-weight:700;font-size:12px;border:1.5px solid}.pass{color:var(--pass)}.fail{color:var(--fail)}.unverified{color:var(--unv)}
+code,pre{font-family:ui-monospace,Consolas,monospace;background:var(--code);border-radius:4px}code{padding:1px 4px;font-size:12.5px}pre{padding:10px;overflow-x:auto;font-size:12px;line-height:1.45}
+ol,ul{margin:6px 0;padding-left:22px}li{margin:4px 0}.kpi{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.kpi div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px}
+.kpi b{display:block;font-size:22px}.note{border-left:3px solid var(--unv);padding:6px 12px;background:var(--card);margin:10px 0}
+</style></head><body><main>
+<h1>รายงานตรวจอิสระ P0–P2</h1>
+<p class="mut">นับเมล็ด + ระดับคั่วรายเมล็ด + contract v3 + dashboard · ตรวจที่ main @ 69c4354 · 10 ต.ค. 2569 · อ่านและรันซ้ำเท่านั้น ไม่ได้แก้โค้ด ไม่ได้เทรน ไม่ได้เปิด split=test หรือแถว frozen</p>
+<div class="kpi"><div><b class="pass">11</b>PASS</div><div><b class="fail">13</b>FAIL</div><div><b class="unverified">2</b>UNVERIFIED</div></div>
+<p><b>สรุป:</b> main ตอนนี้ยังเสิร์ฟ B1 ระดับภาพตัวเดิมของวันที่ 8 ต.ค. — ไม่มีการนับและไม่มีผลรายเมล็ดออกไปถึงผู้ใช้เลย และผล v3 ทุกตัวถูก Firmware บน origin/main ปฏิเสธตอนบันทึกลง SQLite ตัวเลขใน P1 คำนวณซ้ำได้ตรงและไม่พบ leakage แต่เกณฑ์ที่ประกาศไว้ไม่ผ่านเกือบทั้งหมด และพบสาเหตุของ light F1 = 0 ที่ตรวจสอบได้</p>
+<h2>1) ตาราง A–F</h2>
+<div class="scroll"><table class=""><thead><tr><th>ID</th><th>ผล</th><th>หลักฐาน</th></tr></thead><tbody><tr><td>A1</td><td><span class="b pass">PASS</span></td><td>main = origin/main (ref ในเครื่อง) = 69c4354 ไม่ ahead/behind · Firmware/ มี 7 commit ทั้งหมดโดย Kittiphob Subsorn · c02ed6a/3a7172d/d3a6dcb แตะไฟล์นอก ML/ = 0 ไฟล์ · (ไม่ได้ fetch → ความสดของ remote = UNVERIFIED · worktree seed-count มี Firmware แก้ค้าง 6 ไฟล์ ไม่ได้ commit)</td></tr><tr><td>A2</td><td><span class="b unverified">UNVERIFIED</span></td><td>ทำซ้ำไม่ได้: `git -C &lt;main&gt; status --porcelain` และ `git diff --stat` ว่างทั้งคู่ ณ ตอนตรวจ · ไม่มี .gitattributes · ls-files --eol = 241 ไฟล์ i/lf w/crlf · อ่าน core.autocrlf ไม่ได้ (คำสั่งถูกปฏิเสธสิทธิ์)</td></tr><tr><td>A3</td><td><span class="b fail">FAIL</span></td><td>ค่า default โหลด models/current = backend b1_linear (สร้าง 8 ต.ค.) → ไม่เรียก counter.py เลย · n_beans/counts/count_method = null · beans = [] · ROAST_BEANS ไม่มีผล · label มาจาก softmax ระดับภาพ</td></tr><tr><td>A4</td><td><span class="b pass">PASS</span></td><td>card ของ current: LOSO 0.6382 / 0.6774 ตรง results/baseline_loso.json:136,713 · เป็น card ของ B1 จึงไม่มีเกณฑ์รายเมล็ด · card preview (ไม่ได้ deploy) ตรงไฟล์ P1 และเขียน &#x27;P1 dev gates failed/unmeasured&#x27;, deployment_eligible=false</td></tr><tr><td>B1</td><td><span class="b fail">FAIL</span></td><td>prereg ไม่ถูกแก้หลังเห็นผล (blob 48431eb commit เดียว c02ed6a · mtime 9 ต.ค. 22:57 &lt; ไฟล์ผล P1 ตัวแรก 10 ต.ค. 00:33) และเกณฑ์ 8 ตัวตรง GATES · แต่ status ยัง &#x27;DRAFT … no P1 experiment has been run&#x27; = รัน P1 บน prereg ที่ไม่เคยอนุมัติ + เบี่ยงจาก prereg 3 จุด</td></tr><tr><td>B2</td><td><span class="b fail">FAIL</span></td><td>40 แถว · กรอกแล้ว 11 (dev 3 + frozen 8) ทั้งหมดเป็น rf_boos ที่ prefill จาก YOLO · คนนับจริง = 0 · pile 14 แถวว่าง · web 15 ช่องไม่มีรูป · frozen touching ถูก &#x27;เลือก&#x27; ด้วยผลตัวนับเก่า และ P0 audit เปิดภาพ frozen 397 ภาพก่อน split</td></tr><tr><td>B3</td><td><span class="b pass">PASS</span></td><td>คำนวณซ้ำจาก predictions_old/new.csv ตรง summary ทุกค่า (boos MAE 0.390/0.399 · ontoum =1: 1.000/0.018 · empty 1.000/0.207 · dup 0/346 คู่)</td></tr><tr><td>C1</td><td><span class="b fail">FAIL</span></td><td>Empty แยก group จริง (tune 145 / report 160) และ score() ใช้ tune-half เท่านั้น · แต่ report-half ถูกรัน 2 ครั้ง (00:45 → 0.8938, แก้โค้ด, 10:03 → 0.9125) · ontoum 895 / boos 598 / count-dev 3 แถว เป็นชุดเดียวกันทั้ง tune และ report · ontoum target = 1 ถูก</td></tr><tr><td>C2</td><td><span class="b fail">FAIL</span></td><td>146/160 = 0.9125 &lt; 0.95 · ผิด 14 ภาพ ทุกภาพ n=1 จาก 2 ใน 6 วิดีโอ · pattern = วัตถุสว่างอมเหลืองที่มุมบนซ้ายของภาพ (ชิดขอบ, 0.03–0.23% ของภาพ, L*≈72–80, hue≈96°) ไม่ใช่เงาหรือลายพื้น</td></tr><tr><td>C3</td><td><span class="b fail">FAIL</span></td><td>ทั้งสองอย่าง: fixture ไม่สมจริง (สีเรียบ, ปิดภาพ 92.7%) และตัวนับแตกเมล็ดจริง: 1.7–3.2 ชิ้น/เมล็ด, ref_area 70–228 px เทียบของจริง 1303 px, เมล็ดเข้ม ~105 เมล็ดไม่ถูกนับเลย, n แกว่ง 514↔974 ตามคุณภาพ JPEG · คู่ IoU&gt;0.5 แค่ 4–22 คู่ = ไม่ใช่นับซ้ำ</td></tr><tr><td>C4</td><td><span class="b pass">PASS</span></td><td>summary เขียน count_test_touching/pile = &#x27;unmeasured&#x27;, passed = null, eligible = false · ไม่ได้อ้างว่าผ่าน · (ข้อค้นพบเพิ่ม: ภาพกองจริง agtron ผ่านทาง FW → n=1 &#x27;exact&#x27; ไม่มี warning 16/20 ภาพ)</td></tr><tr><td>C5</td><td><span class="b pass">PASS</span></td><td>เกิน max_beans → เก็บ 1000 ก้อนใหญ่สุด + method=estimated + note max_beans_cap (ทดสอบ max_beans=100 บน 300 เมล็ด → 100 estimated) · feature/core/bbox เป็น vectorized · ยกเว้น _blob_shapes เป็น loop ต่อทุก component รวมฝุ่น (counter.py:168-183, 430)</td></tr><tr><td>D1</td><td><span class="b pass">PASS</span></td><td>คำนวณใหม่จาก feature cache + โมเดลราย fold ได้ตรง summary ทั้ง 12 ค่า (cm ต่างสูงสุด 8e-12) · weight 1/n ต่อภาพถูก · หมายเหตุ: ไม่มีไฟล์ prediction รายเมล็ด มีแต่ count รายภาพ</td></tr><tr><td>D2</td><td><span class="b pass">PASS</span></td><td>0 group ข้าม source · 0 md5/phash ซ้ำข้าม source · 0 แถว frozen · 0 แถว split=test · scaler = สถิติถ่วงน้ำหนักของ train fold เท่านั้น (ต่าง 1e-14) · C และ gap เลือกจาก train fold · ข้อสังเกต: fold rf_boos ไม่มี medium เลย</td></tr><tr><td>D3</td><td><span class="b fail">FAIL</span></td><td>feature รายเมล็ดไม่ใช่สาเหตุ (ontoum ΔL_med +0.34 ± 1.19) · ตัวโมเดลรายเมล็ดคือสาเหตุ: เอาน้ำหนัก B1 มาใช้กับ feature รายเมล็ดได้ 0.8615 (ontoum) / 0.6306 (boos) · rf_robusta ป้อน &#x27;เมล็ด&#x27; ที่ไม่ใช่เมล็ด (L*≈46 ทั้ง medium/dark) เข้าเทรน 74% ของ medium</td></tr><tr><td>D4</td><td><span class="b fail">FAIL</span></td><td>20.9% มาจาก 2 fold: rf_robusta dark→light 174.4 ภาพ (50.3%) + rf_boos light→dark 158.3 ภาพ (44.0%) · ontoum 3.9% · agtron 1.8%</td></tr><tr><td>D5</td><td><span class="b fail">FAIL</span></td><td>วัดแค่ 3 เฟรมของวิดีโอเดียว (GT = YOLO prefill): error ต่อภาพ B1 8.33 / B-bean 5.00 / +group 8.33 จาก 6 เมล็ด · ข้อมูลที่ใช้ได้โดยไม่แตะ frozen: rf_boos Mixed 102 เฟรม, rf_robusta mixed 981 ภาพ</td></tr><tr><td>E1</td><td><span class="b pass">PASS</span></td><td>0 invariant ผิด ใน (100 + 6 + 8 ภาพ) × 3 โมเดล · ส่วนต่าง proportions ≤ 1.5e-4 มาจากการปัด 4 ตำแหน่งตามออกแบบ · เสมอ 9–11/100 ตัดสินด้วยค่าเฉลี่ย prob</td></tr><tr><td>E2</td><td><span class="b pass">PASS</span></td><td>เกิด 0/100 ทั้งสองโมเดลรายเมล็ด · ถ้าเกิดจะเป็น status &#x27;error&#x27; (ไม่ใช่ bad_image) ข้อความ &#x27;ระบบขัดข้องชั่วคราว…&#x27; (api.py:167-177) · ในทางปฏิบัติ majority_probs โยนก่อนใน backend → ถอยเป็น B1 เงียบ ๆ</td></tr><tr><td>E3</td><td><span class="b fail">FAIL</span></td><td>Firmware/service.py:56 บน origin/main บังคับ set(result) == 12 key → ผล v3 (16 key) ถูกปฏิเสธ 100/100 ภาพ + 8/8 ผลเสีย → subscriber ทิ้ง event → SQLite/หน้า market ไม่ได้ข้อมูล · HTTP ตอบ browser ยังปกติ</td></tr><tr><td>E4</td><td><span class="b fail">FAIL</span></td><td>ที่ 69c4354 สะอาด: ปกติ 320 passed / 15 failed · จำลอง Pi 289 passed / 15 failed / 9 skipped · 15 ตัวที่ล้มอยู่ใน tests/test_firmware_v3.py (ทดสอบ patch FW ที่ยังไม่ commit) · เลขใน commit (335 · 304+9) ได้เฉพาะ worktree ที่มี patch</td></tr><tr><td>F1</td><td><span class="b fail">FAIL</span></td><td>git apply --check ผ่านทั้ง 6 patch บน 69c4354 ไม่ชน · แต่แตะ 6 ไฟล์ ไม่ใช่ 4 (app.py, service.py, script.js, style.css, index.html, market.html)</td></tr><tr><td>F2</td><td><span class="b pass">PASS</span></td><td>DOM ใช้ textContent/createElement ทั้งหมด ไม่มี innerHTML · upload สูงสุด 32 MiB (client + MAX_CONTENT_LENGTH) · SQL ใช้ ? ทุกจุด · ไม่มี credential ใน patch · ข้อสังเกต: BEGIN IMMEDIATE ทุกครั้งที่ connect แม้ตอนอ่าน</td></tr><tr><td>F3</td><td><span class="b unverified">UNVERIFIED</span></td><td>อ่านโค้ดแล้วสเกลถูก (sx = canvas/image_size แยกแกน · รูปที่แสดงคือ blob เดียวกับที่ส่ง · DPR ≤ 2 · ResizeObserver) · วาด 964 กรอบ 1.3–3.3 ms บน notebook · ไม่ได้ทดสอบบนมือถือจริง/EXIF จริง</td></tr><tr><td>F4</td><td><span class="b pass">PASS</span></td><td>mqtt_result() ตัด beans ออกสำหรับ v3 (patch app.py) · enqueue = queue.put_nowait · publish ทำใน daemon thread (mqtt_pub.py:21-43) · ยังไม่เคยส่งถึง broker จริง</td></tr><tr><td>F5</td><td><span class="b fail">FAIL</span></td><td>252 ms = รอบ pilot LAN บน notebook Windows (loopback proxy, ภาพสังเคราะห์ 4–123 KB) · hotspot n=0 เพราะรอบนั้นไม่ได้รัน hotspot · รอบสุดท้ายที่ครบ 2 profile ได้ p95 3983 / 2995 ms = ไม่ผ่าน · ยังไม่มีตัวเลขบน Pi</td></tr></tbody></table></div>
+<h2>2) main เสิร์ฟอะไรจริงตอนนี้</h2><ol><li>Backend: b1_linear ชื่อ b1-Lab_hist-C0.01-R2 จาก ML/models/current (สร้าง 8 ต.ค. 14:23 ก่อน P0–P2 ทั้งหมด) ห่อด้วย contract v3</li><li>ตัวนับ: ไม่มี — counter.py ไม่ถูกเรียก · n_beans, counts, count_method, proportions = null · ROAST_BEANS ตั้งหรือไม่ตั้งก็ไม่มีผลกับ backend นี้</li><li>beans[]: ว่างเสมอ — ไม่ใช่ทั้ง B1 broadcast, B-bean หรือ B-bean+group</li><li>label ระดับภาพ: softmax ของ B1 บน feature Lab_hist จากพิกเซลที่ segment() เลือก · low_conf_threshold = 0.0 → status เป็น ok ทุกภาพที่เปิดได้ แม้ภาพว่าง (ได้ &#x27;คั่วเข้ม&#x27; + no_beans_detected)</li><li>ฝั่ง FW: /api/predict ตอบ browser ได้ แต่ subscriber ของ origin/main ปฏิเสธ event v3 ทุกตัว → SQLite/หน้า market ว่าง · pytest ที่ commit นี้ล้ม 15 ตัว</li></ol>
+<p class="mut">หมายเหตุ: Firmware/app.py:33 ใช้ค่า default <code>/opt/topgun/ML/models/current</code> ส่วน run_local.sh:9 ใช้ <code>$PROJECT_DIR/ML/models/current</code> · models/ ไม่อยู่ใน git จึงตรวจได้เฉพาะสำเนาบนเครื่องนี้ · ไฟล์ที่อยู่บน Pi จริง = UNVERIFIED</p>
+<h2>3) Blocker ก่อนวันจันทร์ 18:00</h2><div class="scroll"><table class=""><thead><tr><th>#</th><th>ปัญหา</th><th>หลักฐาน</th><th>ทางแก้ที่เล็กที่สุด</th></tr></thead><tbody><tr><td>1</td><td>main ไม่สอดคล้องกันเอง: ML v3 + FW v2</td><td>ผล v3 ทุกตัวถูก service.py:56 ปฏิเสธ → ตลาด/SQLite ไม่มีข้อมูล และ pytest ล้ม 15 ตัว</td><td>ให้เพื่อน merge patch แค่ 2 ไฟล์ (service.py + app.py) ก็พอให้ persist ได้ · 4 ไฟล์ที่เหลือเป็นหน้าจอ</td></tr><tr><td>2</td><td>requirement &#x27;รายเมล็ด + นับ&#x27; ยังไม่ถูกเสิร์ฟเลย</td><td>default เป็น B1 ระดับภาพ · ไม่มีโมเดลรายเมล็ดตัวไหนผ่านเกณฑ์ และ models/ ของ main ไม่มีโมเดล v3</td><td>ตัดสินใจว่าจะเสิร์ฟอะไรวันจันทร์ (ดูข้อ 4 ด้านล่าง) · ทางเล็กสุดที่ซื่อตรง = ตัวนับ + label ระดับภาพของ B1 กระจายให้ทุกเมล็ด พร้อม warning</td></tr><tr><td>3</td><td>ภาพกองจริงนับได้ 1 เมล็ด</td><td>agtron เต็มเฟรม 16/20 ภาพ → n=1, count_method=&#x27;exact&#x27;, ไม่มี warning · กองสังเคราะห์แตกเป็นชิ้นและทิ้งเมล็ดเข้ม · ไม่มี GT touching/pile เลย</td><td>นับ GT 7 ภาพ pile ใน dev ด้วยมือ + เพิ่มกฎ &#x27;ก้อนเดียวใหญ่มาก → เส้นทาง pile + estimated&#x27; แล้ววัดบน dev ก่อน</td></tr><tr><td>4</td><td>ตัวจำแนกรายเมล็ดแย่กว่า B1 มาก</td><td>light F1 = 0 บน ontoum และ boos · light↔dark 20.9% (เกณฑ์ 5%)</td><td>การทดลองเดียว: เทรน nested LOSO เดิมโดยตัด rf_robusta ออกจากชุดเทรนรายเมล็ด (ประกาศเกณฑ์ก่อนรัน)</td></tr><tr><td>5</td><td>ยังไม่มีหลักฐาน &lt; 1 s บน Pi</td><td>ML อย่างเดียวบน notebook กับภาพกองจริง 1600 px = 530–683 ms (เกณฑ์ Pi 500 ms) · E2E รอบสุดท้าย 3–4 s ยังไม่รู้สาเหตุ</td><td>รัน tools/pi_bench.sh บน Pi จริงด้วยภาพจริง 1600 px 20 ภาพ + แยกวัด fetch→JSON ออกจากช่วงรอ animation frame</td></tr></tbody></table></div>
+<h2>4) สิ่งที่ต้องให้คุณตัดสินใจ</h2><ol><li>จะเสิร์ฟอะไรวันจันทร์: (ก) B1 ระดับภาพอย่างเดียว บอกตรง ๆ ว่ายังไม่นับ · (ข) ตัวนับ + label ของ B1 กระจายทุกเมล็ด (นับได้ แต่ภาพปนหลายระดับไม่รองรับ) · (ค) รอผลการทดลองตัด rf_robusta ก่อน — ผมแนะนำ (ข) เป็นค่าตั้งต้น และรัน (ค) คู่ขนาน</li><li>patch FW แตะ 6 ไฟล์ ไม่ใช่ 4: รับทั้ง 6 หรือให้เพื่อนรับเฉพาะ service.py + app.py ก่อน</li><li>prereg_perbean_v2: อนุมัติย้อนหลังพร้อมบันทึก 3 จุดที่เบี่ยง หรือออก v3 · และจะแก้ fold rf_boos ที่ไม่มี medium (เพราะวิดีโอ Medium-1- ถูก freeze) อย่างไร</li><li>อนุญาตให้เทรนใหม่ 1 รอบเพื่อยืนยันสมมติฐาน D3 ไหม (รอบตรวจนี้ห้ามเทรน จึงยังไม่ได้รัน)</li><li>metal_chroma_min = 16: ได้ Empty tune-half 100% แต่ตัดเมล็ดคั่วเข้ม (chroma 9–13) ออกเมื่อพื้นหลังไม่ขาวสม่ำเสมอ — ยอมแลกหรือไม่</li><li>ใครจะนับ GT: pile 7 ภาพ dev + หา touching สำหรับ dev (ตอนนี้ touching อยู่ใน frozen ทั้งหมด)</li><li>worktree seed-count มี Firmware แก้ค้าง 6 ไฟล์ที่ Claude รอบก่อนเขียนไว้ (นอกขอบเขต ML/): เก็บไว้ให้เพื่อนดู หรือให้คุณล้างเอง</li><li>โฟลเดอร์รายงานนี้ยังไม่ commit (test ที่ commit นี้ไม่ผ่าน และคำสั่งรอบนี้คืออ่านอย่างเดียว) — จะให้ commit ไหม</li></ol>
+<h2>A. สถานะ repo และสิ่งที่ deploy</h2>
+<h3>A2 ไฟล์แก้ค้าง 12 ไฟล์</h3><p>ตอนตรวจ main สะอาด จึงยืนยันไม่ได้ว่า 12 ไฟล์นั้นต่างแค่ line ending ข้อเท็จจริงที่อ่านได้: ไม่มี <code>.gitattributes</code> และไฟล์ที่ track 241 ไฟล์เก็บเป็น LF ใน index แต่เป็น CRLF ใน working tree ซึ่งเป็นรูปแบบของ <code>core.autocrlf=true</code></p><div class="note">ผลข้างเคียงที่ต้องแจ้ง: คำสั่งแรกที่ผมรันบน main คือ <code>git status --porcelain</code> ซึ่ง git อาจ refresh stat cache ใน <code>.git/index</code> เอง ถ้า 12 ไฟล์นั้น "ค้าง" เพราะ mtime เปลี่ยนแต่เนื้อหาเท่าเดิม การ refresh นี้ทำให้มันหายไปได้ ผมไม่ได้รัน checkout / restore / stash / add ใด ๆ บน main</div><p>ถ้ามันกลับมาอีก ให้ตรวจเองตามลำดับนี้ (ไม่ทำลายงาน):</p><pre>git status --porcelain
+git diff --ignore-cr-at-eol --stat      # ว่าง = ต่างแค่ line ending
+git diff -w --stat                      # ว่าง = ต่างแค่ whitespace
+git update-index --refresh              # ล้างเฉพาะ stat ที่ค้าง ไม่แตะเนื้อไฟล์</pre><p>ทางป้องกันถาวรคือให้เจ้าของ repo เพิ่ม <code>.gitattributes</code> (<code>* text=auto eol=lf</code>) — ไฟล์นี้อยู่นอก ML/ ผมจึงไม่ได้สร้าง</p>
+<h3>A3 รันจริง 5 ภาพด้วยค่า default (ROASTML_MODEL = models/current, ไม่ตั้ง ROAST_BEANS)</h3><pre>[
+ {
+  &quot;image&quot;: &quot;ontoum&quot;,
+  &quot;true&quot;: &quot;light&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;light&quot;,
+  &quot;confidence&quot;: 0.9804,
+  &quot;n_beans&quot;: null,
+  &quot;counts&quot;: null,
+  &quot;count_method&quot;: null,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   224,
+   224
+  ],
+  &quot;ml_ms_notebook&quot;: 88.3,
+  &quot;model&quot;: &quot;b1-Lab_hist-C0.01-R2&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;boos&quot;,
+  &quot;true&quot;: &quot;mixed&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;dark&quot;,
+  &quot;confidence&quot;: 0.5657,
+  &quot;n_beans&quot;: null,
+  &quot;counts&quot;: null,
+  &quot;count_method&quot;: null,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   640,
+   640
+  ],
+  &quot;ml_ms_notebook&quot;: 433.1,
+  &quot;model&quot;: &quot;b1-Lab_hist-C0.01-R2&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;agtron(full frame)&quot;,
+  &quot;true&quot;: &quot;medium&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;medium&quot;,
+  &quot;confidence&quot;: 0.5281,
+  &quot;n_beans&quot;: null,
+  &quot;counts&quot;: null,
+  &quot;count_method&quot;: null,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   1600,
+   1200
+  ],
+  &quot;ml_ms_notebook&quot;: 1185.2,
+  &quot;model&quot;: &quot;b1-Lab_hist-C0.01-R2&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;empty(hendi)&quot;,
+  &quot;true&quot;: &quot;empty&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;dark&quot;,
+  &quot;confidence&quot;: 0.9036,
+  &quot;n_beans&quot;: null,
+  &quot;counts&quot;: null,
+  &quot;count_method&quot;: null,
+  &quot;warnings&quot;: [
+   &quot;no_beans_detected&quot;
+  ],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   640,
+   640
+  ],
+  &quot;ml_ms_notebook&quot;: 261.7,
+  &quot;model&quot;: &quot;b1-Lab_hist-C0.01-R2&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;synthetic pile300&quot;,
+  &quot;true&quot;: &quot;visible gt=300&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;medium&quot;,
+  &quot;confidence&quot;: 0.6403,
+  &quot;n_beans&quot;: null,
+  &quot;counts&quot;: null,
+  &quot;count_method&quot;: null,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   900,
+   600
+  ],
+  &quot;ml_ms_notebook&quot;: 343.4,
+  &quot;model&quot;: &quot;b1-Lab_hist-C0.01-R2&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ }
+]</pre>
+<p>เทียบ: ภาพชุดเดียวกันกับโมเดลรายเมล็ด preview (อยู่เฉพาะใน worktree seed-count ไม่ได้อยู่ใน main)</p><pre>[
+ {
+  &quot;image&quot;: &quot;ontoum&quot;,
+  &quot;true&quot;: &quot;light&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;light&quot;,
+  &quot;confidence&quot;: 0.9998,
+  &quot;n_beans&quot;: 1,
+  &quot;counts&quot;: {
+   &quot;light&quot;: 1,
+   &quot;medium&quot;: 0,
+   &quot;dark&quot;: 0
+  },
+  &quot;count_method&quot;: &quot;exact&quot;,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 1,
+  &quot;image_size&quot;: [
+   224,
+   224
+  ],
+  &quot;ml_ms_notebook&quot;: 58.8,
+  &quot;model&quot;: &quot;perbean-dev-fold-rf_boos-v3-preview&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;boos&quot;,
+  &quot;true&quot;: &quot;mixed&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;medium&quot;,
+  &quot;confidence&quot;: 0.9997,
+  &quot;n_beans&quot;: 6,
+  &quot;counts&quot;: {
+   &quot;light&quot;: 0,
+   &quot;medium&quot;: 6,
+   &quot;dark&quot;: 0
+  },
+  &quot;count_method&quot;: &quot;exact&quot;,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 6,
+  &quot;image_size&quot;: [
+   640,
+   640
+  ],
+  &quot;ml_ms_notebook&quot;: 468.4,
+  &quot;model&quot;: &quot;perbean-dev-fold-rf_boos-v3-preview&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;agtron(full frame)&quot;,
+  &quot;true&quot;: &quot;medium&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;medium&quot;,
+  &quot;confidence&quot;: 0.9997,
+  &quot;n_beans&quot;: 1,
+  &quot;counts&quot;: {
+   &quot;light&quot;: 0,
+   &quot;medium&quot;: 1,
+   &quot;dark&quot;: 0
+  },
+  &quot;count_method&quot;: &quot;exact&quot;,
+  &quot;warnings&quot;: [],
+  &quot;len_beans&quot;: 1,
+  &quot;image_size&quot;: [
+   1600,
+   1200
+  ],
+  &quot;ml_ms_notebook&quot;: 799.8,
+  &quot;model&quot;: &quot;perbean-dev-fold-rf_boos-v3-preview&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;empty(hendi)&quot;,
+  &quot;true&quot;: &quot;empty&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;dark&quot;,
+  &quot;confidence&quot;: 0.8682,
+  &quot;n_beans&quot;: 0,
+  &quot;counts&quot;: {
+   &quot;light&quot;: 0,
+   &quot;medium&quot;: 0,
+   &quot;dark&quot;: 0
+  },
+  &quot;count_method&quot;: &quot;exact&quot;,
+  &quot;warnings&quot;: [
+   &quot;no_beans_detected&quot;
+  ],
+  &quot;len_beans&quot;: 0,
+  &quot;image_size&quot;: [
+   640,
+   640
+  ],
+  &quot;ml_ms_notebook&quot;: 287.5,
+  &quot;model&quot;: &quot;perbean-dev-fold-rf_boos-v3-preview&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ },
+ {
+  &quot;image&quot;: &quot;synthetic pile300&quot;,
+  &quot;true&quot;: &quot;visible gt=300&quot;,
+  &quot;status&quot;: &quot;ok&quot;,
+  &quot;label&quot;: &quot;medium&quot;,
+  &quot;confidence&quot;: 0.9996,
+  &quot;n_beans&quot;: 514,
+  &quot;counts&quot;: {
+   &quot;light&quot;: 0,
+   &quot;medium&quot;: 514,
+   &quot;dark&quot;: 0
+  },
+  &quot;count_method&quot;: &quot;estimated&quot;,
+  &quot;warnings&quot;: [
+   &quot;count_visible_only&quot;,
+   &quot;bean_count_estimated&quot;
+  ],
+  &quot;len_beans&quot;: 514,
+  &quot;image_size&quot;: [
+   900,
+   600
+  ],
+  &quot;ml_ms_notebook&quot;: 475.9,
+  &quot;model&quot;: &quot;perbean-dev-fold-rf_boos-v3-preview&quot;,
+  &quot;fw_origin_main&quot;: &quot;REJECT: result fields do not match roastml contract&quot;
+ }
+]</pre>
+<p>ข้อสังเกตจาก preview: ภาพ boos ที่มี 3 ระดับปนกันได้ medium ทั้ง 6 เมล็ดและไม่มี mixed_roast · ภาพ agtron เต็มเฟรมนับได้ 1 เมล็ด · กองสังเคราะห์ 300 ได้ 514</p>
+<h2>B. P0 + prereg</h2><h3>B1 จุดที่เบี่ยงจาก prereg</h3><ul><li>Empty: prereg กำหนด rf_hendi empty 305 ภาพ · P1 แบ่งครึ่งเป็น tune 145 / report 160 แล้วรายงานเฉพาะ 160 (เข้มกว่า prereg)</li><li>rf_boos beans-mode: prereg กำหนดทุกภาพ trainval (P0 audit มี 925) · P1 ใช้ 598 เพราะตัด group ที่ freeze ออก</li><li>macro-F1 ราย fold: fold rf_boos เหลือแค่ light 198 + dark 298 ภาพ (medium 0) เพราะวิดีโอ Medium-1- ถูก freeze → macro-F1 3 คลาสมีเพดาน 0.667</li></ul><p>เกณฑ์ mixed_dev (candidate ต้องต่ำกว่า B1) ไม่อยู่ใน <code>GATES</code> ของ tools/perbean_protocol.py:14-16 จึงไม่ถูกบันทึกใน declaration</p>
+<h3>B2 count-test</h3><div class="scroll"><table class=""><thead><tr><th>split</th><th>scene</th><th>ที่มา</th><th>กรอกแล้ว</th><th>มีรูป</th><th>จำนวนแถว</th></tr></thead><tbody><tr><td>dev</td><td>flat</td><td>rf_boos Mixed (YOLO prefill)</td><td>ใช่</td><td>ใช่</td><td>3</td></tr><tr><td>dev</td><td>pile</td><td>agtron 6 + rf_hendi 1</td><td>ไม่</td><td>ใช่</td><td>7</td></tr><tr><td>dev</td><td>—</td><td>web slot</td><td>ไม่</td><td>ไม่</td><td>5</td></tr><tr><td>frozen</td><td>flat</td><td>rf_boos</td><td>ใช่</td><td>ใช่</td><td>4</td></tr><tr><td>frozen</td><td>touching</td><td>rf_boos Medium-1-</td><td>ใช่</td><td>ใช่</td><td>4</td></tr><tr><td>frozen</td><td>pile</td><td>agtron/rf_hendi</td><td>ไม่</td><td>ใช่</td><td>7</td></tr><tr><td>frozen</td><td>—</td><td>web slot</td><td>ไม่</td><td>ไม่</td><td>10</td></tr></tbody></table></div>
+<ul><li>split สุ่มระดับ group ด้วย seed 20261009 · count_test.csv และ count_test_meta.json mtime 9 ต.ค. 22:56 และไม่ถูกแก้อีกเลย → split มาก่อนการนับด้วยคนแน่นอน เพราะยังไม่มีใครนับ</li><li>group ที่ freeze: rf_boos 3 วิดีโอ (397 ภาพ), agtron dev2 + dev4 (189 ภาพ), rf_hendi 3 วิดีโอ (68 ภาพ) รวม 654 ภาพ trainval</li><li>P1 ไม่แตะ frozen: feature cache 3,892 record อยู่ใน frozen 0 · ค้น path ของ frozen/test ในไฟล์ผล P1 ทุกไฟล์ = 0</li><li>แต่ P0 audit (22:44–22:48 ก่อน split 22:56) รันตัวนับทั้งสองบน rf_boos ทั้ง 995 ภาพ รวม 397 ภาพที่ภายหลังถูก freeze และ 8 แถว frozen ของ count-test · แถว touching ถูกเลือกด้วย <code>--touching-from predictions_old.csv</code> (tools/make_count_test.py:79-83) คือเลือกเฟรมที่ตัวนับเก่านับน้อยกว่า GT</li><li>B1 ที่ deploy อยู่ (current) เทรนด้วย trainval ทั้งหมดรวม group ที่ freeze → แถว frozen เป็น in-sample สำหรับ label ระดับภาพ</li><li>ในรอบตรวจนี้ผมอ่านเฉพาะคอลัมน์ path/split/scene และดูว่าช่อง n_total ว่างหรือไม่ของแถว frozen ไม่ได้เปิดรูปและไม่ได้รันโมเดลบนแถวเหล่านั้น</li></ul>
+<h2>C. P1 ตัวนับ</h2><h3>C1 ลำดับเวลาของการรัน</h3><div class="scroll"><table class=""><thead><tr><th>เวลา (10 ต.ค.)</th><th>run</th><th>Empty zero-rate</th><th>boos MAE</th><th>หมายเหตุ</th></tr></thead><tbody><tr><td>00:33</td><td>counter_wip_dev</td><td>tune 0.008 (n=120)</td><td>0.058 (n=120)</td><td>ค่าเริ่มต้น</td></tr><tr><td>00:38</td><td>counter_grid_dev</td><td>tune (n=120): chroma8 0.375 → chroma12 0.908 → chroma16 1.000</td><td>0.050 (n=120)</td><td>เลือก chroma16</td></tr><tr><td>00:45</td><td>counter_report_dev</td><td>report-half 0.8938 (n=160)</td><td>0.0769 (n=598)</td><td>เปิด report-half ครั้งที่ 1</td></tr><tr><td>09:56</td><td>counter_touch_resume</td><td>tune 1.000 (n=145)</td><td>0.0619 (n=598)</td><td>config เดิมแต่ค่าเปลี่ยน = โค้ดตัวนับถูกแก้</td></tr><tr><td>09:59</td><td>counter_final_grid</td><td>tune 1.000 (n=145)</td><td>0.0385 (n=598)</td><td>เลือก sep2</td></tr><tr><td>10:03</td><td>counter_final_report</td><td>report-half 0.9125 (n=160)</td><td>0.0385 (n=598)</td><td>เปิด report-half ครั้งที่ 2</td></tr></tbody></table></div>
+<p>tune-half ได้ 145/145 แต่ report-half ได้ 146/160 — ช่องว่างนี้บอกว่าค่า chroma ที่จูนพอดีกับวิดีโอฝั่ง tune · ค่าที่เลือก (metal_chroma_min=16, ws_separation=2) ต่างจากค่า default ใน CountConfig (8.0, 1.0) ดังนั้น model_card ที่ไม่มี count_config จะได้พฤติกรรมอีกแบบ (เห็นได้จาก bean_candidate ใน main ที่นับภาพ Empty ได้ 5 เมล็ด)</p>
+<h3>C2 ภาพ Empty ที่นับผิด 14 ภาพ</h3><p>ดูภาพ overlay ครบทั้ง 14 ภาพ: เป็นภาพภายในถังคั่วโลหะสีเข้ม ทุกภาพที่ผิดมีวัตถุสีอ่อนอมเหลืองโผล่ที่มุมบนซ้ายของเฟรมและถูกนับเป็น 1 เมล็ดแบบ flat/exact ผ่านเส้นทาง local_background · กระจุกอยู่ใน 2 วิดีโอ: {&quot;rf_hendi:20240817_154323&quot;: 7, &quot;rf_hendi:20240817_154338&quot;: 7} จาก 6 วิดีโอ · ภาพที่ผ่านจากวิดีโอเดียวกันมีวัตถุเดียวกันแต่เล็กกว่าเกณฑ์พื้นที่</p><p class='mut'>ข้อจำกัดของชุดนี้: 'Empty' ของ rf_hendi คือถังคั่วเปล่า ไม่ใช่โต๊ะหรือกระดาษเปล่าแบบที่จะเจอตอนสาธิต</p>
+<h3>C3 กองสังเคราะห์ 300 เมล็ด</h3><div class="scroll"><table class=""><thead><tr><th>อินพุต</th><th>n ที่นับได้</th><th>ref_area (px)</th><th>พื้นที่เมล็ดจริง (px)</th><th>ชิ้น/เมล็ด</th><th>เมล็ดที่ไม่ถูกนับ</th><th>ชิ้นที่คร่อม &gt;1 เมล็ด</th><th>คู่กรอบ IoU&gt;0.5</th></tr></thead><tbody><tr><td>raw_array</td><td>974</td><td>70.4</td><td>1303.0</td><td>3.23</td><td>103</td><td>296</td><td>19</td></tr><tr><td>jpeg_q85</td><td>514</td><td>228.0</td><td>1303.0</td><td>1.7</td><td>108</td><td>224</td><td>4</td></tr><tr><td>jpeg_q85_then_q84(browser-like)</td><td>970</td><td>70.4</td><td>1303.0</td><td>3.21</td><td>105</td><td>307</td><td>22</td></tr><tr><td>jpeg_q60</td><td>517</td><td>222.7</td><td>1303.0</td><td>1.72</td><td>106</td><td>233</td><td>7</td></tr></tbody></table></div>
+<p>ภาพเดียวกันนับได้ 514 หรือ ~970 ขึ้นกับการบีบอัด JPEG อย่างเดียว (นี่คือที่มาของ 964 ใน E2E ซึ่ง browser บีบซ้ำ) · เมล็ดสีเข้มของ fixture (RGB 50,32,22) ไม่ถูกนับเลยเพราะ chroma ต่ำกว่า metal_chroma_min=16 · เมล็ดสีอ่อน/กลางถูกแบ่งเป็นหลายชิ้นซ้อนกัน · label เป็น partition ไม่ทับกัน จึงไม่ใช่การนับซ้ำด้วยกรอบซ้อน</p><p>หลักฐานเดียวกันในข้อมูลจริง: rf_robusta ภาพ dark ตรวจไม่เจอเมล็ดเลย 149/500 (30%) เทียบ medium 32/479 (7%)</p>
+<h3>C4 ภาพกองจริงผ่านเส้นทางของ FW</h3><p>agtron 20 ภาพ (สุ่ม seed 20261010, ไม่ใช่ frozen) ส่งทั้งเฟรมผ่าน predict_bytes: n_beans = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6, 23, 24, 26] · ภาพเดียวกันผ่าน ROI + force_pile (เส้นทางที่ P1 ใช้ประเมิน) ได้ 53–89 เมล็ด</p><p>สาเหตุจากโค้ด: กองบนจานบนพื้นขาวกินพื้นที่ภาพไม่ถึง 60% จึงไม่เข้าเงื่อนไข pile (counter.py:403, 415) → ทั้งกองเป็นก้อนเดียวและเป็นก้อนเดียวที่ใช้กำหนดขนาดอ้างอิง → นับเป็น 1 เมล็ดแบบ exact (counter.py:437-441) ผลของ fold agtron ใน P1 จึงไม่ได้สะท้อนสิ่งที่ FW จะได้</p>
+<h3>C5 cap และ loop</h3><p>finish() ที่ counter.py:385-393 ตัดเหลือก้อนใหญ่สุด max_beans ก้อน เปลี่ยน method เป็น estimated → ผู้ใช้ได้ warning count_visible_only + bean_count_estimated แต่ไม่มี warning เฉพาะว่า 'ถึงเพดาน' · ภาพจุดเล็ก 4,000 จุดที่ 1600×1200: ขั้น count ใช้ 625.1 ms และรวม 1196.1 ms บน notebook เพราะ _blob_shapes วน Python ต่อทุก component</p>
+<h2>D. P1 ตัวจำแนกรายเมล็ด</h2><h3>D1 ตาราง paired (คำนวณใหม่ = summary ทุกค่า)</h3><div class="scroll"><table class=""><thead><tr><th>fold</th><th>วิธี</th><th>macro-F1 (ถ่วง 1/n)</th><th>ต่างจาก B1</th><th>ผ่าน −0.02</th><th>F1 light / medium / dark</th><th>light↔dark</th></tr></thead><tbody><tr><td>ontoum224</td><td>B1 broadcast</td><td>0.8579</td><td>—</td><td>อ้างอิง</td><td>0.905 / 0.772 / 0.897</td><td>0.0034</td></tr><tr><td>ontoum224</td><td>B-bean</td><td>0.4034</td><td>−0.4544</td><td>ไม่ผ่าน</td><td>0.000 / 0.420 / 0.790</td><td>0.0235</td></tr><tr><td>ontoum224</td><td>B-bean+group</td><td>0.4034</td><td>−0.4544</td><td>ไม่ผ่าน</td><td>0.000 / 0.420 / 0.790</td><td>0.0235</td></tr><tr><td>rf_robusta</td><td>B1 broadcast</td><td>0.3683</td><td>—</td><td>อ้างอิง</td><td>0.092 / 0.524 / 0.489</td><td>0.1202</td></tr><tr><td>rf_robusta</td><td>B-bean</td><td>0.2396</td><td>−0.1287</td><td>ไม่ผ่าน</td><td>0.016 / 0.380 / 0.323</td><td>0.4346</td></tr><tr><td>rf_robusta</td><td>B-bean+group</td><td>0.2634</td><td>−0.1050</td><td>ไม่ผ่าน</td><td>0.014 / 0.447 / 0.329</td><td>0.3977</td></tr><tr><td>rf_boos</td><td>B1 broadcast</td><td>0.6234</td><td>—</td><td>อ้างอิง</td><td>0.872 / 0.000 / 0.998</td><td>0.0000</td></tr><tr><td>rf_boos</td><td>B-bean</td><td>0.2634</td><td>−0.3600</td><td>ไม่ผ่าน</td><td>0.000 / 0.000 / 0.790</td><td>0.3192</td></tr><tr><td>rf_boos</td><td>B-bean+group</td><td>0.2505</td><td>−0.3728</td><td>ไม่ผ่าน</td><td>0.000 / 0.000 / 0.752</td><td>0.3972</td></tr><tr><td>agtron</td><td>B1 broadcast</td><td>0.6374</td><td>—</td><td>อ้างอิง</td><td>0.611 / 0.714 / 0.587</td><td>0.0000</td></tr><tr><td>agtron</td><td>B-bean</td><td>0.6534</td><td>+0.0159</td><td>ผ่าน</td><td>0.460 / 0.644 / 0.856</td><td>0.0300</td></tr><tr><td>agtron</td><td>B-bean+group</td><td>0.7919</td><td>+0.1545</td><td>ผ่าน</td><td>0.667 / 0.787 / 0.922</td><td>0.0000</td></tr></tbody></table></div>
+<p class='mut'>ภาพที่ตรวจไม่เจอเมล็ดถูกตัดออกจากทั้งสองฝั่ง (rf_robusta 183/1046) · fold agtron ประเมินด้วย ROI + force_pile ซึ่ง FW ไม่มี · ตาราง per-class ใน report เดิมใส่ F1 รายคลาสแบบถ่วงน้ำหนักคู่กับ macro-F1 แบบไม่ถ่วงในคอลัมน์สุดท้าย (เช่น rf_robusta 0.3613)</p>
+<h3>D3 วินิจฉัย light F1 = 0</h3><p><b>ขั้นที่ 1 — feature รายเมล็ดกับ feature ทั้งภาพของ B1 บนภาพ ontoum เดียวกัน 50 ภาพ (สุ่ม seed 20261010, ทุกภาพ n=1)</b></p><div class="scroll"><table class=""><thead><tr><th>feature</th><th>รายเมล็ด</th><th>ทั้งภาพ (B1)</th><th>ส่วนต่างเฉลี่ย</th><th>SD</th><th>ต่างสูงสุด</th></tr></thead><tbody><tr><td>L_med</td><td>33.71</td><td>33.37</td><td>0.34</td><td>1.19</td><td>4.94</td></tr><tr><td>a_med</td><td>5.36</td><td>5.24</td><td>0.13</td><td>0.26</td><td>1.02</td></tr><tr><td>b_med</td><td>22.3</td><td>22.19</td><td>0.11</td><td>0.45</td><td>1.31</td></tr><tr><td>L_p10</td><td>13.27</td><td>13.37</td><td>-0.11</td><td>3.44</td><td>14.43</td></tr><tr><td>L_std</td><td>14.96</td><td>14.55</td><td>0.41</td><td>0.9</td><td>2.63</td></tr></tbody></table></div>
+<p>แทบเท่ากัน → WB และ core mask ไม่ใช่สาเหตุบนภาพเรียบ · WB ใช้ PreparedImage ตัวเดียวกันทั้ง segment และตัวนับ (train_perbean.py:47-49, bean_backend.py:53-69) · เทรนและ serve เรียก count_features ตัวเดียวกัน (perbean.py:16-19) · parity test มีจริง (tests/test_beans.py:61, 124) แต่ครอบเฉพาะฉากสังเคราะห์แบบ flat ไม่ครอบเส้นทาง pile/ROI</p>
+<p><b>ขั้นที่ 2 — สลับโมเดลกับ feature (ใช้โมเดลราย fold ที่มีอยู่ ไม่ได้เทรน)</b></p><div class="scroll"><table class=""><thead><tr><th>fold</th><th>น้ำหนัก B1 × feature ภาพ</th><th>น้ำหนัก B1 × feature เมล็ด</th><th>โมเดลเมล็ด × feature ภาพ</th><th>โมเดลเมล็ด × feature เมล็ด (P1)</th><th>F1 L/M/D ของ P1</th><th>‖W‖ B1</th><th>‖W‖ เมล็ด</th></tr></thead><tbody><tr><td>ontoum224</td><td>0.8579</td><td>0.8615</td><td>0.3875</td><td>0.4034</td><td>[0.0, 0.42, 0.79]</td><td>1.36</td><td>3.11</td></tr><tr><td>rf_robusta</td><td>0.3683</td><td>0.2540</td><td>0.3249</td><td>0.2396</td><td>[0.016, 0.38, 0.323]</td><td>1.53</td><td>1.53</td></tr><tr><td>rf_boos</td><td>0.6234</td><td>0.6306</td><td>0.2515</td><td>0.2634</td><td>[0.0, 0.0, 0.79]</td><td>1.66</td><td>4.93</td></tr><tr><td>agtron</td><td>0.6374</td><td>0.4070</td><td>0.6969</td><td>0.6534</td><td>[0.46, 0.644, 0.856]</td><td>1.59</td><td>2.6</td></tr></tbody></table></div>
+<p>บน ontoum และ rf_boos น้ำหนักของ B1 ทำงานกับ feature รายเมล็ดได้ดีเท่าเดิม ส่วนโมเดลรายเมล็ดแย่ไม่ว่าจะป้อน feature แบบไหน → ปัญหาอยู่ที่สิ่งที่โมเดลรายเมล็ดเรียนมา</p>
+<p><b>ขั้นที่ 3 — โมเดลรายเมล็ดเรียนจากอะไร</b> (ค่าเฉลี่ยต่อ source × คลาส)</p><div class="scroll"><table class=""><thead><tr><th>source</th><th>คลาส</th><th>ภาพ</th><th>เมล็ด</th><th>L_med เมล็ด</th><th>L_med ภาพ</th><th>L_med ที่ B1 ใช้เทรน</th><th>a เมล็ด</th><th>b เมล็ด</th><th>L_p10 เมล็ด</th><th>L_p10 ภาพ</th></tr></thead><tbody><tr><td>ontoum224</td><td>light</td><td>300</td><td>300</td><td>46.8</td><td>46.4</td><td>46.4</td><td>8.3</td><td>38.4</td><td>25.7</td><td>24.6</td></tr><tr><td>ontoum224</td><td>medium</td><td>300</td><td>300</td><td>28.4</td><td>27.8</td><td>27.8</td><td>5.8</td><td>19.5</td><td>9.8</td><td>9.9</td></tr><tr><td>ontoum224</td><td>dark</td><td>295</td><td>295</td><td>20.9</td><td>20.7</td><td>20.7</td><td>3.3</td><td>8.6</td><td>2.8</td><td>3.3</td></tr><tr><td>rf_robusta</td><td>light</td><td>65</td><td>81</td><td>32.7</td><td>36.7</td><td>32.2</td><td>9.2</td><td>18.8</td><td>13.6</td><td>15.7</td></tr><tr><td>rf_robusta</td><td>medium</td><td>447</td><td>12938</td><td>46.3</td><td>38.4</td><td>26.3</td><td>12.8</td><td>21.7</td><td>29.1</td><td>15.1</td></tr><tr><td>rf_robusta</td><td>dark</td><td>351</td><td>4849</td><td>45.7</td><td>33.1</td><td>14.4</td><td>10.3</td><td>17.5</td><td>30.3</td><td>14.4</td></tr><tr><td>rf_boos</td><td>light</td><td>198</td><td>594</td><td>47.3</td><td>48.1</td><td>50.3</td><td>2.5</td><td>-2.3</td><td>40.3</td><td>38.6</td></tr><tr><td>rf_boos</td><td>medium</td><td>0</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>rf_boos</td><td>dark</td><td>298</td><td>894</td><td>18.8</td><td>19.1</td><td>19.8</td><td>2.3</td><td>-1.6</td><td>14.0</td><td>13.5</td></tr><tr><td>agtron</td><td>light</td><td>50</td><td>5182</td><td>40.6</td><td>33.9</td><td>33.9</td><td>10.0</td><td>28.2</td><td>31.8</td><td>19.4</td></tr><tr><td>agtron</td><td>medium</td><td>156</td><td>13912</td><td>34.6</td><td>28.7</td><td>28.7</td><td>10.2</td><td>25.2</td><td>25.9</td><td>15.6</td></tr><tr><td>agtron</td><td>dark</td><td>166</td><td>12263</td><td>22.7</td><td>16.6</td><td>16.6</td><td>7.0</td><td>11.4</td><td>13.9</td><td>6.2</td></tr></tbody></table></div>
+<p>rf_robusta: 'เมล็ด' ที่ตัวนับหาได้มี L_med ≈ 46 ทั้ง medium และ dark ขณะที่ B1 เทรนจากกล่อง YOLO ได้ 26.3 และ 14.4 → บริเวณที่ตัวนับจับไม่ใช่เมล็ดที่ label พูดถึง แต่ถูกป้อนเข้าเทรนพร้อม label ของภาพ</p>
+<p><b>ขั้นที่ 4 — สัดส่วนน้ำหนักในชุดเทรนของ fold ที่ light F1 = 0</b></p><div class="scroll"><table class=""><thead><tr><th>fold ที่กันออก</th><th>คลาส</th><th>น้ำหนักรวม (ภาพ)</th><th>สัดส่วนต่อ source — โมเดลเมล็ด</th><th>แถวเทรนของ B1 (cap 10 เฟรม/วิดีโอ)</th><th>สัดส่วนต่อ source — B1</th></tr></thead><tbody><tr><td>ontoum224</td><td>light</td><td>313</td><td>{&quot;rf_robusta&quot;: 0.208, &quot;rf_boos&quot;: 0.633, &quot;agtron&quot;: 0.16}</td><td>20</td><td>{&quot;rf_robusta&quot;: 0.5, &quot;rf_boos&quot;: 0.5}</td></tr><tr><td>ontoum224</td><td>medium</td><td>603</td><td>{&quot;rf_robusta&quot;: 0.741, &quot;agtron&quot;: 0.259}</td><td>183</td><td>{&quot;rf_robusta&quot;: 1.0}</td></tr><tr><td>ontoum224</td><td>dark</td><td>815</td><td>{&quot;rf_robusta&quot;: 0.431, &quot;rf_boos&quot;: 0.366, &quot;agtron&quot;: 0.204}</td><td>903</td><td>{&quot;rf_robusta&quot;: 0.566, &quot;rf_boos&quot;: 0.022, &quot;agtron&quot;: 0.412}</td></tr><tr><td>rf_boos</td><td>light</td><td>415</td><td>{&quot;ontoum224&quot;: 0.723, &quot;rf_robusta&quot;: 0.157, &quot;agtron&quot;: 0.12}</td><td>310</td><td>{&quot;ontoum224&quot;: 0.968, &quot;rf_robusta&quot;: 0.032}</td></tr><tr><td>rf_boos</td><td>medium</td><td>903</td><td>{&quot;ontoum224&quot;: 0.332, &quot;rf_robusta&quot;: 0.495, &quot;agtron&quot;: 0.173}</td><td>483</td><td>{&quot;ontoum224&quot;: 0.621, &quot;rf_robusta&quot;: 0.379}</td></tr><tr><td>rf_boos</td><td>dark</td><td>812</td><td>{&quot;ontoum224&quot;: 0.363, &quot;rf_robusta&quot;: 0.432, &quot;agtron&quot;: 0.204}</td><td>1178</td><td>{&quot;ontoum224&quot;: 0.25, &quot;rf_robusta&quot;: 0.434, &quot;agtron&quot;: 0.316}</td></tr></tbody></table></div>
+<p><b>สมมติฐาน (เรียงตามน้ำหนักหลักฐาน)</b></p><ol><li>H1: rf_robusta ปนเปื้อนชุดเทรนรายเมล็ด — ใน fold ontoum มันคือ 74% ของน้ำหนัก medium และ 43% ของ dark โดยมี L_med ≈ 46 → โมเดลเรียนว่า 'สว่างราว 46 = medium/dark' → ontoum light (L_med 46.8) ถูกทายเป็น medium ทั้ง 300 ภาพ และ boos light (L_med 47.3, chroma ต่ำ) ถูกทายเป็น dark 158/198</li><li>H2: ไม่มี cap เฟรมต่อวิดีโอในโมเดลรายเมล็ด — rf_boos (3 วิดีโอ) เป็น 63% ของน้ำหนัก light ใน fold ontoum และ C ที่เลือกได้ (1.0) ให้ ‖W‖ ใหญ่กว่า B1 2–3 เท่า</li><li>H3: เส้นทาง pile ตัดร่องมืดออกก่อนคิดสี — agtron L_med รายเมล็ดสูงกว่าระดับภาพ ~6 และ L_p10 สูงกว่า ~12 (agtron ไม่ได้ข่มด้วยจำนวน เพราะถ่วง 1/n แล้วเหลือ 16–26% ต่อคลาส)</li></ol><p><b>การทดลองเล็กที่สุดที่ยืนยันได้ (ยังไม่ได้รัน):</b> รัน tools/train_perbean.py เดิมทุกอย่าง แต่ตัด rf_robusta ออกจาก <code>arrays(train)</code> ของโมเดลรายเมล็ดเท่านั้น (B1 broadcast คงเดิม) ประกาศก่อนรันว่า H1 ถูกถ้า light F1 ของ fold ontoum ≥ 0.70 และ light→dark ของ fold rf_boos ≤ 5% · ถ้าไม่ถึง ให้ทดสอบ H2 ด้วย cap 10 เฟรม/วิดีโอ</p><p class='mut'>ตัวเลข 'น้ำหนัก B1 × feature เมล็ด' ในตารางขั้นที่ 2 เป็นการวินิจฉัยบน dev ไม่ใช่ผลของ candidate ที่ประกาศไว้ล่วงหน้า ห้ามใช้เป็นหลักฐานผ่านเกณฑ์</p>
+<h3>D4 light↔dark ของ B-bean แยกตาม fold</h3><div class="scroll"><table class=""><thead><tr><th>fold</th><th>light→dark (ภาพ)</th><th>dark→light (ภาพ)</th><th>ภาพ light</th><th>ภาพ dark</th><th>ส่วนแบ่งของ error</th></tr></thead><tbody><tr><td>ontoum224</td><td>0.0</td><td>14.0</td><td>300.0</td><td>295.0</td><td>3.9%</td></tr><tr><td>rf_robusta</td><td>6.3</td><td>174.4</td><td>65.0</td><td>351.0</td><td>50.3%</td></tr><tr><td>rf_boos</td><td>158.3</td><td>0.0</td><td>198.0</td><td>298.0</td><td>44.0%</td></tr><tr><td>agtron</td><td>0.6</td><td>5.9</td><td>50.0</td><td>166.0</td><td>1.8%</td></tr></tbody></table></div><p>รวม 0.2086 ตรงกับ report เดิม (0.2087)</p>
+<h2>E. P2 contract v3</h2><h3>E1–E3 รัน 100 ภาพสุ่มจาก trainval (ตัด group ที่ freeze, seed 20261010) + 6 ภาพว่าง/สังเคราะห์ + 8 อินพุตเสีย</h3>
+<div class="scroll"><table class=""><thead><tr><th>โมเดล</th><th>backend</th><th>status</th><th>invariant ผิด</th><th>เสมอ</th><th>มี n_beans</th><th>n min/med/max</th><th>conf ภาพ 1 เมล็ด</th><th>คู่ IoU&gt;0.5</th><th>ML ms p50/p95/max (notebook)</th><th>FW origin ปฏิเสธ</th><th>FW+patch ปฏิเสธ</th><th>ValueError majority</th><th>ถอยเป็น B1</th></tr></thead><tbody><tr><td>current (default)</td><td>b1_linear</td><td>{&quot;ok&quot;: 100}</td><td>{}</td><td>0</td><td>0</td><td>None</td><td>None</td><td>0</td><td>134 / 473 / 1525</td><td>100</td><td>0</td><td>0</td><td>0</td></tr><tr><td>bean_candidate (main)</td><td>b1_linear_beans</td><td>{&quot;ok&quot;: 100}</td><td>{&quot;proportions!=counts/n&quot;: 4}</td><td>11</td><td>100</td><td>[0, 3.0, 226]</td><td>[0.9995, 1.0]</td><td>19</td><td>269 / 704 / 1126</td><td>100</td><td>0</td><td>0</td><td>0</td></tr><tr><td>v3 preview (worktree)</td><td>b1_linear_beans</td><td>{&quot;ok&quot;: 100}</td><td>{&quot;proportions!=counts/n&quot;: 1}</td><td>9</td><td>100</td><td>[0, 2.0, 90]</td><td>[0.9995, 0.9999]</td><td>2</td><td>200 / 610 / 844</td><td>100</td><td>0</td><td>0</td><td>0</td></tr></tbody></table></div>
+<p>invariant ที่ตรวจ: key ครบและเรียงตาม RESULT_KEYS · json.dumps ได้ · n_beans == len(beans) == sum(counts) · counts ตรงกับ label ของ beans · label อยู่ในกลุ่มที่ count สูงสุด · label == argmax(probs) · proportions รวม 1 และ null เมื่อ n=0 · bbox อยู่ใน image_size · mixed_roast / no_beans_detected / bean_count_estimated ตรงกับ counts และ count_method · ผลเสียต้องเป็น null ทั้งชุด</p>
+<p>อินพุตเสีย: ไบต์ว่าง, ไบต์สุ่ม, JPEG ตัดท้าย, ข้อความ, PDF, None → bad_image · PNG 4×4 → bad_image พร้อมข้อความ 'รูปเล็กเกินไป' · ส่ง str → error</p>
+<p><b>ข้อค้นพบที่ไม่ใช่ invariant แต่กระทบผู้ใช้</b></p><ul><li>confidence ของโมเดลรายเมล็ด = 0.999 × สัดส่วนคลาสข้างมาก + 0.001 × prob เฉลี่ย (perbean.py:86) → ภาพ 1 เมล็ดได้ 0.9995–1.0 ทั้ง 29 ภาพไม่ว่าตัวจำแนกจะลังเลแค่ไหน และ low_conf_threshold ของทุก card = 0.0 → ไม่มีทางได้ status low_confidence</li><li>ภาพว่าง (ขาวล้วน, ดำล้วน, noise, ถังเปล่า): status ok พร้อม label 'คั่วเข้ม/คั่วกลาง' ความมั่นใจ 0.87–0.94 และ warning no_beans_detected — ข้อความขึ้นว่า 'ผลวิเคราะห์: คั่วเข้ม'</li><li>เมื่อเส้นทางรายเมล็ดพัง backend จับ exception แล้วคืนผล B1 พร้อม n_beans = null (bean_backend.py:106-108) ผู้ใช้ไม่รู้ว่าระบบถอย · ใน 100 ภาพเกิด 0 ครั้ง</li></ul>
+<h3>E4 pytest</h3><div class="scroll"><table class=""><thead><tr><th>ที่ไหน</th><th>ชุด</th><th>ผล</th></tr></thead><tbody><tr><td>69c4354 สะอาด (worktree ตรวจ)</td><td>ปกติ</td><td>320 passed, 15 failed</td></tr><tr><td>69c4354 สะอาด (worktree ตรวจ)</td><td>จำลอง Pi (-p tools.pi_runtime_plugin)</td><td>289 passed, 15 failed, 9 skipped</td></tr><tr><td>worktree seed-count (มี patch FW)</td><td>ปกติ</td><td>335 passed</td></tr><tr><td>worktree seed-count (มี patch FW)</td><td>จำลอง Pi</td><td>304 passed, 9 skipped</td></tr></tbody></table></div>
+<p>15 ตัวที่ล้มอยู่ใน tests/test_firmware_v3.py ทั้งหมด (เช่น <code>AttributeError: module 'app' has no attribute 'mqtt_result'</code>) · 9 ตัวที่ skip: sklearn 7 (test_compare_tabular, test_d1_tools, test_export_d1, test_roi_scaling, test_run_tools, test_baseline ×2) และ onnx/onnxruntime 2 (test_onnx_backend) · เลขของ commit P1 (308 · 277+9) ไม่ได้รันซ้ำ = UNVERIFIED</p>
+<h2>F. Firmware patch (ยังไม่ commit)</h2><ul><li>F1: patch อยู่ที่ results/fw_v3_review_20261010/diff/Firmware/ · รวม 332 บรรทัดเพิ่ม / 167 บรรทัดลบ (service.py เปลี่ยน 125 บรรทัด, script.js เปลี่ยน 315 บรรทัด) · ตรวจด้วย <code>git apply --check</code> เท่านั้น ไม่ได้ apply จริง</li><li>F2: connect_db() ของ patch รัน CREATE TABLE + BEGIN IMMEDIATE ทุกครั้ง และ read_market_snapshot() อ่านทุกแถวไม่มี LIMIT ขณะที่หน้าเว็บเรียก /api/market ทุก 3 วินาทีต่อ client → บน Pi จะแย่ง CPU/lock กับ /api/predict เมื่อข้อมูลสะสม</li><li>F3: ถ้า browser เปิดไฟล์ไม่ได้ (เช่น HEIC บน Chrome) จะส่งไฟล์ต้นฉบับและซ่อน canvas → ไม่มี overlay แต่ผลตัวเลขยังแสดง</li><li>F4: payload MQTT ของ v3 ไม่มี key beans เลย · subscriber ที่ patch แล้วรับได้ทั้งแบบมีและไม่มี beans</li></ul>
+<h3>F5 E2E ทั้ง 3 รอบที่มีผล</h3><div class="scroll"><table class=""><thead><tr><th>รอบ (เวลา)</th><th>LAN n</th><th>LAN p50 / p95 ms</th><th>hotspot n</th><th>hotspot p50 / p95 ms</th><th>p95 &lt; 1 s</th></tr></thead><tbody><tr><td>fw_v3_e2e_20261010_final (11:39)</td><td>20</td><td>229.0 / 252.0</td><td>0</td><td>—</td><td>LAN ผ่าน · hotspot ไม่ได้รัน</td></tr><tr><td>fw_v3_e2e_20261010_review (11:43)</td><td>20</td><td>2990.9 / 2992.5</td><td>0</td><td>—</td><td>ไม่ผ่าน</td></tr><tr><td>fw_v3_e2e_20261010_visible (11:49)</td><td>20</td><td>2988.4 / 3982.6</td><td>20</td><td>2988.6 / 2995.2</td><td>ไม่ผ่านทั้งคู่</td></tr></tbody></table></div>
+<p>report.html เดิมรายงานรอบ 11:49 เป็นผลสุดท้ายและเขียนว่าไม่ผ่าน ส่วน 252 ms ถูกระบุเป็น pilot · ค่า ~2990 ms คงที่ทุกฉากทั้งที่ ML ใช้ 114–280 ms แปลว่าเวลาส่วนใหญ่ไม่ได้อยู่ที่ ML หรือเครือข่ายจำลอง — เข้ากับการที่ requestAnimationFrame ถูกหน่วงเมื่อ iframe/แท็บไม่ได้วาดจริง แต่ผมไม่ได้พิสูจน์ข้อนี้</p>
+<p>ทั้งสามรอบวัดบน notebook Windows 11 ผ่าน proxy บน loopback ที่หน่วง RTT และจำกัด bitrate เฉพาะ /api/predict ใช้ภาพสังเคราะห์ 900×600 ขนาด 4–123 KB และปิด broker MQTT → ใช้สรุปเรื่อง Pi ไม่ได้ · วัดเพิ่มในรอบตรวจนี้ (ML อย่างเดียวบน notebook, ภาพ agtron จริง): ไฟล์ต้นฉบับ 7 MB ใช้ 805–1010 ms · ย่อเหลือ 1600 px ก่อนส่งใช้ 530–683 ms (B1 ตัวปัจจุบัน 249–318 ms)</p>
+<h2>สิ่งที่ไม่ได้ตรวจ / UNVERIFIED</h2><ul><li>origin/main บน GitHub จริง (ไม่ได้ fetch) และโมเดลที่อยู่บน Pi จริง</li><li>core.autocrlf และสาเหตุของ 12 ไฟล์แก้ค้าง</li><li>เลข pytest ของ commit P0 และ P1 · ผลบน Pi จริงทุกชนิด (latency, RAM, HEIC)</li><li>overlay บนมือถือจริง/ภาพ EXIF จริง · การส่ง MQTT ถึง broker จริง</li><li>สาเหตุของ E2E ~2990 ms · สมมติฐาน H1–H3 ของ D3 (ต้องเทรนใหม่จึงยืนยันได้)</li><li>notes ของแถว frozen ใน count_test.csv (ไม่ได้อ่าน)</li></ul>
+<h2>ทำซ้ำได้อย่างไร</h2><p>สคริปต์และหลักฐานดิบอยู่ในโฟลเดอร์เดียวกับรายงานนี้ รันจาก <code>ML/</code> ด้วย <code>ROAST_DATA_DIR</code> ชี้ไปที่โฟลเดอร์ข้อมูล:</p><pre>python results/review_p0_p2_20261010/scripts/run_e.py   results/review_p0_p2_20261010/evidence_contract.json   # A3, E1–E3
+python results/review_p0_p2_20261010/scripts/d_verify.py                                                        # D1, D2
+python results/review_p0_p2_20261010/scripts/d3.py      results/review_p0_p2_20261010/evidence_perbean.json    # D3, D4
+python results/review_p0_p2_20261010/scripts/c23.py     results/review_p0_p2_20261010/evidence_counter.json    # C2–C5
+python -m pytest -q -p no:cacheprovider [-p tools.pi_runtime_plugin]                                            # E4</pre><p class='mut'>seed 20261010 · Python 3.14.3, numpy 2.5.3, OpenCV 5.0.0, Pillow 12.3.0 (pytest ใช้ ML/.venv ของ main: sklearn 1.9.1, pytest 9.1.1) · ภาพ overlay ที่สร้างจากข้อมูลอยู่นอก repo ที่ <code>$ROAST_DATA_DIR/contact_sheets/review_p0_p2_20261010/</code> (C2_empty_fail_overlay.jpg, C3_synthetic_pile_overlay.jpg, C3_pile_crop_zoom.png, C4_agtron_fullframe_overlay.jpg)</p>
+</main></body></html>
