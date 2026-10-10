@@ -52,7 +52,7 @@ class ImageTooSmallError(BadImageError):
 @dataclass(frozen=True)
 class DecodedImage:
     image: Image.Image          # RGB, ด้านยาวสุด ≤ MAX_SIDE
-    orig_size: tuple[int, int]  # (w, h) ของรูปต้นฉบับหลังหมุนตาม EXIF — พิกัด bbox ของ beans อ้างอิงขนาดนี้
+    orig_size: tuple[int, int]  # ต้นฉบับหลัง EXIF; ใช้ map dataset ROI เท่านั้น (v3 beans อ้างอิง image.size)
     format: str                 # format ที่ Pillow ตรวจเจอ เช่น "JPEG"
 
     @property
