@@ -1,0 +1,27 @@
+{
+  "exp": "final",
+  "seconds": 816.2137694000003,
+  "ultralytics": "8.4.175",
+  "run_dir": "D:\\data\\cache\\yolo_runs\\yolo_bean_retrain_20261010_final",
+  "val_metrics_last_epoch(monitor only)": {
+    "metrics/precision(B)": 0.9397931585880663,
+    "metrics/recall(B)": 0.9374652275509069,
+    "metrics/mAP50(B)": 0.9838883082287405,
+    "metrics/mAP50-95(B)": 0.8385630044297747
+  },
+  "model_dir": "D:\\Topgun\\ML\\models\\yolo_bean_retrain_20261010\\final",
+  "onnx_bytes": 10624000,
+  "config": {
+    "model": "yolo11n.pt",
+    "epochs": 30,
+    "imgsz": 640,
+    "batch": 8,
+    "seed": 20261009,
+    "single_cls": true,
+    "amp": false,
+    "deterministic": true,
+    "plots": false,
+    "augment": "ultralytics defaults",
+    "checkpoint_used": "last.pt (fixed epochs; val only monitors loss)"
+  }
+}

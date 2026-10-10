@@ -1,0 +1,76 @@
+{
+  "sources": [
+    "ontoum224",
+    "rf_robusta",
+    "rf_boos",
+    "agtron"
+  ],
+  "n_rows": 5315,
+  "n_rows_ref_without_rf_hendi": 5315,
+  "source_x_split_x_label": {
+    "agtron": {
+      "test": {
+        "dark": 46,
+        "light": 10,
+        "medium": 30
+      },
+      "trainval": {
+        "dark": 255,
+        "light": 76,
+        "medium": 230
+      }
+    },
+    "ontoum224": {
+      "trainval": {
+        "dark": 295,
+        "green": 299,
+        "light": 300,
+        "medium": 300
+      }
+    },
+    "rf_boos": {
+      "trainval": {
+        "dark": 298,
+        "light": 297,
+        "medium": 298,
+        "mixed": 102
+      }
+    },
+    "rf_robusta": {
+      "trainval": {
+        "dark": 500,
+        "green": 452,
+        "light": 67,
+        "medium": 479,
+        "mixed": 981
+      }
+    }
+  },
+  "n_groups_per_source": {
+    "agtron": 7,
+    "ontoum224": 1194,
+    "rf_boos": 7,
+    "rf_robusta": 638
+  },
+  "agtron": {
+    "dup_rows_identical": 1,
+    "dup_rows_conflicting_dropped": 0,
+    "unknown_agtron_dropped": 0,
+    "test_devices": [
+      "0:iPhone 12",
+      "3:Motorola X4"
+    ]
+  },
+  "dedupe_md5": {
+    "groups_deduped": 403,
+    "removed:ontoum224": 406
+  },
+  "dropped_by_source_reason": {
+    "rf_robusta:maw_only": 1,
+    "rf_robusta:yolo_no_label": 1,
+    "agtron:not_in_photos_csv": 7,
+    "ontoum224:md5_dup_of": 406
+  },
+  "cross_source_near_dups": 0,
+  "diffs_vs_tracked_summary": []
+}

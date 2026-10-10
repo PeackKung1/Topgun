@@ -1,0 +1,59 @@
+{
+  "dev_rows": 4643,
+  "frozen_groups": [
+    "agtron:dev2",
+    "agtron:dev4",
+    "rf_boos:video:Medium-1-",
+    "rf_boos:video:WhatsApp-Video-2026-05-19-at-9_14_47-PM",
+    "rf_boos:video:WhatsApp-Video-2026-05-19-at-9_14_56-PM",
+    "rf_hendi:20240903_110225",
+    "rf_hendi:20240903_110240",
+    "rf_hendi:20240905_081155"
+  ],
+  "files_by_source": {
+    "agtron": {
+      "rows": 372,
+      "files_present": 372,
+      "missing": 0,
+      "pct": 100.0
+    },
+    "ontoum224": {
+      "rows": 1194,
+      "files_present": 1194,
+      "missing": 0,
+      "pct": 100.0
+    },
+    "rf_boos": {
+      "rows": 598,
+      "files_present": 598,
+      "missing": 0,
+      "pct": 100.0
+    },
+    "rf_robusta": {
+      "rows": 2479,
+      "files_present": 2479,
+      "missing": 0,
+      "pct": 100.0
+    }
+  },
+  "rf_hendi_rows": 0,
+  "negatives": 0,
+  "rf_boos_dev_groups": {
+    "rf_boos:video:Darkest-1-": 199,
+    "rf_boos:video:Lightest-1-": 198,
+    "rf_boos:video:Mixed": 102,
+    "rf_boos:video:WhatsApp-Video-2026-05-19-at-9_15_06-PM": 99
+  },
+  "real_boos": 441,
+  "target": {
+    "holdout_train": 1245,
+    "final_train": 2036,
+    "val": 100
+  },
+  "make_synth_beans_args": {
+    "n_ontoum": 1245,
+    "n_boos": 350,
+    "n_val": 100
+  },
+  "count_config": "results\\yolo_bean_retrain_20261010\\selected_config_reconstructed.json"
+}
