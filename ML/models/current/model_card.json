@@ -1,0 +1,96 @@
+{
+ "backend": "det_b1_beans",
+ "name": "det-yolo11n-retrain-b1-Lab_hist-local",
+ "model_file": "model.json",
+ "detector_file": "bean.onnx",
+ "det_config": {
+  "conf": 0.25,
+  "iou": 0.7,
+  "max_det": 1000,
+  "pre_nms_top": 4000,
+  "threads": 4,
+  "tile": false,
+  "tile_overlap": 0.2,
+  "container_min": 5,
+  "container_area_ratio": 4.0
+ },
+ "box_shape": "mask",
+ "box_shrink": 0.2,
+ "bean_label_mode": "image_prior",
+ "prior_weight": 2.0,
+ "seg_config": {
+  "work_side": 800,
+  "border_frac": 0.04,
+  "bg_uniform_de": 10.0,
+  "bg_uniform_min": 0.6,
+  "white_balance": true,
+  "wb_min_L": 50.0,
+  "wb_max_chroma": 20.0,
+  "wb_target": 0.9,
+  "wb_max_gain": 3.0,
+  "min_contrast": 12.0,
+  "min_area_frac": 0.0004,
+  "max_area_frac": 0.9,
+  "min_rel_area": 0.25,
+  "min_solidity": 0.8,
+  "max_aspect": 3.0,
+  "cluster_area_ratio": 2.5,
+  "cluster_min_solidity": 0.5,
+  "core_frac": 0.25,
+  "min_core_px": 200,
+  "pile_beanlike_min": 0.6,
+  "crop_margin": 0.05,
+  "trim_lo": 15.0,
+  "trim_hi": 98.0,
+  "trim_center": 0.05,
+  "full_trim_lo": 2.0,
+  "full_trim_hi": 90.0
+ },
+ "low_conf_threshold": 0.0,
+ "created": "2026-10-10 23:30:56",
+ "schema_version": 3,
+ "feature_set": "Lab_hist",
+ "C": 0.01,
+ "train": {
+  "b1": {
+   "rows_single_roast": 2809,
+   "sources": [
+    "ontoum224",
+    "rf_robusta",
+    "rf_boos",
+    "agtron"
+   ],
+   "video_cap": 10,
+   "split": "trainval minus count-test frozen groups (manifest rebuilt from 4 source zips)",
+   "counts": {
+    "light": 615,
+    "medium": 935,
+    "dark": 1259
+   }
+  },
+  "detector": "YOLO11n single class, retrain 2026-10-10 from 4 source zips: synthetic copy-paste scenes (ontoum224 + rf_boos bean cutouts) + real rf_boos frames; no rf_hendi Empty negatives (see results/yolo_bean_retrain_20261010/REPORT.md)"
+ },
+ "measured": {},
+ "label_config_source": {
+  "path": "results\\yolo_bean_20261010\\eval_holdout_boos_v2\\label_selection.json",
+  "sha256": "491df5f2eb727f26aa2cd077681718165816ea39ff4d6188f76d308e8fc6e784",
+  "chosen": "mask|prior2",
+  "note": "box_shape/box_shrink/bean_label_mode/prior_weight คัดลอกจากการเลือกของ detector ตัวเดิม (holdout_boos_v2) — ไม่ได้เลือกใหม่และไม่ได้วัดกับ detector ตัวนี้"
+ },
+ "deployment_eligible": false,
+ "limitations": [
+  "ประกอบในเครื่องเพื่อลองรัน — ไม่ใช่ det_b1_variants_20261010 และยังไม่ได้ประเมิน gate ใดเลย (measured ว่าง)",
+  "detector ตัวนี้ไม่เคยเห็นภาพเครื่องคั่วเปล่าของจริง (ไม่มี rf_hendi) — ยังไม่ได้วัด empty_zero_rate",
+  "นับเฉพาะเมล็ดที่ detector เห็น · เมล็ดที่ถูกบังไม่ถูกนับ · ภาพแน่นได้ count_method = estimated",
+  "ยังไม่ได้วัด latency/RAM บน Pi จริง · ยังไม่ได้ประเมิน frozen/test",
+  "เทรนรวม agtron (license Unknown) — ห้าม commit · detector เทรนด้วย Ultralytics (AGPL-3.0)"
+ ],
+ "versions": {
+  "roastml": "0.1.0"
+ },
+ "result_sources": {
+  "detector": "models\\yolo_bean_retrain_20261010\\final\\bean.onnx",
+  "detector_sha256": "b25e7a67ac2ce31a2b3adcc33196ab57127b04218cbc4c032a9a92f0bcc0d8a0",
+  "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac"
+ }
+}
