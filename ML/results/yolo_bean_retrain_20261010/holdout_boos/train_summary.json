@@ -1,0 +1,27 @@
+{
+  "exp": "holdout_boos",
+  "seconds": 527.8615269000002,
+  "ultralytics": "8.4.175",
+  "run_dir": "D:\\data\\cache\\yolo_runs\\yolo_bean_retrain_20261010_holdout_boos",
+  "val_metrics_last_epoch(monitor only)": {
+    "metrics/precision(B)": 0.9352137179851419,
+    "metrics/recall(B)": 0.9429175475687104,
+    "metrics/mAP50(B)": 0.9833542734220723,
+    "metrics/mAP50-95(B)": 0.8362909789868705
+  },
+  "model_dir": "D:\\Topgun\\ML\\models\\yolo_bean_retrain_20261010\\holdout_boos",
+  "onnx_bytes": 10624007,
+  "config": {
+    "model": "yolo11n.pt",
+    "epochs": 30,
+    "imgsz": 640,
+    "batch": 8,
+    "seed": 20261009,
+    "single_cls": true,
+    "amp": false,
+    "deterministic": true,
+    "plots": false,
+    "augment": "ultralytics defaults",
+    "checkpoint_used": "last.pt (fixed epochs; val only monitors loss)"
+  }
+}

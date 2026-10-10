@@ -81,6 +81,23 @@ config การเทรนตรงกับ run เดิมทุกค่�
 - โมเดลอยู่ที่ `ML/models/yolo_bean_retrain_20261010/final/` (`bean.pt`, `bean.onnx`) ไม่เข้า git
   `bean.onnx` sha256 `b25e7a67ac2ce31a2b3adcc33196ab57127b04218cbc4c032a9a92f0bcc0d8a0`
 
+## ผลเทรน `holdout_boos`
+
+เทรนจากภาพสังเคราะห์ของ sprite ontoum อย่างเดียว (1245 ภาพ, ไม่มี negatives) ไม่เคยเห็น rf_boos
+config เดียวกับ `final` · run เดิมที่เทียบคือ `results/yolo_bean_20261010/holdout_boos_v2`
+
+| | `holdout_boos_v2` เดิม | run นี้ |
+|---|---|---|
+| precision (val สังเคราะห์, epoch สุดท้าย) | 0.944 | 0.935 |
+| recall | 0.938 | 0.943 |
+| mAP50 | 0.985 | 0.983 |
+| mAP50-95 | 0.835 | 0.836 |
+| เวลาเทรน + export | 773.7 s | 527.9 s |
+
+- ตัวเลขนี้เป็น val สังเคราะห์เช่นกัน ยังไม่ได้วัดบน rf_boos จริง (`tools.eval_det_beans`)
+- โมเดลอยู่ที่ `ML/models/yolo_bean_retrain_20261010/holdout_boos/` ไม่เข้า git
+  `bean.onnx` 10,624,007 bytes sha256 `4e01b924e4792cb64e3c7bba180af271f0d1c102d3e7ceb24805128363c3688c`
+
 ## คำสั่งที่รันจริง
 
 ทุกคำสั่งรันจาก `D:\Topgun\ML` ด้วย `ROAST_DATA_DIR=D:\data` และ `YOLO_AUTOINSTALL=false`
@@ -109,6 +126,8 @@ git switch -c retrain/yolo-bean-20261010
 .venv\Scripts\python -m tools.train_yolo_bean --exp final --dataset yolo_synth_retrain ^
     --out results/yolo_bean_retrain_20261010/final --epochs 30 --batch 8 --imgsz 640 --device 0 (816 s)
 .venv\Scripts\python -m pytest tests/test_detector.py -q
+.venv\Scripts\python -m tools.train_yolo_bean --exp holdout_boos --dataset yolo_synth_retrain ^
+    --out results/yolo_bean_retrain_20261010/holdout_boos --epochs 30 --batch 8 --imgsz 640 --device 0 (528 s)
 ```
 
 `yolo11n.pt` มาจาก `github.com/ultralytics/assets/releases/download/v8.4.0/` 5,613,764 bytes
@@ -119,6 +138,7 @@ sha256 `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`
 | ไฟล์ | เนื้อหา |
 |---|---|
 | `final/declaration.json`, `final/train_summary.json` | ประกาศก่อนเทรนและผลเทรนของ `final` |
+| `holdout_boos/declaration.json`, `holdout_boos/train_summary.json` | ประกาศก่อนเทรนและผลเทรนของ `holdout_boos` |
 | `selected_config_reconstructed.json` | config ตัวนับที่สร้างขึ้นใหม่ |
 | `manifest_4src_check.json` | ผลเทียบ manifest ใหม่กับ `manifest_summary.json` |
 | `data_check.json` | ผลขั้น A และ C |
@@ -129,3 +149,4 @@ sha256 `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`
 - เทรนซ้ำด้วย `manifest.csv`, `count_test/` และ rf_hendi ตัวจริง จึงจะเรียกว่า reproduction ได้
 - เทียบกับ `det_b1_variants_20261010` ผ่าน roastml (`n_beans`, label)
 - วัด gate บนข้อมูลจริง (`tools.eval_det_beans`) โดยเฉพาะ `empty_zero_rate`
+- วัด `holdout_boos` บน rf_boos จริง (`boos_mae`)
