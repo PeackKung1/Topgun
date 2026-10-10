@@ -75,7 +75,7 @@ class StubBackend:
             rng = self._rng
             status = rng.choices(self._statuses, self._weights)[0]
             delay = rng.uniform(*self._delay)
-            out = self._random_output(rng, status, img.orig_size)
+            out = self._random_output(rng, status, img.image.size)
 
         if delay > 0:
             time.sleep(delay / 1000.0)
@@ -117,6 +117,9 @@ class StubBackend:
                 })
             n_beans = len(beans)
             proportions = {lb: sum(b["label"] == lb for b in beans) / n_beans for lb in LABELS}
+            majority = max(LABELS, key=lambda lb: (proportions[lb], probs[lb]))
+            # Keep the simulated confidence/status while obeying the v3 majority.
+            probs[label], probs[majority] = probs[majority], probs[label]
 
         return BackendOutput(
             probs=probs, warnings=warnings, n_beans=n_beans,

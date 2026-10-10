@@ -392,6 +392,11 @@ def count_beans(rgb: np.ndarray, cfg: CountConfig | None = None, seg_cfg: SegCon
             notes.append("max_beans_cap")
             method = "estimated"
         core, boxes = _core_and_boxes(labels, n, cfg, inv)
+        if n:
+            # Rounding work-scale coordinates can otherwise overshoot by 1px.
+            boxes[:, :2] = np.maximum(boxes[:, :2], 0)
+            boxes[:, 2] = np.minimum(boxes[:, 2], rgb.shape[1] - boxes[:, 0])
+            boxes[:, 3] = np.minimum(boxes[:, 3], rgb.shape[0] - boxes[:, 1])
         return CountResult(scene if n else "empty", method if n else "none", labels, core, n, boxes,
                            lab, s, wbr.applied, ref, notes)
 

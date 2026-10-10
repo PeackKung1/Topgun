@@ -73,6 +73,7 @@ class BeanLinearBackend(LinearBackend):
             out.warnings = []
             if not result.n:
                 out.n_beans = 0
+                out.count_method = "exact"
                 out.warnings = ["no_beans_detected"]
                 return out, stages
             X = count_features(result)
@@ -85,12 +86,20 @@ class BeanLinearBackend(LinearBackend):
                 labels, conf, _ = group_predictions(X, P, classes, self.group_cfg)
             out.probs, out.proportions = majority_probs(labels, P, classes)
             out.n_beans = result.n
+            out.count_method = "estimated" if result.method in ("estimated", "split") else "exact"
+            # Dataset ROIs are cropped in decoded coordinates. Public boxes
+            # still reference the complete decoded image (as camera requests do).
+            if source == "agtron":
+                x0, y0, _, _ = map(int, roi.split())
+                offset = np.rint([x0*img.image.width/img.orig_size[0], y0*img.image.height/img.orig_size[1]]).astype(int)
+                result.bboxes[:, :2] += offset
             out.beans = [{"bbox": result.bboxes[i].tolist(), "label": classes[int(labels[i])], "conf": float(conf[i])}
                          for i in range(result.n)]
             if np.count_nonzero(np.bincount(labels, minlength=3)) > 1:
                 out.warnings.append("mixed_roast")
-            if result.method == "estimated":
+            if out.count_method == "estimated":
                 out.warnings.append("bean_count_estimated")
+            stages["count_method"] = out.count_method
             if result.scene in ("touching", "pile") or "max_beans_cap" in result.notes or "visible_area_filter" in result.notes:
                 out.warnings.append("count_visible_only")
             stages.update(features=(tf-tc)*1000, classify=(tp-tf)*1000, group=(time.perf_counter()-tp)*1000)

@@ -1,4 +1,4 @@
-"""ทดสอบ contract FW ↔ ML v2 (ml-spec ข้อ 4) ด้วย stub backend และ backend ทดสอบ"""
+"""Contract v3, including preserved v2 keys, errors and thread safety."""
 
 from __future__ import annotations
 
@@ -33,6 +33,7 @@ def img_bytes(size=(640, 480), fmt="JPEG", mode="RGB", color=(120, 80, 50), **sa
 def assert_valid_result(r: dict) -> None:
     """ตรวจ schema ตาม contract v2 ทุก field"""
     assert isinstance(r, dict)
+    assert r["schema_version"] == 3
     assert tuple(r) == RESULT_KEYS, f"keys ไม่ตรง: {list(r)}"
     assert r["status"] in STATUSES
     assert isinstance(r["message_th"], str) and r["message_th"]
@@ -50,6 +51,7 @@ def assert_valid_result(r: dict) -> None:
         assert r["confidence"] is None and r["probs"] is None
         assert r["warnings"] == [] and r["beans"] == []
         assert r["n_beans"] is None and r["proportions"] is None
+        assert r["counts"] is None and r["count_method"] is None
     else:
         assert r["label"] in LABELS
         assert isinstance(r["label_th"], str) and r["label_th"]
@@ -60,17 +62,29 @@ def assert_valid_result(r: dict) -> None:
 
         if r["n_beans"] is None:
             assert r["proportions"] is None and r["beans"] == []
+            assert r["counts"] is None and r["count_method"] is None
         elif r["n_beans"] == 0:
             assert r["beans"] == [] and r["proportions"] is None
+            assert r["counts"] == dict.fromkeys(LABELS, 0)
             assert "no_beans_detected" in r["warnings"]
         else:
             assert r["n_beans"] == len(r["beans"]) >= 1
+            assert sum(r["counts"].values()) == r["n_beans"]
+            assert r["counts"] == {c: sum(b["label"] == c for b in r["beans"]) for c in LABELS}
+            assert r["counts"][r["label"]] == max(r["counts"].values())
             assert set(r["proportions"]) == set(LABELS)
             assert math.isclose(sum(r["proportions"].values()), 1.0, abs_tol=1e-3)
             for b in r["beans"]:
                 assert set(b) == {"bbox", "label", "conf"}
                 assert len(b["bbox"]) == 4 and all(isinstance(v, int) for v in b["bbox"])
                 assert b["label"] in LABELS and 0.0 <= b["conf"] <= 1.0
+                x, y, w, h = b["bbox"]
+                assert 0 <= x < x+w <= r["image_size"][0]
+                assert 0 <= y < y+h <= r["image_size"][1]
+        assert r["image_size"] and len(r["image_size"]) == 2
+        if r["n_beans"] is not None:
+            assert r["count_method"] in ("exact", "estimated")
+            assert (r["count_method"] == "estimated") == ("bean_count_estimated" in r["warnings"])
 
     # ต้องส่งเป็น JSON ได้ทันที (ไม่มี NaN / numpy type / tuple key)
     json.dumps(r, ensure_ascii=False, allow_nan=False)
@@ -399,7 +413,7 @@ def test_probs_are_normalized_and_unknown_warnings_dropped():
 def test_info_is_json_serializable(stub):
     info = stub.info()
     json.dumps(info, ensure_ascii=False, allow_nan=False)
-    assert info["model"] == "stub" and info["api_version"] == "2"
+    assert info["model"] == "stub" and info["api_version"] == "3"
     assert info["statuses"] == list(STATUSES)
     assert info["load_ms"] is not None
 

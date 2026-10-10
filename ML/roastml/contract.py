@@ -1,4 +1,4 @@
-"""ค่าคงที่และชนิดข้อมูลของ contract FW ↔ ML v2 (ml-spec ข้อ 4)
+"""Contract FW ↔ ML v3; all v2 result keys remain available.
 
 แยกไฟล์ไว้เพื่อให้ api.py และ backend ทุกตัว import ได้โดยไม่วนกัน
 """
@@ -10,7 +10,8 @@ from typing import Any, Protocol
 
 from .decode import DecodedImage
 
-API_VERSION = "2"
+API_VERSION = "3"
+SCHEMA_VERSION = 3
 
 LABELS = ("light", "medium", "dark")
 LABEL_TH = {"light": "คั่วอ่อน", "medium": "คั่วกลาง", "dark": "คั่วเข้ม"}
@@ -25,15 +26,18 @@ WARNING_TH = {
     "dark_image": "ภาพมืด ลองถ่ายในที่สว่างขึ้น",
     "colored_light": "แสงมีสีเพี้ยน ลองถ่ายใต้แสงสีขาวหรือแสงธรรมชาติ",
     "bean_count_estimated": "จำนวนเมล็ดเป็นค่าประมาณจากขอบที่มองเห็น เมล็ดที่บังกันอาจนับไม่ครบ",
-    "count_visible_only": "นับเฉพาะเมล็ดที่เห็นอย่างน้อยครึ่ง เมล็ดที่ถูกบังอาจนับไม่ได้",
+    "count_visible_only": "นับเฉพาะส่วนเมล็ดที่มองเห็น เมล็ดที่ถูกบังอาจนับไม่ได้",
 }
 
 # key ทุกตัวที่ต้องมีในผลลัพธ์ (ลำดับตาม spec)
-RESULT_KEYS = (
+LEGACY_RESULT_KEYS = (
     "status", "label", "label_th", "message_th", "confidence", "probs", "warnings",
     "n_beans", "proportions", "beans", "timing_ms", "model",
 )
-TIMING_KEYS = ("decode", "ml", "total")
+RESULT_KEYS = LEGACY_RESULT_KEYS + ("schema_version", "counts", "count_method", "image_size")
+STAGE_TIMING_KEYS = ("WB", "segment", "count", "features", "classify", "group", "fallback")
+TIMING_KEYS = ("decode", "ml", "total") + STAGE_TIMING_KEYS
+COUNT_METHODS = ("exact", "estimated")
 
 
 @dataclass
@@ -45,6 +49,7 @@ class BackendOutput:
     n_beans: int | None = None
     proportions: dict[str, float] | None = None        # key = LABELS, รวม = 1
     beans: list[dict[str, Any]] = field(default_factory=list)  # [{"bbox":[x,y,w,h], "label", "conf"}]
+    count_method: str | None = None  # None when counting is unavailable
 
 
 class Backend(Protocol):

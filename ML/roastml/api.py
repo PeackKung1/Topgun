@@ -1,4 +1,4 @@
-"""Contract FW ↔ ML v2 (ml-spec ข้อ 4) — FW เรียกใช้ไฟล์นี้เท่านั้น
+"""Contract FW ↔ ML v3 — FW เรียกใช้ไฟล์นี้เท่านั้น
 
     from roastml.api import load
     predictor = load("stub")                  # หรือ load("ML/models/current") เมื่อมีโมเดล
@@ -25,7 +25,8 @@ from PIL import Image
 
 from . import __version__
 from .contract import (
-    API_VERSION, LABEL_TH, LABELS, RESULT_KEYS, STATUSES, WARNING_TH, WARNINGS,
+    API_VERSION, SCHEMA_VERSION, COUNT_METHODS, STAGE_TIMING_KEYS, TIMING_KEYS,
+    LABEL_TH, LABELS, RESULT_KEYS, STATUSES, WARNING_TH, WARNINGS,
     Backend, BackendOutput,
 )
 from .decode import (
@@ -67,7 +68,7 @@ class Predictor:
 
     # ------------------------------------------------------------------ public
     def predict_bytes(self, raw: Any) -> dict[str, Any]:
-        """ทางเข้าของ FW (contract v2) — รับ bytes อย่างเดียว ไม่ raise"""
+        """ทางเข้าของ FW (contract v3) — รับ bytes อย่างเดียว ไม่ raise"""
         return self._safe_predict(raw)
 
     def predict_dataset(self, raw: Any, *, source: str, roi: str = "") -> dict[str, Any]:
@@ -92,8 +93,8 @@ class Predictor:
     def predict_profile(self, raw: Any, *, source: str = "", roi: str = "") -> tuple[dict, dict]:
         """Same bytes→dict path, plus per-request stage timings for benchmark tools.
 
-        Profiling does not store mutable timing state on a shared predictor and does
-        not add fields to the FW result contract. Metadata is for dataset evaluators;
+        Profiling does not store mutable timing state on a shared predictor.
+        Public stage timings use the same measurements. Metadata is for dataset evaluators;
         normal camera requests keep calling predict_bytes(raw).
         """
         stages: dict[str, float] = {}
@@ -139,6 +140,7 @@ class Predictor:
     # ----------------------------------------------------------------- internal
     def _predict(self, raw: Any, t0: float, *, source: str = "", roi: str = "",
                  stages: dict | None = None) -> dict[str, Any]:
+        stages = {} if stages is None else stages
         if raw is None:
             return self._failure("bad_image", t0, decode_ms=0.0)
         if not isinstance(raw, (bytes, bytearray, memoryview)):
@@ -159,19 +161,23 @@ class Predictor:
         try:
             out = self._run_backend(img, source=source, roi=roi, stages=stages)
             label, conf, probs = self._check_probs(out)
+            image_size = list(img.image.size)
+            beans = _clean_beans(out.beans, image_size)
+            counts, method, warnings = _count_summary(out, beans)
+            if counts and out.n_beans and counts[label] != max(counts.values()):
+                raise ValueError("backend probability label must match a bean-count majority")
         except BadImageError as e:
             log.info("bad_image from backend: %s", e)
-            return self._failure("bad_image", t0, decode_ms=decode_ms, message=_bad_image_message(e))
+            return self._failure("bad_image", t0, decode_ms=decode_ms, message=_bad_image_message(e), image_size=list(img.image.size))
         except SimulatedFailure as e:
             log.info("%s", e)
-            return self._failure("error", t0, decode_ms=decode_ms)
+            return self._failure("error", t0, decode_ms=decode_ms, image_size=list(img.image.size))
         except Exception:
             log.exception("backend %s failed", self.backend.name)
-            return self._failure("error", t0, decode_ms=decode_ms)
+            return self._failure("error", t0, decode_ms=decode_ms, image_size=list(img.image.size))
 
         ml_ms = _ms_since(t_decoded)
         status = "ok" if conf >= self.low_conf_threshold else "low_confidence"
-        warnings = _clean_warnings(out.warnings)
         return {
             "status": status,
             "label": label,
@@ -181,10 +187,14 @@ class Predictor:
             "probs": {k: round(v, 4) for k, v in probs.items()},
             "warnings": warnings,
             "n_beans": out.n_beans,
-            "proportions": _clean_proportions(out.proportions),
-            "beans": _clean_beans(out.beans),
-            "timing_ms": _timing(decode_ms, ml_ms, _ms_since(t0)),
+            "proportions": _clean_proportions({k: v / out.n_beans for k, v in counts.items()}) if counts and out.n_beans else None,
+            "beans": beans,
+            "timing_ms": _timing(decode_ms, ml_ms, _ms_since(t0), stages),
             "model": self.backend.name,
+            "schema_version": SCHEMA_VERSION,
+            "counts": counts,
+            "count_method": method,
+            "image_size": image_size,
         }
 
     def _run_backend(self, img: DecodedImage, *, source: str = "", roi: str = "",
@@ -220,7 +230,8 @@ class Predictor:
         label = max(LABELS, key=lambda k: vals[k])
         return label, vals[label], vals
 
-    def _failure(self, status: str, t0: float, decode_ms: float, message: str | None = None) -> dict[str, Any]:
+    def _failure(self, status: str, t0: float, decode_ms: float, message: str | None = None,
+                 image_size: list[int] | None = None) -> dict[str, Any]:
         """ผลสำหรับ bad_image / error — key ครบ แต่ label/probs เป็น null · message = ข้อความแทนค่าเริ่มต้น"""
         total = _ms_since(t0)
         return {
@@ -236,6 +247,10 @@ class Predictor:
             "beans": [],
             "timing_ms": _timing(decode_ms, max(0.0, total - decode_ms), total),
             "model": getattr(self.backend, "name", "?"),
+            "schema_version": SCHEMA_VERSION,
+            "counts": None,
+            "count_method": None,
+            "image_size": image_size,
         }
 
 
@@ -327,8 +342,12 @@ def _ms_since(t: float) -> float:
     return (time.perf_counter() - t) * 1000.0
 
 
-def _timing(decode_ms: float, ml_ms: float, total_ms: float) -> dict[str, float]:
-    return {"decode": round(decode_ms, 1), "ml": round(ml_ms, 1), "total": round(total_ms, 1)}
+def _timing(decode_ms: float, ml_ms: float, total_ms: float, stages: dict | None = None) -> dict[str, float]:
+    values = {"decode": decode_ms, "ml": ml_ms, "total": total_ms}
+    values.update({k: (stages or {}).get(k, 0.0) for k in STAGE_TIMING_KEYS})
+    if any(not math.isfinite(float(v)) or v < 0 for v in values.values()):
+        raise ValueError("invalid backend stage timing")
+    return {k: round(float(values[k]), 1) for k in TIMING_KEYS}
 
 
 def _clean_warnings(warnings: Any) -> list[str]:
@@ -356,15 +375,44 @@ def _clean_proportions(p: dict[str, float] | None) -> dict[str, float] | None:
     return out
 
 
-def _clean_beans(beans: Any) -> list[dict[str, Any]]:
-    return [
-        {
-            "bbox": [int(v) for v in b["bbox"]],
-            "label": b["label"],
-            "conf": round(float(b["conf"]), 4),
-        }
-        for b in beans or []
-    ]
+def _clean_beans(beans: Any, image_size: list[int]) -> list[dict[str, Any]]:
+    cleaned = []
+    for bean in beans or []:
+        bbox = bean["bbox"]
+        if len(bbox) != 4 or any(isinstance(v, bool) or not math.isfinite(float(v)) or int(v) != v for v in bbox):
+            raise ValueError("invalid bean bbox")
+        x, y, w, h = map(int, bbox)
+        conf = float(bean["conf"])
+        if bean["label"] not in LABELS or not math.isfinite(conf) or not 0 <= conf <= 1:
+            raise ValueError("invalid bean label/confidence")
+        if min(x, y) < 0 or min(w, h) < 1 or x+w > image_size[0] or y+h > image_size[1]:
+            raise ValueError("bean bbox must use decoded-image coordinates")
+        cleaned.append({"bbox": [x, y, w, h], "label": bean["label"], "conf": round(conf, 4)})
+    return cleaned
+
+
+def _count_summary(out: BackendOutput, beans: list[dict]) -> tuple[dict | None, str | None, list[str]]:
+    warnings = _clean_warnings(out.warnings)
+    n = out.n_beans
+    if n is None:
+        if beans:
+            raise ValueError("beans require n_beans")
+        return None, None, warnings
+    if isinstance(n, bool) or not isinstance(n, int) or n < 0 or n != len(beans):
+        raise ValueError("n_beans must equal len(beans)")
+    counts = {c: sum(b["label"] == c for b in beans) for c in LABELS}
+    method = out.count_method or ("estimated" if "bean_count_estimated" in warnings else "exact")
+    if method not in COUNT_METHODS:
+        raise ValueError("invalid count_method")
+    # Public warnings reflect the returned detections, including zero-counts.
+    warnings = [w for w in warnings if w not in ("mixed_roast", "no_beans_detected", "bean_count_estimated")]
+    if not n:
+        warnings.append("no_beans_detected")
+    elif sum(v > 0 for v in counts.values()) > 1:
+        warnings.append("mixed_roast")
+    if method == "estimated":
+        warnings.append("bean_count_estimated")
+    return counts, method, warnings
 
 
 def _message(status: str, label: str, conf: float, warnings: list[str]) -> str:
@@ -391,5 +439,6 @@ def _hardcoded_error() -> dict[str, Any]:
         "status": "error", "label": None, "label_th": None, "message_th": MSG_ERROR,
         "confidence": None, "probs": None, "warnings": [], "n_beans": None,
         "proportions": None, "beans": [],
-        "timing_ms": {"decode": 0.0, "ml": 0.0, "total": 0.0}, "model": "?",
+        "timing_ms": {k: 0.0 for k in TIMING_KEYS}, "model": "?",
+        "schema_version": SCHEMA_VERSION, "counts": None, "count_method": None, "image_size": None,
     }
