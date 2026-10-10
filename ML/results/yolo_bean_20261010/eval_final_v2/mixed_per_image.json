@@ -1,0 +1,2348 @@
+[
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0000_jpg.rf.d44a735b1183d04376caca993acb55a8.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0011_jpg.rf.bfef999ce34b6f05f5ea6e7675318367.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0019_jpg.rf.38a2d9fbbafcaed7b0d43fb30d3850b3.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0027_jpg.rf.afc017ee3eeca0f5d850a171c5dc338f.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0078_jpg.rf.42c764a28b04b6ae78af5d095f0c3566.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0084_jpg.rf.106b39d7b515ef8020e8a98f439bb053.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0092_jpg.rf.6934be222686f44b2b0d278110d050f1.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0093_jpg.rf.1e548560a09ea1347129b5e8d29058a4.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0094_jpg.rf.1bfde20c73e5ff64af8185633aa46489.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0098_jpg.rf.e72c00965a1b0668da173a422cc34755.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0002_jpg.rf.a899182b2b6747e9248e964c53f1da76.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0003_jpg.rf.0611f86b73c04face8e13e936b65611b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0004_jpg.rf.76fe041541b188ac32b6c03a779ce8ef.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0006_jpg.rf.7da33c32223fe642b0304f62c91620c1.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0010_jpg.rf.fa0d1c63eec2bcf5c838e838abaafa58.jpg",
+    "gt": [
+      2,
+      3,
+      1
+    ],
+    "n": 6,
+    "B1 broadcast": 10,
+    "det+B1 per box": 2,
+    "det+B1+group": 6,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0012_jpg.rf.d38ebf1b79754a7e7bd6768169bf8f27.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0013_jpg.rf.a13bbfe0447eea0b95acbd5abe292f2b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0015_jpg.rf.a770015ec116360aa194c523b2d4c56f.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0016_jpg.rf.d8a6c928c2b18cbda622aad26bc1f556.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0017_jpg.rf.d4a72d75078c57da7c75b3026119aa69.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0018_jpg.rf.afd6db806bde7aeece769f7365af30ad.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0020_jpg.rf.b4af26d874de3bbb45a868882cbef618.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0021_jpg.rf.f4d36691b54a0069196832d5803aad49.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0022_jpg.rf.6c54f72566b3eeaae5b232f99e56677b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0023_jpg.rf.5de4566e0b7f231a008d87f55d05581e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      2,
+      3
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0025_jpg.rf.2e9c61304f7e49e7eb025baaa16deff1.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0026_jpg.rf.17cdcaca4bbaaf18c23151f488e4a02a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0028_jpg.rf.2e872fd24e351695a668964b115e72ba.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0029_jpg.rf.4f265f2fa6eb9d6509c5c2d329551b52.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0030_jpg.rf.36badae63d187edbae1222eb8445160d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0031_jpg.rf.fc29818fcee48f4b96367b86eab16bde.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0033_jpg.rf.cad6895268eeb910c583e244d8a14900.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0034_jpg.rf.6799bf87220baf38a6f7054ccec5b4d3.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0035_jpg.rf.8a3ca30fe17eb0e3a96c4d2873609df1.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0036_jpg.rf.d5f10fe33c8f00500d86b53f127dba21.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0037_jpg.rf.5640aceda6333e11587ecbff52136f0d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0039_jpg.rf.1ff51d9d2bfd4ee906f3aa334f5c72cf.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0040_jpg.rf.a2510eb2d871f23e94055d250e597ff3.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0041_jpg.rf.02a70bbb968b51d3284184cdeccad29d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0042_jpg.rf.d9d504523a8b94de51aa7188889366e1.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0043_jpg.rf.4a1242b5b6c1b5bbb02197e3b4af9a49.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0044_jpg.rf.fad6d18cf959290db1bf8e7e1a523702.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 4,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      0,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0045_jpg.rf.92d54e9e9912ad0f3b6892a76984ac70.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0046_jpg.rf.aa029d2207bee5e00a3fc46f9eefd4e8.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0047_jpg.rf.f9066f95c15e38e09e3ca76ee081da76.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0048_jpg.rf.eee8261e070f955913b10fcd01a1982b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0049_jpg.rf.13a1ac351fe40059a2c709807d1c2e6c.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0050_jpg.rf.0f10e7fbd615f9aaa40928a31150271d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0051_jpg.rf.620a4174504bc96c7803905d6130fc8d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0054_jpg.rf.09937e5e9095ee8ad604e845fe7a629a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0055_jpg.rf.7202a787d2c3c4be3ff186cb3ea25a5a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0056_jpg.rf.f298291ae4f8372cf764b7b125607caa.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0057_jpg.rf.4a32b9a1060fa6f30a3f946972ed069a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0058_jpg.rf.dad38626d88de6649c2dd66f2c2e4a76.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0059_jpg.rf.df969948ddb6869c3b322ab5508f4df6.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0060_jpg.rf.a4b4bcd519273e33d4bca83247c2bd12.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0061_jpg.rf.8c5e99a79cc5955bdc7cf66387a84f80.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0063_jpg.rf.9b5d3f643223b2af1656b42a164a81e6.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0064_jpg.rf.9e6dfcf929a837539f215b113ae55513.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0065_jpg.rf.fb5e948a7133eae6e78744f88f6056c5.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0066_jpg.rf.ea86e5054175f28011944bc14ec4cd1b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0067_jpg.rf.7511e3c00dbd1f3e550f2e9d552eac7c.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0068_jpg.rf.55e6f66738698b7c1a7ad7fe6ad2596e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0072_jpg.rf.9b4d2bec6ad4a3a4c4d1c0a49f8c2c6d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0073_jpg.rf.8f88700f6098760d60a377604f08c712.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0074_jpg.rf.1e16e1eda97416ee09152b399f157d4a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0075_jpg.rf.afb0c83b134ac6beeee85c3a0190bc6e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0076_jpg.rf.c534aeb0ce1caa8781c3057baea28c2c.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0079_jpg.rf.5d2f1eb7f571ea1a0568aa39dfb19afe.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0081_jpg.rf.63b4f65fb49fcfa6bd0ff0988456df5a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0082_jpg.rf.73b8a45aae43ce744e4a9cdd2cf23eea.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0083_jpg.rf.9ce6ff587f805550f6187bdf54e46e82.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0085_jpg.rf.5a6e8b356425ea22f511c5281384a4f2.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0086_jpg.rf.8ff284a71863da5338e5eeb3646d57b0.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0087_jpg.rf.4430e2416231fefe1d9206988d8e70f5.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0088_jpg.rf.ff3275aa5ae7b9d846000f6707f5ad73.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0089_jpg.rf.c987e9c35ae4be67b3443fafab61b20b.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0090_jpg.rf.21ffb67c8f47ae8eb1e447163afc7a77.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0091_jpg.rf.8690194baebae703475fa460a4766b20.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0095_jpg.rf.3e8dec0bf73b46d03a0851c1bc02476e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0096_jpg.rf.edbb1d22e7fcc9ade3004e256d7af8ad.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0097_jpg.rf.2125c32ba032c79aea2c7d56803ac9ed.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0099_jpg.rf.514f541f147bbd5055dcb781c9fb9095.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0100_jpg.rf.f2eefc9c97f4e83603986bb35af6f962.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0001_jpg.rf.3c5e7777a03ffc05c42424e5be321e8a.jpg",
+    "gt": [
+      2,
+      2,
+      1
+    ],
+    "n": 6,
+    "B1 broadcast": 9,
+    "det+B1 per box": 1,
+    "det+B1+group": 7,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0005_jpg.rf.6f13d8a3bb3931e24ae5453b61b4853e.jpg",
+    "gt": [
+      3,
+      1,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 4,
+    "det+B1+group": 10,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0007_jpg.rf.a7aaab83c0a0d8615d6a18c75285712a.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0008_jpg.rf.d1f236cb5413988ba27dd6c320f20cd6.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0009_jpg.rf.0278f18bad3d882a33d10828f49cc2cb.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0014_jpg.rf.323e7615f961a9a621705d6359ba9a2d.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0024_jpg.rf.12145b6673735c62c87002b1e84c80e4.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0032_jpg.rf.4a19a08870d2091ef21825957ac0e828.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      6,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0038_jpg.rf.f9234d5aa35ec4f4c6e2b96278e810f6.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      1,
+      3
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0052_jpg.rf.c70e854dfa335276afe61eededd62b6e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0053_jpg.rf.7c272dea27bf5605eb4e28e82d947951.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0062_jpg.rf.632c78b59b32ddb98473c1a9d3bdc3de.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      3,
+      1,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0069_jpg.rf.35d884fd9873a9862bb7bb44fb960e8e.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      6,
+      0,
+      0
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0070_jpg.rf.f9b59fc90da17bbcbdccb87f327b6f6c.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0071_jpg.rf.9e7ea4f318ede9c6bac19d7a86be99c4.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 8,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0077_jpg.rf.c0bdb2a95b64750d272b2ddae391f376.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0080_jpg.rf.40a655fe6c196d18100c1a86d52d136f.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 2,
+    "det+B1+group": 8,
+    "pred": [
+      1,
+      3,
+      2
+    ],
+    "pred_group": [
+      0,
+      0,
+      6
+    ],
+    "group_k": 1
+  },
+  {
+    "path": "raw/rf_boos/valid/images/Mixed_mp4-0101_jpg.rf.483ad6a92acef171eb403b0fc8969856.jpg",
+    "gt": [
+      2,
+      2,
+      2
+    ],
+    "n": 6,
+    "B1 broadcast": 8,
+    "det+B1 per box": 0,
+    "det+B1+group": 4,
+    "pred": [
+      2,
+      2,
+      2
+    ],
+    "pred_group": [
+      2,
+      0,
+      4
+    ],
+    "group_k": 2
+  }
+]

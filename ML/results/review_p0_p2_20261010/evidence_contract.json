@@ -1,0 +1,7238 @@
+{
+ "env": {
+  "ROAST_BEANS": null,
+  "ROASTML_MODEL": null
+ },
+ "seed": 20261010,
+ "models": {
+  "current(main default)": {
+   "path": "C:/Users/Public/Documents/TOPGUN_CONTEST/Topgun/ML/models/current",
+   "backend": "b1_linear",
+   "name": "b1-Lab_hist-C0.01-R2",
+   "low_conf_threshold": 0.0,
+   "beans_enabled": null,
+   "count_config_subset": {
+    "ws_separation": null,
+    "metal_chroma_min": null,
+    "max_beans": null
+   },
+   "group_config": null,
+   "five": [
+    {
+     "image": "ontoum",
+     "path": "raw/ontoum224/train/Light/light (260).png",
+     "true": "light",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 0.9804,
+      "probs": {
+       "light": 0.9804,
+       "medium": 0.0194,
+       "dark": 0.0002
+      },
+      "warnings": [],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       224,
+       224
+      ],
+      "timing_ms": {
+       "decode": 5.7,
+       "ml": 82.5,
+       "total": 88.3
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 98%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "boos",
+     "path": "raw/rf_boos/train/images/Mixed_mp4-0030_jpg.rf.36badae63d187edbae1222eb8445160d.jpg",
+     "true": "mixed",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.5657,
+      "probs": {
+       "light": 0.0313,
+       "medium": 0.403,
+       "dark": 0.5657
+      },
+      "warnings": [],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 2.0,
+       "ml": 431.0,
+       "total": 433.1
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 57%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "agtron(full frame)",
+     "path": "raw/agtron/RAW/RAW/065_00_00_05_124639.jpg",
+     "true": "medium",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.5281,
+      "probs": {
+       "light": 0.4564,
+       "medium": 0.5281,
+       "dark": 0.0155
+      },
+      "warnings": [],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       1600,
+       1200
+      ],
+      "timing_ms": {
+       "decode": 591.8,
+       "ml": 593.3,
+       "total": 1185.2
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 53%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "empty(hendi)",
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_007_jpg.rf.0ef750991377e3631d8f38d4f37cac4f.jpg",
+     "true": "empty",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9036,
+      "probs": {
+       "light": 0.0019,
+       "medium": 0.0945,
+       "dark": 0.9036
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 6.4,
+       "ml": 255.3,
+       "total": 261.7
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 90%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "synthetic pile300",
+     "path": "(synthetic)",
+     "true": "visible gt=300",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.6403,
+      "probs": {
+       "light": 0.2867,
+       "medium": 0.6403,
+       "dark": 0.0729
+      },
+      "warnings": [],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 8.3,
+       "ml": 334.7,
+       "total": 343.4
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 64%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    }
+   ],
+   "hundred": {
+    "n": 100,
+    "sources": {
+     "rf_hendi": 37,
+     "rf_boos": 6,
+     "rf_robusta": 37,
+     "ontoum224": 16,
+     "agtron": 4
+    },
+    "status": {
+     "ok": 100
+    },
+    "violations": {},
+    "count_ties": 0,
+    "n_beans_reported": 0,
+    "n_beans_min_med_max": null,
+    "count_method": {},
+    "single_bean_images": 0,
+    "single_bean_conf_min_max": null,
+    "dup_pairs_iou>0.5": 0,
+    "images_with_dup": 0,
+    "ms_p50_p95_max": [
+     134.4,
+     472.50499999999994,
+     1524.9
+    ],
+    "fw_origin_main_rejects": 100,
+    "fw_patched_rejects": 0,
+    "label_agreement_single_roast(in-sample; not a metric)": {
+     "agtron:right": 4,
+     "ontoum224:wrong": 1,
+     "ontoum224:right": 10,
+     "rf_boos:right": 6,
+     "rf_hendi:wrong": 10,
+     "rf_hendi:right": 17,
+     "rf_robusta:wrong": 1,
+     "rf_robusta:right": 11
+    }
+   },
+   "hundred_rows": [
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085949_013_jpg.rf.869bd516fab797f93c81d13565a03da9.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8875,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 256.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110217_023_jpg.rf.01de113d7f4da0e296e43dc354457e1b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6696,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 176.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_017_jpg.rf.9dfee54cf361c03bc81cd03d4bdf785d.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.915,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 314.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240903_105720_001_jpg.rf.353f56caadef29c4619186efafba3e17.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6423,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 249.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/valid/images/Darkest-1-_mp4-0069_jpg.rf.579608740327f874c02a05b606d3cff7.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7156,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 465.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-549_jpg.rf.5bd1e4c76d56daa4c596ab7a9550e8d1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.472,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 63.1,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (24).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6223,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 136.3,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (186).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5101,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 156.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_007_saved_jpg.rf.d479d4d19a770d20668042cc42bcef2b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5509,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 146.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_146_jpg.rf.53be65463866e9ee05670dbe3a7216cf.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6841,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 195.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_002_jpg.rf.6b8049564423d18fa573588540b12a4f.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5208,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 373.9,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/035_00_00_05_123806.jpg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5152,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 1524.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_83_jpg.rf.0a64f4b5d7cff106c2f31c73dc5e6c95.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.92,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 75.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1119_jpg.rf.4b00bf10f38d95eecfbeb512d8ce9b05.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.525,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 108.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Raw/20240905_091405_023_jpg.rf.256427a9f9336293b453dca7bb09ccbd.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5516,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 172.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090512_026_jpg.rf.1559fdc9723b674bc10b0f13b7d107fa.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5394,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 182.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_022_jpg.rf.2058e86bf4f338713256138a92074526.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9092,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 223.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240818_130901_023_jpg.rf.255717f04a0677b0739bdd62aca74b21.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9454,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 273.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-386_jpg.rf.1eb01c93064f8de7cbb8c2254a4f2acd.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4999,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 140.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_64_jpg.rf.87f930ab2902eaebaeee24bf3cbfa3f9.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9216,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 116.0,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (215).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.566,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 116.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/test/images/Darkest-1-_mp4-0060_jpg.rf.6542092de7f4148ba75244d77347113b.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7263,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 493.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_007_saved_jpg.rf.2c43b74ddf05682fd0bb3ae3e683d4f1.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6421,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 237.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090504_013_jpg.rf.e7e8cfb4a0aa53c783a336ea0631e30e.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5375,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 270.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_019_jpg.rf.eaa48ddd5ce1faba96a591629f5198f8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5221,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 242.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (297).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9611,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 68.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_10_0_jpg.rf.0a35aadb2af77dac36b3f8d6b1cc94ab.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6823,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 97.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (180).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.952,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 68.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-93_jpg.rf.2a6a91260f2c1c881104c5723d68dad9.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5846,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 122.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (198).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6677,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 55.4,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (126).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.8778,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 60.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_022_jpg.rf.a5e3da08e1b9cdc99c0483ecc1a126b9.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5028,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 248.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154346_002_jpg.rf.41fe3cc59472dea507edc619e526a79f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.94,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 182.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_016_saved_jpg.rf.7bacc5aa85bec13cabaf4af800b1586c.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5165,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 348.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090520_008_jpg.rf.c8818c633a6530cac7b7ac73ecacc8bd.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5364,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 313.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-893_jpg.rf.cede46aeaff0f31a1cbcbf6d22ed2322.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5736,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 272.0,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (192).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7661,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 60.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_018_jpg.rf.c9c626a86ef3c562f1cd0c9390566210.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5297,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 235.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_102411_016_saved_jpg.rf.a884e08fbe23e5249a39e6eb76f1d395.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5585,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 221.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (231).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9014,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 93.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03417_JPG.rf.88db061686b8477d30863deea55e352c.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6052,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 80.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_026_saved_jpg.rf.0382c4ca2fe107e42920260a663ad455.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6288,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 305.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1094_jpg.rf.198ba95d6560fc0a3d3b84e0d6a56bed.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5578,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 105.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-5e01183879da8f420b3d4126fa43fdb2-22031109_JPG.rf.c0f2bb73e87fdd4574d3dbebeb828515.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6495,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 99.2,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/65_L_i11_4231.JPG",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6459,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 506.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-f4ea75cab44a95aa17a14ca0241f8dec-22031110_JPG.rf.e8853c64aed870fe9f90524a9463595d.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5145,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 142.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_025_jpg.rf.8303ddca6d9d8e418deb78ecb26df286.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6595,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 143.5,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (286).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.767,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 38.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-365_jpg.rf.8009ec98f44d3178a5b4a02cfc6f26ce.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5017,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 84.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0001_jpg.rf.58d8084074dc31f55876a14f2dddf52c.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.7125,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 417.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_99_jpg.rf.0d88e3b7a7a0275f8183850c52b0772e.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.656,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 85.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (270).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7466,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 46.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/valid/images/DSC03250_JPG.rf.06bdf7453219ecec2e1319a46fdf07ee.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7882,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 71.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-10_jpg.rf.6165521b87c12ee6ad76c1e74ed3ade7.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5721,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 113.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_090004_009_jpg.rf.1082c8973034ecc4d70c16e7dcac3843.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9299,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 282.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_51_jpg.rf.fb2d431044ab64f571a15844b57ec596.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6514,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 96.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090557_004_jpg.rf.463e0a2157ad7516cb3b5e3f9cfb29b8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6411,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 336.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-403_jpg.rf.0836272fe7144d4010c19027e11d3775.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4392,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 159.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-286_jpg.rf.ac3b8f19d5f74a1eb0b44fb2ad303db6.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.487,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 86.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-927_jpg.rf.f3e424f7747bfb2ac9dbeeb2822d9daa.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7105,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 193.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-413_jpg.rf.25ca03c3ebadbbeeb0b86cabcb076ce1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5673,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 102.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_017_jpg.rf.9417a0b94ad03bb449e3bdb1d34e9d86.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6565,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 221.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/4620693218556181731-535cd909189333d29ff62d0a6a691832-22031110_JPG.rf.e8f5aad05d512f844eff3686126ffba9.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8473,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 208.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Darkest-1-_mp4-0159_jpg.rf.f402e89ba49b6848b95b0058d7717c95.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8779,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 471.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-910_jpg.rf.cd7c50e39ac4c51574ca9a28eb6b1f6f.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5248,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 219.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-729b41ba46c68b6221f87b3c14668aca-22031110_JPG.rf.da92cf27609f3f125410146917e0b721.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8316,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 121.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110232_006_jpg.rf.76b2681ec0066ad42baea76dcee2dc7b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6814,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 205.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081306_007_jpg.rf.93ce3e3b2374dac8a58bd7f181a420e8.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6748,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 206.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (237).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.95,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 55.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154331_025_jpg.rf.a8f73343c169bf00b059e32cee3efe2f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.917,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 141.7,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/25_F_i11_4554.jpeg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7876,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 681.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105651_011_jpg.rf.eee804f9c68c62a477babd53c23dfb00.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6359,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 210.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240817_103653_007_saved_jpg.rf.7eafac420d10ac3793c4f6bf51967a4d.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6834,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 195.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-fa8417c7eba8245cbe09857aedf6a0c6-22031109_JPG.rf.6c8bde11f756939df4d1ff15b9a00214.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6797,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 55.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03282_JPG.rf.a51b074db53936434098c29a190a71e7.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6898,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 54.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240903_104627_017_jpg.rf.fe23caec9aca870b3122a05080893e0b.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7763,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 131.1,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (140).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6637,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 22.8,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/55_F_i11_4491.jpeg",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6585,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 528.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-663_jpg.rf.73111e745b8b79189358ce2520f0eee0.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5702,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 60.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03195_JPG.rf.08d6005d26375288a1df39eea387a9a7.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7463,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 34.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/LINE_ALBUM_220327_156_jpg.rf.01bb5d47341cbeb8749ce8c12c1d95aa.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5703,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 48.2,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (100).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9121,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 25.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081219_030_jpg.rf.d2ce3d5e769d1d7ce54723aea45a41e6.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6674,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 112.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (84).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9896,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 33.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_63_jpg.rf.d0e05c549aaf10841a36f9cbe79ae1ab.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8285,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 88.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-ff8b8421a350bc2a9e3e9065cc7a6d6e-22031109_JPG.rf.420d35dbb0fe70264bf927dd66334074.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7644,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 90.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081243_030_jpg.rf.cfccbd43911058a010ab99f29b6d96e9.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6689,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 118.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03306_JPG.rf.b09e227f58a724c013bcddda63026f28.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5361,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 59.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105729_006_jpg.rf.fa361cadac8cfc7ff76bd1ad9d875aba.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.653,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 132.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1140_jpg.rf.901b7c3417447a491c2694fa874d2d69.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4994,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 53.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_030_jpg.rf.7164706f5064e05f275ccf8a5f5ad06a.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4807,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 264.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1013_jpg.rf.2a2bf899b3b955285a64eceb0f90c778.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6549,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 124.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0019_jpg.rf.d5b3e89e2ed2cb882336c7960b604c18.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.8111,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 223.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-271_jpg.rf.5f8a4fe514b43101fedeab8110f37cda.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6118,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 37.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (64).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.584,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 21.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081211_025_jpg.rf.f3cdc7f9ad69c5be1a46648240998dcf.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6839,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 122.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-682_jpg.rf.5446229d647fcb9639c4a4cf99d450eb.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5115,
+     "n": null,
+     "counts": null,
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 35.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_023_jpg.rf.3b2fe5f943c3ae337a3d1dcffed2c148.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5054,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 126.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_020_saved_jpg.rf.c26880090ac1acfa77fd05a854bad4ff.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6114,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 79.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/WhatsApp-Video-2026-05-19-at-9_15_06-PM_mp4-0021_jpg.rf.3a63d9ee1cc0d443150865160fd1c982.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8726,
+     "n": null,
+     "counts": null,
+     "warnings": [],
+     "ms": 140.9,
+     "violations": []
+    }
+   ],
+   "extra": [
+    {
+     "image": "white",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9438,
+      "probs": {
+       "light": 0.0374,
+       "medium": 0.0189,
+       "dark": 0.9438
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 2.6,
+       "ml": 343.2,
+       "total": 345.9
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 94%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "black",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8988,
+      "probs": {
+       "light": 0.0104,
+       "medium": 0.0907,
+       "dark": 0.8988
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 5.9,
+       "ml": 229.4,
+       "total": 235.3
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 90%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "rgb noise",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9304,
+      "probs": {
+       "light": 0.0692,
+       "medium": 0.9304,
+       "dark": 0.0004
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 21.9,
+       "ml": 217.9,
+       "total": 239.8
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 93%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 2",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8925,
+      "probs": {
+       "light": 0.0019,
+       "medium": 0.1056,
+       "dark": 0.8925
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 6.6,
+       "ml": 205.5,
+       "total": 212.2
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 89%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 3",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9085,
+      "probs": {
+       "light": 0.002,
+       "medium": 0.0895,
+       "dark": 0.9085
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 4.2,
+       "ml": 144.7,
+       "total": 148.8
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 91%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "synthetic 300 flat",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.6307,
+      "probs": {
+       "light": 0.2514,
+       "medium": 0.6307,
+       "dark": 0.1179
+      },
+      "warnings": [],
+      "n_beans": null,
+      "counts": null,
+      "count_method": null,
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 8.4,
+       "ml": 332.7,
+       "total": 341.1
+      },
+      "model": "b1-Lab_hist-C0.01-R2",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 63%)"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    }
+   ],
+   "bad": [
+    {
+     "input": "empty bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "random bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "truncated jpeg",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "text",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "4x4 png",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "รูปเล็กเกินไป กรุณาถ่ายหรือเลือกรูปเมล็ดกาแฟที่ชัดและใหญ่ขึ้น",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "None",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "str path",
+     "status": "error",
+     "label": null,
+     "message_th": "ระบบขัดข้องชั่วคราว กรุณาลองส่งรูปใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "pdf header",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    }
+   ],
+   "log_errors_warnings": [
+    {
+     "level": "ERROR",
+     "msg": "predict_bytes expects bytes, got str",
+     "exc": "",
+     "count": 1
+    }
+   ],
+   "majority_valueerror_count": 0,
+   "bean_path_fallback_count": 0
+  },
+  "bean_candidate(main)": {
+   "path": "C:/Users/Public/Documents/TOPGUN_CONTEST/Topgun/ML/models/bean_candidate",
+   "backend": "b1_linear_beans",
+   "name": "b1-Lab_hist-C0.01-R2+beans",
+   "low_conf_threshold": 0.0,
+   "beans_enabled": true,
+   "count_config_subset": {
+    "ws_separation": 1.0,
+    "metal_chroma_min": 8.0,
+    "max_beans": 1000
+   },
+   "group_config": null,
+   "five": [
+    {
+     "image": "ontoum",
+     "path": "raw/ontoum224/train/Light/light (260).png",
+     "true": "light",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 1.0,
+      "probs": {
+       "light": 1.0,
+       "medium": 0.0,
+       "dark": 0.0
+      },
+      "warnings": [],
+      "n_beans": 1,
+      "counts": {
+       "light": 1,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 1.0,
+       "medium": 0.0,
+       "dark": 0.0
+      },
+      "len(beans)": 1,
+      "beans[:2]": [
+       {
+        "bbox": [
+         40,
+         46,
+         145,
+         143
+        ],
+        "label": "light",
+        "conf": 0.9738
+       }
+      ],
+      "image_size": [
+       224,
+       224
+      ],
+      "timing_ms": {
+       "decode": 3.2,
+       "ml": 74.3,
+       "total": 77.6
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 100%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "boos",
+     "path": "raw/rf_boos/train/images/Mixed_mp4-0030_jpg.rf.36badae63d187edbae1222eb8445160d.jpg",
+     "true": "mixed",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.5,
+      "probs": {
+       "light": 0.1667,
+       "medium": 0.3333,
+       "dark": 0.5
+      },
+      "warnings": [
+       "mixed_roast"
+      ],
+      "n_beans": 6,
+      "counts": {
+       "light": 1,
+       "medium": 2,
+       "dark": 3
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.1667,
+       "medium": 0.3333,
+       "dark": 0.5
+      },
+      "len(beans)": 6,
+      "beans[:2]": [
+       {
+        "bbox": [
+         320,
+         35,
+         87,
+         148
+        ],
+        "label": "medium",
+        "conf": 0.6184
+       },
+       {
+        "bbox": [
+         163,
+         129,
+         159,
+         144
+        ],
+        "label": "dark",
+        "conf": 0.758
+       }
+      ],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 4.1,
+       "ml": 545.6,
+       "total": 549.7
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 50%) · ในภาพมีเมล็ดหลายระดับคั่วปนกัน"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "agtron(full frame)",
+     "path": "raw/agtron/RAW/RAW/065_00_00_05_124639.jpg",
+     "true": "medium",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9996,
+      "probs": {
+       "light": 0.0004,
+       "medium": 0.9996,
+       "dark": 0.0
+      },
+      "warnings": [],
+      "n_beans": 1,
+      "counts": {
+       "light": 0,
+       "medium": 1,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.0,
+       "medium": 1.0,
+       "dark": 0.0
+      },
+      "len(beans)": 1,
+      "beans[:2]": [
+       {
+        "bbox": [
+         474,
+         280,
+         612,
+         632
+        ],
+        "label": "medium",
+        "conf": 0.5568
+       }
+      ],
+      "image_size": [
+       1600,
+       1200
+      ],
+      "timing_ms": {
+       "decode": 371.9,
+       "ml": 489.3,
+       "total": 861.2
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 100%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "empty(hendi)",
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_007_jpg.rf.0ef750991377e3631d8f38d4f37cac4f.jpg",
+     "true": "empty",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 0.8,
+      "probs": {
+       "light": 0.8,
+       "medium": 0.0001,
+       "dark": 0.1999
+      },
+      "warnings": [
+       "count_visible_only",
+       "mixed_roast",
+       "bean_count_estimated"
+      ],
+      "n_beans": 5,
+      "counts": {
+       "light": 4,
+       "medium": 0,
+       "dark": 1
+      },
+      "count_method": "estimated",
+      "proportions": {
+       "light": 0.8,
+       "medium": 0.0,
+       "dark": 0.2
+      },
+      "len(beans)": 5,
+      "beans[:2]": [
+       {
+        "bbox": [
+         516,
+         31,
+         7,
+         7
+        ],
+        "label": "light",
+        "conf": 0.994
+       },
+       {
+        "bbox": [
+         513,
+         37,
+         9,
+         9
+        ],
+        "label": "light",
+        "conf": 0.9937
+       }
+      ],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 7.6,
+       "ml": 437.0,
+       "total": 444.6
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 80%) · นับเฉพาะส่วนเมล็ดที่มองเห็น เมล็ดที่ถูกบังอาจนับไม่ได้ · ในภาพมีเมล็ดหลายระดับคั่วปนกัน · จำนวนเมล็ดเป็นค่าประมาณจากขอบที่มองเห็น เมล็ดที่บังกันอาจนับไม่ครบ"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "synthetic pile300",
+     "path": "(synthetic)",
+     "true": "visible gt=300",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 0.5715,
+      "probs": {
+       "light": 0.5715,
+       "medium": 0.354,
+       "dark": 0.0746
+      },
+      "warnings": [
+       "count_visible_only",
+       "mixed_roast",
+       "bean_count_estimated"
+      ],
+      "n_beans": 952,
+      "counts": {
+       "light": 544,
+       "medium": 337,
+       "dark": 71
+      },
+      "count_method": "estimated",
+      "proportions": {
+       "light": 0.5714,
+       "medium": 0.354,
+       "dark": 0.0746
+      },
+      "len(beans)": 952,
+      "beans[:2]": [
+       {
+        "bbox": [
+         32,
+         0,
+         16,
+         21
+        ],
+        "label": "light",
+        "conf": 0.9917
+       },
+       {
+        "bbox": [
+         76,
+         0,
+         9,
+         8
+        ],
+        "label": "medium",
+        "conf": 0.7272
+       }
+      ],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 5.1,
+       "ml": 611.5,
+       "total": 616.6
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 57%) · นับเฉพาะส่วนเมล็ดที่มองเห็น เมล็ดที่ถูกบังอาจนับไม่ได้ · ในภาพมีเมล็ดหลายระดับคั่วปนกัน · จำนวนเมล็ดเป็นค่าประมาณจากขอบที่มองเห็น เมล็ดที่บังกันอาจนับไม่ครบ"
+     },
+     "violations": [],
+     "dup_iou>0.5": 17,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    }
+   ],
+   "hundred": {
+    "n": 100,
+    "sources": {
+     "rf_hendi": 37,
+     "rf_boos": 6,
+     "rf_robusta": 37,
+     "ontoum224": 16,
+     "agtron": 4
+    },
+    "status": {
+     "ok": 100
+    },
+    "violations": {
+     "proportions!=counts/n": 4
+    },
+    "count_ties": 11,
+    "n_beans_reported": 100,
+    "n_beans_min_med_max": [
+     0,
+     3.0,
+     226
+    ],
+    "count_method": {
+     "estimated": 53,
+     "exact": 47
+    },
+    "single_bean_images": 29,
+    "single_bean_conf_min_max": [
+     0.9995,
+     1.0
+    ],
+    "dup_pairs_iou>0.5": 19,
+    "images_with_dup": 6,
+    "ms_p50_p95_max": [
+     268.65,
+     704.14,
+     1126.0
+    ],
+    "fw_origin_main_rejects": 100,
+    "fw_patched_rejects": 0,
+    "label_agreement_single_roast(in-sample; not a metric)": {
+     "agtron:right": 4,
+     "ontoum224:wrong": 1,
+     "ontoum224:right": 10,
+     "rf_boos:right": 6,
+     "rf_hendi:wrong": 15,
+     "rf_hendi:right": 12,
+     "rf_robusta:wrong": 8,
+     "rf_robusta:right": 4
+    }
+   },
+   "hundred_rows": [
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085949_013_jpg.rf.869bd516fab797f93c81d13565a03da9.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9998,
+     "n": 2,
+     "counts": {
+      "light": 2,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 569.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110217_023_jpg.rf.01de113d7f4da0e296e43dc354457e1b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 589.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_017_jpg.rf.9dfee54cf361c03bc81cd03d4bdf785d.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 2,
+     "counts": {
+      "light": 2,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 366.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240903_105720_001_jpg.rf.353f56caadef29c4619186efafba3e17.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4473,
+     "n": 38,
+     "counts": {
+      "light": 13,
+      "medium": 17,
+      "dark": 8
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 271.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/valid/images/Darkest-1-_mp4-0069_jpg.rf.579608740327f874c02a05b606d3cff7.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 243.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-549_jpg.rf.5bd1e4c76d56daa4c596ab7a9550e8d1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5,
+     "n": 4,
+     "counts": {
+      "light": 1,
+      "medium": 1,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 139.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (24).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 38.1,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (186).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 35.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_007_saved_jpg.rf.d479d4d19a770d20668042cc42bcef2b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6499,
+     "n": 20,
+     "counts": {
+      "light": 7,
+      "medium": 13,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 303.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_146_jpg.rf.53be65463866e9ee05670dbe3a7216cf.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.8061,
+     "n": 129,
+     "counts": {
+      "light": 104,
+      "medium": 25,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 187.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_002_jpg.rf.6b8049564423d18fa573588540b12a4f.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.4546,
+     "n": 44,
+     "counts": {
+      "light": 20,
+      "medium": 10,
+      "dark": 14
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 306.9,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/035_00_00_05_123806.jpg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 539.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_83_jpg.rf.0a64f4b5d7cff106c2f31c73dc5e6c95.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.4999,
+     "n": 6,
+     "counts": {
+      "light": 3,
+      "medium": 1,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 148.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1119_jpg.rf.4b00bf10f38d95eecfbeb512d8ce9b05.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.3334,
+     "n": 6,
+     "counts": {
+      "light": 2,
+      "medium": 2,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast"
+     ],
+     "ms": 117.9,
+     "violations": [
+      "proportions!=counts/n"
+     ]
+    },
+    {
+     "path": "raw/rf_hendi/valid/Raw/20240905_091405_023_jpg.rf.256427a9f9336293b453dca7bb09ccbd.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5516,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 304.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090512_026_jpg.rf.1559fdc9723b674bc10b0f13b7d107fa.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5161,
+     "n": 62,
+     "counts": {
+      "light": 32,
+      "medium": 19,
+      "dark": 11
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 287.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_022_jpg.rf.2058e86bf4f338713256138a92074526.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9092,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 136.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240818_130901_023_jpg.rf.255717f04a0677b0739bdd62aca74b21.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5555,
+     "n": 9,
+     "counts": {
+      "light": 5,
+      "medium": 3,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 282.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-386_jpg.rf.1eb01c93064f8de7cbb8c2254a4f2acd.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6667,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 160.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_64_jpg.rf.87f930ab2902eaebaeee24bf3cbfa3f9.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5999,
+     "n": 5,
+     "counts": {
+      "light": 3,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 105.3,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (215).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 32.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/test/images/Darkest-1-_mp4-0060_jpg.rf.6542092de7f4148ba75244d77347113b.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 247.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_007_saved_jpg.rf.2c43b74ddf05682fd0bb3ae3e683d4f1.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5001,
+     "n": 4,
+     "counts": {
+      "light": 2,
+      "medium": 2,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 310.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090504_013_jpg.rf.e7e8cfb4a0aa53c783a336ea0631e30e.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5375,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 483.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_019_jpg.rf.eaa48ddd5ce1faba96a591629f5198f8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5789,
+     "n": 19,
+     "counts": {
+      "light": 3,
+      "medium": 5,
+      "dark": 11
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 561.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (297).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 43.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_10_0_jpg.rf.0a35aadb2af77dac36b3f8d6b1cc94ab.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.7954,
+     "n": 132,
+     "counts": {
+      "light": 105,
+      "medium": 27,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 262.0,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (180).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 44.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-93_jpg.rf.2a6a91260f2c1c881104c5723d68dad9.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4999,
+     "n": 4,
+     "counts": {
+      "light": 1,
+      "medium": 1,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 180.3,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (198).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 62.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (126).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 42.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_022_jpg.rf.a5e3da08e1b9cdc99c0483ecc1a126b9.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.4117,
+     "n": 34,
+     "counts": {
+      "light": 14,
+      "medium": 12,
+      "dark": 8
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 320.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154346_002_jpg.rf.41fe3cc59472dea507edc619e526a79f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4063,
+     "n": 32,
+     "counts": {
+      "light": 8,
+      "medium": 11,
+      "dark": 13
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 323.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_016_saved_jpg.rf.7bacc5aa85bec13cabaf4af800b1586c.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5499,
+     "n": 20,
+     "counts": {
+      "light": 11,
+      "medium": 9,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 373.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090520_008_jpg.rf.c8818c633a6530cac7b7ac73ecacc8bd.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.6053,
+     "n": 38,
+     "counts": {
+      "light": 23,
+      "medium": 13,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 386.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-893_jpg.rf.cede46aeaff0f31a1cbcbf6d22ed2322.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5001,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "mixed_roast"
+     ],
+     "ms": 222.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (192).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 76.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_018_jpg.rf.c9c626a86ef3c562f1cd0c9390566210.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5002,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 1126.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_102411_016_saved_jpg.rf.a884e08fbe23e5249a39e6eb76f1d395.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.8749,
+     "n": 8,
+     "counts": {
+      "light": 1,
+      "medium": 7,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 377.5,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (231).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 56.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03417_JPG.rf.88db061686b8477d30863deea55e352c.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 127.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_026_saved_jpg.rf.0382c4ca2fe107e42920260a663ad455.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.7333,
+     "n": 15,
+     "counts": {
+      "light": 11,
+      "medium": 4,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 328.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1094_jpg.rf.198ba95d6560fc0a3d3b84e0d6a56bed.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.3334,
+     "n": 3,
+     "counts": {
+      "light": 1,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "mixed_roast"
+     ],
+     "ms": 135.6,
+     "violations": [
+      "proportions!=counts/n"
+     ]
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-5e01183879da8f420b3d4126fa43fdb2-22031109_JPG.rf.c0f2bb73e87fdd4574d3dbebeb828515.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5001,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 205.7,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/65_L_i11_4231.JPG",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 769.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-f4ea75cab44a95aa17a14ca0241f8dec-22031110_JPG.rf.e8853c64aed870fe9f90524a9463595d.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 195.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_025_jpg.rf.8303ddca6d9d8e418deb78ecb26df286.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 703.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (286).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 63.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-365_jpg.rf.8009ec98f44d3178a5b4a02cfc6f26ce.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 236.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0001_jpg.rf.58d8084074dc31f55876a14f2dddf52c.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9997,
+     "n": 3,
+     "counts": {
+      "light": 3,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 310.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_99_jpg.rf.0d88e3b7a7a0275f8183850c52b0772e.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7141,
+     "n": 14,
+     "counts": {
+      "light": 0,
+      "medium": 10,
+      "dark": 4
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 247.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (270).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 47.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/valid/images/DSC03250_JPG.rf.06bdf7453219ecec2e1319a46fdf07ee.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9999,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 2,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 100.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-10_jpg.rf.6165521b87c12ee6ad76c1e74ed3ade7.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4001,
+     "n": 5,
+     "counts": {
+      "light": 1,
+      "medium": 2,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 200.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_090004_009_jpg.rf.1082c8973034ecc4d70c16e7dcac3843.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7496,
+     "n": 4,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 482.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_51_jpg.rf.fb2d431044ab64f571a15844b57ec596.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.6504,
+     "n": 226,
+     "counts": {
+      "light": 147,
+      "medium": 69,
+      "dark": 10
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 496.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090557_004_jpg.rf.463e0a2157ad7516cb3b5e3f9cfb29b8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5082,
+     "n": 61,
+     "counts": {
+      "light": 31,
+      "medium": 20,
+      "dark": 10
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 581.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-403_jpg.rf.0836272fe7144d4010c19027e11d3775.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6667,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 389.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-286_jpg.rf.ac3b8f19d5f74a1eb0b44fb2ad303db6.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 235.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-927_jpg.rf.f3e424f7747bfb2ac9dbeeb2822d9daa.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 154.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-413_jpg.rf.25ca03c3ebadbbeeb0b86cabcb076ce1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 212.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_017_jpg.rf.9417a0b94ad03bb449e3bdb1d34e9d86.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6565,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 459.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/4620693218556181731-535cd909189333d29ff62d0a6a691832-22031110_JPG.rf.e8f5aad05d512f844eff3686126ffba9.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6665,
+     "n": 3,
+     "counts": {
+      "light": 1,
+      "medium": 2,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 191.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Darkest-1-_mp4-0159_jpg.rf.f402e89ba49b6848b95b0058d7717c95.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 396.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-910_jpg.rf.cd7c50e39ac4c51574ca9a28eb6b1f6f.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 235.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-729b41ba46c68b6221f87b3c14668aca-22031110_JPG.rf.da92cf27609f3f125410146917e0b721.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 324.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110232_006_jpg.rf.76b2681ec0066ad42baea76dcee2dc7b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5,
+     "n": 24,
+     "counts": {
+      "light": 12,
+      "medium": 10,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 504.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081306_007_jpg.rf.93ce3e3b2374dac8a58bd7f181a420e8.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only"
+     ],
+     "ms": 492.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (237).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 51.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154331_025_jpg.rf.a8f73343c169bf00b059e32cee3efe2f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.8332,
+     "n": 6,
+     "counts": {
+      "light": 5,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 467.9,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/25_F_i11_4554.jpeg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 773.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105651_011_jpg.rf.eee804f9c68c62a477babd53c23dfb00.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7998,
+     "n": 5,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 4
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 532.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240817_103653_007_saved_jpg.rf.7eafac420d10ac3793c4f6bf51967a4d.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5999,
+     "n": 5,
+     "counts": {
+      "light": 2,
+      "medium": 3,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 556.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-fa8417c7eba8245cbe09857aedf6a0c6-22031109_JPG.rf.6c8bde11f756939df4d1ff15b9a00214.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7692,
+     "n": 13,
+     "counts": {
+      "light": 2,
+      "medium": 10,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 262.4,
+     "violations": [
+      "proportions!=counts/n"
+     ]
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03282_JPG.rf.a51b074db53936434098c29a190a71e7.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.5001,
+     "n": 2,
+     "counts": {
+      "light": 1,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 271.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240903_104627_017_jpg.rf.fe23caec9aca870b3122a05080893e0b.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7499,
+     "n": 4,
+     "counts": {
+      "light": 1,
+      "medium": 3,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 414.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (140).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 49.1,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/55_F_i11_4491.jpeg",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 712.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-663_jpg.rf.73111e745b8b79189358ce2520f0eee0.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5001,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 231.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03195_JPG.rf.08d6005d26375288a1df39eea387a9a7.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5,
+     "n": 10,
+     "counts": {
+      "light": 2,
+      "medium": 3,
+      "dark": 5
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 243.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/LINE_ALBUM_220327_156_jpg.rf.01bb5d47341cbeb8749ce8c12c1d95aa.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5703,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 161.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (100).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 81.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081219_030_jpg.rf.d2ce3d5e769d1d7ce54723aea45a41e6.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5,
+     "n": 6,
+     "counts": {
+      "light": 2,
+      "medium": 3,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 869.1,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (84).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 1.0,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 79.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_63_jpg.rf.d0e05c549aaf10841a36f9cbe79ae1ab.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7186,
+     "n": 32,
+     "counts": {
+      "light": 3,
+      "medium": 23,
+      "dark": 6
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 319.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-ff8b8421a350bc2a9e3e9065cc7a6d6e-22031109_JPG.rf.420d35dbb0fe70264bf927dd66334074.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6785,
+     "n": 28,
+     "counts": {
+      "light": 1,
+      "medium": 19,
+      "dark": 8
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 215.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081243_030_jpg.rf.cfccbd43911058a010ab99f29b6d96e9.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6999,
+     "n": 10,
+     "counts": {
+      "light": 1,
+      "medium": 7,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 536.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03306_JPG.rf.b09e227f58a724c013bcddda63026f28.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.7144,
+     "n": 7,
+     "counts": {
+      "light": 5,
+      "medium": 2,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 360.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105729_006_jpg.rf.fa361cadac8cfc7ff76bd1ad9d875aba.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.653,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 677.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1140_jpg.rf.901b7c3417447a491c2694fa874d2d69.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.4999,
+     "n": 8,
+     "counts": {
+      "light": 4,
+      "medium": 2,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 265.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_030_jpg.rf.7164706f5064e05f275ccf8a5f5ad06a.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4375,
+     "n": 32,
+     "counts": {
+      "light": 13,
+      "medium": 14,
+      "dark": 5
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 640.6,
+     "violations": [
+      "proportions!=counts/n"
+     ]
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1013_jpg.rf.2a2bf899b3b955285a64eceb0f90c778.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.4999,
+     "n": 2,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [
+      "mixed_roast"
+     ],
+     "ms": 148.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0019_jpg.rf.d5b3e89e2ed2cb882336c7960b604c18.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9998,
+     "n": 3,
+     "counts": {
+      "light": 3,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 372.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-271_jpg.rf.5f8a4fe514b43101fedeab8110f37cda.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 163.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (64).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 58.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081211_025_jpg.rf.f3cdc7f9ad69c5be1a46648240998dcf.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5385,
+     "n": 13,
+     "counts": {
+      "light": 4,
+      "medium": 7,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 582.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-682_jpg.rf.5446229d647fcb9639c4a4cf99d450eb.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5001,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 247.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_023_jpg.rf.3b2fe5f943c3ae337a3d1dcffed2c148.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6999,
+     "n": 10,
+     "counts": {
+      "light": 0,
+      "medium": 3,
+      "dark": 7
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 563.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_020_saved_jpg.rf.c26880090ac1acfa77fd05a854bad4ff.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.6666,
+     "n": 21,
+     "counts": {
+      "light": 14,
+      "medium": 5,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 496.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/WhatsApp-Video-2026-05-19-at-9_15_06-PM_mp4-0021_jpg.rf.3a63d9ee1cc0d443150865160fd1c982.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9999,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 422.4,
+     "violations": []
+    }
+   ],
+   "extra": [
+    {
+     "image": "white",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9438,
+      "probs": {
+       "light": 0.0374,
+       "medium": 0.0189,
+       "dark": 0.9438
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 4.7,
+       "ml": 334.5,
+       "total": 339.2
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 94%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "black",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8988,
+      "probs": {
+       "light": 0.0104,
+       "medium": 0.0907,
+       "dark": 0.8988
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 2.3,
+       "ml": 240.9,
+       "total": 243.3
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 90%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "rgb noise",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9304,
+      "probs": {
+       "light": 0.0692,
+       "medium": 0.9304,
+       "dark": 0.0004
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 14.5,
+       "ml": 285.2,
+       "total": 299.7
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 93%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 2",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8925,
+      "probs": {
+       "light": 0.0019,
+       "medium": 0.1056,
+       "dark": 0.8925
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 8.4,
+       "ml": 258.9,
+       "total": 267.4
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 89%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 3",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9085,
+      "probs": {
+       "light": 0.002,
+       "medium": 0.0895,
+       "dark": 0.9085
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 11.6,
+       "ml": 252.8,
+       "total": 264.4
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 91%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "synthetic 300 flat",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 0.3334,
+      "probs": {
+       "light": 0.3334,
+       "medium": 0.3333,
+       "dark": 0.3333
+      },
+      "warnings": [
+       "mixed_roast"
+      ],
+      "n_beans": 300,
+      "counts": {
+       "light": 100,
+       "medium": 100,
+       "dark": 100
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.3334,
+       "medium": 0.3333,
+       "dark": 0.3333
+      },
+      "len(beans)": 300,
+      "beans[:2]": [
+       {
+        "bbox": [
+         7,
+         11,
+         27,
+         19
+        ],
+        "label": "light",
+        "conf": 0.999
+       },
+       {
+        "bbox": [
+         51,
+         11,
+         27,
+         19
+        ],
+        "label": "medium",
+        "conf": 0.8773
+       }
+      ],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 8.7,
+       "ml": 526.7,
+       "total": 535.4
+      },
+      "model": "b1-Lab_hist-C0.01-R2+beans",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 33%) · ในภาพมีเมล็ดหลายระดับคั่วปนกัน"
+     },
+     "violations": [
+      "proportions!=counts/n"
+     ],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    }
+   ],
+   "bad": [
+    {
+     "input": "empty bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "random bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "truncated jpeg",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "text",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "4x4 png",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "รูปเล็กเกินไป กรุณาถ่ายหรือเลือกรูปเมล็ดกาแฟที่ชัดและใหญ่ขึ้น",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "None",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "str path",
+     "status": "error",
+     "label": null,
+     "message_th": "ระบบขัดข้องชั่วคราว กรุณาลองส่งรูปใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "pdf header",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    }
+   ],
+   "log_errors_warnings": [
+    {
+     "level": "ERROR",
+     "msg": "predict_bytes expects bytes, got str",
+     "exc": "",
+     "count": 1
+    }
+   ],
+   "majority_valueerror_count": 0,
+   "bean_path_fallback_count": 0
+  },
+  "v3_preview(worktree only)": {
+   "path": "../../roast-classification-seed-count-91d3d9/ML/models/perbean_v3_preview_20261010",
+   "backend": "b1_linear_beans",
+   "name": "perbean-dev-fold-rf_boos-v3-preview",
+   "low_conf_threshold": 0.0,
+   "beans_enabled": true,
+   "count_config_subset": {
+    "ws_separation": 2,
+    "metal_chroma_min": 16,
+    "max_beans": 1000
+   },
+   "group_config": {
+    "min_L_gap": 24.0,
+    "max_k": 3
+   },
+   "five": [
+    {
+     "image": "ontoum",
+     "path": "raw/ontoum224/train/Light/light (260).png",
+     "true": "light",
+     "result": {
+      "status": "ok",
+      "label": "light",
+      "confidence": 0.9998,
+      "probs": {
+       "light": 0.9998,
+       "medium": 0.0002,
+       "dark": 0.0
+      },
+      "warnings": [],
+      "n_beans": 1,
+      "counts": {
+       "light": 1,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 1.0,
+       "medium": 0.0,
+       "dark": 0.0
+      },
+      "len(beans)": 1,
+      "beans[:2]": [
+       {
+        "bbox": [
+         40,
+         46,
+         145,
+         143
+        ],
+        "label": "light",
+        "conf": 0.8298
+       }
+      ],
+      "image_size": [
+       224,
+       224
+      ],
+      "timing_ms": {
+       "decode": 3.6,
+       "ml": 55.2,
+       "total": 58.8
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วอ่อน (ความมั่นใจ 100%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "boos",
+     "path": "raw/rf_boos/train/images/Mixed_mp4-0030_jpg.rf.36badae63d187edbae1222eb8445160d.jpg",
+     "true": "mixed",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9997,
+      "probs": {
+       "light": 0.0,
+       "medium": 0.9997,
+       "dark": 0.0003
+      },
+      "warnings": [],
+      "n_beans": 6,
+      "counts": {
+       "light": 0,
+       "medium": 6,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.0,
+       "medium": 1.0,
+       "dark": 0.0
+      },
+      "len(beans)": 6,
+      "beans[:2]": [
+       {
+        "bbox": [
+         320,
+         35,
+         87,
+         148
+        ],
+        "label": "medium",
+        "conf": 0.6707
+       },
+       {
+        "bbox": [
+         163,
+         129,
+         159,
+         144
+        ],
+        "label": "medium",
+        "conf": 0.6707
+       }
+      ],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 4.7,
+       "ml": 463.7,
+       "total": 468.4
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 100%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "agtron(full frame)",
+     "path": "raw/agtron/RAW/RAW/065_00_00_05_124639.jpg",
+     "true": "medium",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9997,
+      "probs": {
+       "light": 0.0002,
+       "medium": 0.9997,
+       "dark": 0.0002
+      },
+      "warnings": [],
+      "n_beans": 1,
+      "counts": {
+       "light": 0,
+       "medium": 1,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.0,
+       "medium": 1.0,
+       "dark": 0.0
+      },
+      "len(beans)": 1,
+      "beans[:2]": [
+       {
+        "bbox": [
+         474,
+         280,
+         612,
+         632
+        ],
+        "label": "medium",
+        "conf": 0.6926
+       }
+      ],
+      "image_size": [
+       1600,
+       1200
+      ],
+      "timing_ms": {
+       "decode": 310.9,
+       "ml": 488.9,
+       "total": 799.8
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 100%)"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "empty(hendi)",
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_007_jpg.rf.0ef750991377e3631d8f38d4f37cac4f.jpg",
+     "true": "empty",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8682,
+      "probs": {
+       "light": 0.0011,
+       "medium": 0.1307,
+       "dark": 0.8682
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 4.4,
+       "ml": 283.1,
+       "total": 287.5
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 87%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "dup_iou>0.5": 0,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    },
+    {
+     "image": "synthetic pile300",
+     "path": "(synthetic)",
+     "true": "visible gt=300",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9996,
+      "probs": {
+       "light": 0.0001,
+       "medium": 0.9996,
+       "dark": 0.0003
+      },
+      "warnings": [
+       "count_visible_only",
+       "bean_count_estimated"
+      ],
+      "n_beans": 514,
+      "counts": {
+       "light": 0,
+       "medium": 514,
+       "dark": 0
+      },
+      "count_method": "estimated",
+      "proportions": {
+       "light": 0.0,
+       "medium": 1.0,
+       "dark": 0.0
+      },
+      "len(beans)": 514,
+      "beans[:2]": [
+       {
+        "bbox": [
+         400,
+         3,
+         34,
+         20
+        ],
+        "label": "medium",
+        "conf": 0.6102
+       },
+       {
+        "bbox": [
+         796,
+         3,
+         34,
+         20
+        ],
+        "label": "medium",
+        "conf": 0.6102
+       }
+      ],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 6.8,
+       "ml": 469.1,
+       "total": 475.9
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 100%) · นับเฉพาะส่วนเมล็ดที่มองเห็น เมล็ดที่ถูกบังอาจนับไม่ได้ · จำนวนเมล็ดเป็นค่าประมาณจากขอบที่มองเห็น เมล็ดที่บังกันอาจนับไม่ครบ"
+     },
+     "violations": [],
+     "dup_iou>0.5": 4,
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched(mqtt_result)": "ok",
+     "fw_patched(full)": "ok"
+    }
+   ],
+   "hundred": {
+    "n": 100,
+    "sources": {
+     "rf_hendi": 37,
+     "rf_boos": 6,
+     "rf_robusta": 37,
+     "ontoum224": 16,
+     "agtron": 4
+    },
+    "status": {
+     "ok": 100
+    },
+    "violations": {
+     "proportions!=counts/n": 1
+    },
+    "count_ties": 9,
+    "n_beans_reported": 100,
+    "n_beans_min_med_max": [
+     0,
+     2.0,
+     90
+    ],
+    "count_method": {
+     "exact": 61,
+     "estimated": 39
+    },
+    "single_bean_images": 29,
+    "single_bean_conf_min_max": [
+     0.9995,
+     0.9999
+    ],
+    "dup_pairs_iou>0.5": 2,
+    "images_with_dup": 2,
+    "ms_p50_p95_max": [
+     200.35000000000002,
+     610.315,
+     844.3
+    ],
+    "fw_origin_main_rejects": 100,
+    "fw_patched_rejects": 0,
+    "label_agreement_single_roast(in-sample; not a metric)": {
+     "agtron:right": 4,
+     "ontoum224:right": 11,
+     "rf_boos:wrong": 2,
+     "rf_boos:right": 4,
+     "rf_hendi:wrong": 15,
+     "rf_hendi:right": 12,
+     "rf_robusta:wrong": 3,
+     "rf_robusta:right": 9
+    }
+   },
+   "hundred_rows": [
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085949_013_jpg.rf.869bd516fab797f93c81d13565a03da9.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8445,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 193.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110217_023_jpg.rf.01de113d7f4da0e296e43dc354457e1b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 453.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_017_jpg.rf.9dfee54cf361c03bc81cd03d4bdf785d.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8839,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 203.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240903_105720_001_jpg.rf.353f56caadef29c4619186efafba3e17.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7082,
+     "n": 24,
+     "counts": {
+      "light": 0,
+      "medium": 17,
+      "dark": 7
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 323.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/valid/images/Darkest-1-_mp4-0069_jpg.rf.579608740327f874c02a05b606d3cff7.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 295.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-549_jpg.rf.5bd1e4c76d56daa4c596ab7a9550e8d1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5235,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 82.0,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (24).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 57.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (186).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 54.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_007_saved_jpg.rf.d479d4d19a770d20668042cc42bcef2b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6667,
+     "n": 6,
+     "counts": {
+      "light": 0,
+      "medium": 4,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 321.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_146_jpg.rf.53be65463866e9ee05670dbe3a7216cf.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.8284,
+     "n": 35,
+     "counts": {
+      "light": 0,
+      "medium": 29,
+      "dark": 6
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 142.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_002_jpg.rf.6b8049564423d18fa573588540b12a4f.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4155,
+     "n": 65,
+     "counts": {
+      "light": 27,
+      "medium": 27,
+      "dark": 11
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 283.1,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/035_00_00_05_123806.jpg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 612.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_83_jpg.rf.0a64f4b5d7cff106c2f31c73dc5e6c95.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9098,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 88.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1119_jpg.rf.4b00bf10f38d95eecfbeb512d8ce9b05.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4999,
+     "n": 4,
+     "counts": {
+      "light": 0,
+      "medium": 2,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast"
+     ],
+     "ms": 125.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Raw/20240905_091405_023_jpg.rf.256427a9f9336293b453dca7bb09ccbd.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.4229,
+     "n": 26,
+     "counts": {
+      "light": 11,
+      "medium": 9,
+      "dark": 6
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 371.1,
+     "violations": [
+      "proportions!=counts/n"
+     ]
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090512_026_jpg.rf.1559fdc9723b674bc10b0f13b7d107fa.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 39,
+     "counts": {
+      "light": 0,
+      "medium": 39,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 367.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_085941_022_jpg.rf.2058e86bf4f338713256138a92074526.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.8765,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 221.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240818_130901_023_jpg.rf.255717f04a0677b0739bdd62aca74b21.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5557,
+     "n": 9,
+     "counts": {
+      "light": 0,
+      "medium": 5,
+      "dark": 4
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 413.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-386_jpg.rf.1eb01c93064f8de7cbb8c2254a4f2acd.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.541,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 55.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_64_jpg.rf.87f930ab2902eaebaeee24bf3cbfa3f9.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9131,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 69.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (215).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 40.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/test/images/Darkest-1-_mp4-0060_jpg.rf.6542092de7f4148ba75244d77347113b.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 279.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_007_saved_jpg.rf.2c43b74ddf05682fd0bb3ae3e683d4f1.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6,
+     "n": 5,
+     "counts": {
+      "light": 0,
+      "medium": 3,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 326.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090504_013_jpg.rf.e7e8cfb4a0aa53c783a336ea0631e30e.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5623,
+     "n": 16,
+     "counts": {
+      "light": 0,
+      "medium": 7,
+      "dark": 9
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 263.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_019_jpg.rf.eaa48ddd5ce1faba96a591629f5198f8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 20,
+     "counts": {
+      "light": 0,
+      "medium": 20,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 311.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (297).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 42.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_10_0_jpg.rf.0a35aadb2af77dac36b3f8d6b1cc94ab.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5713,
+     "n": 21,
+     "counts": {
+      "light": 0,
+      "medium": 9,
+      "dark": 12
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 150.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (180).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 45.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-93_jpg.rf.2a6a91260f2c1c881104c5723d68dad9.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7498,
+     "n": 4,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 3
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 199.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (198).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 39.6,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (126).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 39.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_022_jpg.rf.a5e3da08e1b9cdc99c0483ecc1a126b9.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5788,
+     "n": 19,
+     "counts": {
+      "light": 0,
+      "medium": 11,
+      "dark": 8
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 308.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154346_002_jpg.rf.41fe3cc59472dea507edc619e526a79f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9278,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 167.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_016_saved_jpg.rf.7bacc5aa85bec13cabaf4af800b1586c.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5,
+     "n": 18,
+     "counts": {
+      "light": 0,
+      "medium": 9,
+      "dark": 9
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 352.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090520_008_jpg.rf.c8818c633a6530cac7b7ac73ecacc8bd.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 27,
+     "counts": {
+      "light": 0,
+      "medium": 27,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 386.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-893_jpg.rf.cede46aeaff0f31a1cbcbf6d22ed2322.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [],
+     "ms": 127.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (192).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 34.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Raw/20240905_091413_018_jpg.rf.c9c626a86ef3c562f1cd0c9390566210.jpg",
+     "source": "rf_hendi",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6887,
+     "n": 90,
+     "counts": {
+      "light": 0,
+      "medium": 62,
+      "dark": 28
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 279.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_102411_016_saved_jpg.rf.a884e08fbe23e5249a39e6eb76f1d395.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7498,
+     "n": 8,
+     "counts": {
+      "light": 0,
+      "medium": 6,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 298.9,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (231).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 32.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03417_JPG.rf.88db061686b8477d30863deea55e352c.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 91.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240817_103013_026_saved_jpg.rf.0382c4ca2fe107e42920260a663ad455.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5001,
+     "n": 12,
+     "counts": {
+      "light": 0,
+      "medium": 6,
+      "dark": 6
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 298.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1094_jpg.rf.198ba95d6560fc0a3d3b84e0d6a56bed.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6664,
+     "n": 3,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [
+      "mixed_roast"
+     ],
+     "ms": 91.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-5e01183879da8f420b3d4126fa43fdb2-22031109_JPG.rf.c0f2bb73e87fdd4574d3dbebeb828515.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 9,
+     "counts": {
+      "light": 0,
+      "medium": 9,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 106.8,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/65_L_i11_4231.JPG",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 491.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181731-f4ea75cab44a95aa17a14ca0241f8dec-22031110_JPG.rf.e8853c64aed870fe9f90524a9463595d.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 138.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_025_jpg.rf.8303ddca6d9d8e418deb78ecb26df286.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast"
+     ],
+     "ms": 373.4,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (286).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 38.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-365_jpg.rf.8009ec98f44d3178a5b4a02cfc6f26ce.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7042,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 52.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0001_jpg.rf.58d8084074dc31f55876a14f2dddf52c.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 300.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_99_jpg.rf.0d88e3b7a7a0275f8183850c52b0772e.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 3,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only"
+     ],
+     "ms": 142.8,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Dark/dark (270).png",
+     "source": "ontoum224",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 49.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/valid/images/DSC03250_JPG.rf.06bdf7453219ecec2e1319a46fdf07ee.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9997,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 2,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 112.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-10_jpg.rf.6165521b87c12ee6ad76c1e74ed3ade7.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.7998,
+     "n": 5,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 4
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 166.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240905_090004_009_jpg.rf.1082c8973034ecc4d70c16e7dcac3843.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9084,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 144.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_51_jpg.rf.fb2d431044ab64f571a15844b57ec596.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 58,
+     "counts": {
+      "light": 0,
+      "medium": 58,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 119.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090557_004_jpg.rf.463e0a2157ad7516cb3b5e3f9cfb29b8.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 25,
+     "counts": {
+      "light": 0,
+      "medium": 25,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 250.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-403_jpg.rf.0836272fe7144d4010c19027e11d3775.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6233,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 47.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-286_jpg.rf.ac3b8f19d5f74a1eb0b44fb2ad303db6.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9997,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 2
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 200.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-927_jpg.rf.f3e424f7747bfb2ac9dbeeb2822d9daa.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 208.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-413_jpg.rf.25ca03c3ebadbbeeb0b86cabcb076ce1.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7423,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 95.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081235_017_jpg.rf.9417a0b94ad03bb449e3bdb1d34e9d86.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6219,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 473.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/4620693218556181731-535cd909189333d29ff62d0a6a691832-22031110_JPG.rf.e8f5aad05d512f844eff3686126ffba9.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 157.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Darkest-1-_mp4-0159_jpg.rf.f402e89ba49b6848b95b0058d7717c95.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9999,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 470.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-910_jpg.rf.cd7c50e39ac4c51574ca9a28eb6b1f6f.jpg",
+     "source": "rf_robusta",
+     "true": "medium",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 239.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-729b41ba46c68b6221f87b3c14668aca-22031110_JPG.rf.da92cf27609f3f125410146917e0b721.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 246.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240903_110232_006_jpg.rf.76b2681ec0066ad42baea76dcee2dc7b.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.8233,
+     "n": 17,
+     "counts": {
+      "light": 0,
+      "medium": 14,
+      "dark": 3
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 425.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081306_007_jpg.rf.93ce3e3b2374dac8a58bd7f181a420e8.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.6482,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 434.0,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (237).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 55.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Empty/20240817_154331_025_jpg.rf.a8f73343c169bf00b059e32cee3efe2f.jpg",
+     "source": "rf_hendi",
+     "true": "empty",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9016,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 271.7,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/25_F_i11_4554.jpeg",
+     "source": "agtron",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 844.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105651_011_jpg.rf.eee804f9c68c62a477babd53c23dfb00.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only"
+     ],
+     "ms": 610.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240817_103653_007_saved_jpg.rf.7eafac420d10ac3793c4f6bf51967a4d.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 6,
+     "counts": {
+      "light": 0,
+      "medium": 6,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 524.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-fa8417c7eba8245cbe09857aedf6a0c6-22031109_JPG.rf.6c8bde11f756939df4d1ff15b9a00214.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.6817,
+     "n": 22,
+     "counts": {
+      "light": 0,
+      "medium": 7,
+      "dark": 15
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 190.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03282_JPG.rf.a51b074db53936434098c29a190a71e7.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9996,
+     "n": 2,
+     "counts": {
+      "light": 2,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 409.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240903_104627_017_jpg.rf.fe23caec9aca870b3122a05080893e0b.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 8,
+     "counts": {
+      "light": 0,
+      "medium": 8,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 495.3,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (140).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 54.2,
+     "violations": []
+    },
+    {
+     "path": "raw/agtron/RAW/RAW/55_F_i11_4491.jpeg",
+     "source": "agtron",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 746.1,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-663_jpg.rf.73111e745b8b79189358ce2520f0eee0.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.7364,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 112.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03195_JPG.rf.08d6005d26375288a1df39eea387a9a7.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9998,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 1
+     },
+     "warnings": [],
+     "ms": 114.4,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/test/images/LINE_ALBUM_220327_156_jpg.rf.01bb5d47341cbeb8749ce8c12c1d95aa.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 154.2,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Green/green (100).png",
+     "source": "ontoum224",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 51.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081219_030_jpg.rf.d2ce3d5e769d1d7ce54723aea45a41e6.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5,
+     "n": 6,
+     "counts": {
+      "light": 0,
+      "medium": 3,
+      "dark": 3
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 614.2,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Light/light (84).png",
+     "source": "ontoum224",
+     "true": "light",
+     "status": "ok",
+     "label": "light",
+     "conf": 0.9999,
+     "n": 1,
+     "counts": {
+      "light": 1,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 53.5,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/LINE_ALBUM_220329_63_jpg.rf.d0e05c549aaf10841a36f9cbe79ae1ab.jpg",
+     "source": "rf_robusta",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 178.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/4620693218556181706-ff8b8421a350bc2a9e3e9065cc7a6d6e-22031109_JPG.rf.420d35dbb0fe70264bf927dd66334074.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 13,
+     "counts": {
+      "light": 0,
+      "medium": 13,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 158.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081243_030_jpg.rf.cfccbd43911058a010ab99f29b6d96e9.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 8,
+     "counts": {
+      "light": 0,
+      "medium": 8,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 365.2,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/DSC03306_JPG.rf.b09e227f58a724c013bcddda63026f28.jpg",
+     "source": "rf_robusta",
+     "true": "green",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9996,
+     "n": 5,
+     "counts": {
+      "light": 0,
+      "medium": 5,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 235.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/valid/Light/20240903_105729_006_jpg.rf.fa361cadac8cfc7ff76bd1ad9d875aba.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5581,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 463.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1140_jpg.rf.901b7c3417447a491c2694fa874d2d69.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 5,
+     "counts": {
+      "light": 0,
+      "medium": 5,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 166.9,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240817_104455_030_jpg.rf.7164706f5064e05f275ccf8a5f5ad06a.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 12,
+     "counts": {
+      "light": 0,
+      "medium": 12,
+      "dark": 0
+     },
+     "warnings": [
+      "count_visible_only",
+      "bean_count_estimated"
+     ],
+     "ms": 387.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-1013_jpg.rf.2a2bf899b3b955285a64eceb0f90c778.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5002,
+     "n": 2,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 1
+     },
+     "warnings": [
+      "mixed_roast"
+     ],
+     "ms": 174.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/Lightest-1-_mp4-0019_jpg.rf.d5b3e89e2ed2cb882336c7960b604c18.jpg",
+     "source": "rf_boos",
+     "true": "light",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9996,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 405.6,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-271_jpg.rf.5f8a4fe514b43101fedeab8110f37cda.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5451,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 74.7,
+     "violations": []
+    },
+    {
+     "path": "raw/ontoum224/train/Medium/medium (64).png",
+     "source": "ontoum224",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.9995,
+     "n": 1,
+     "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 0
+     },
+     "warnings": [],
+     "ms": 50.8,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Medium/20240905_081211_025_jpg.rf.f3cdc7f9ad69c5be1a46648240998dcf.jpg",
+     "source": "rf_hendi",
+     "true": "medium",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.5001,
+     "n": 8,
+     "counts": {
+      "light": 0,
+      "medium": 4,
+      "dark": 4
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 627.7,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_robusta/train/images/Coffee-Test_mp4-682_jpg.rf.5446229d647fcb9639c4a4cf99d450eb.jpg",
+     "source": "rf_robusta",
+     "true": "mixed",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.4877,
+     "n": 0,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 0
+     },
+     "warnings": [
+      "no_beans_detected"
+     ],
+     "ms": 103.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Dark/20240905_090534_023_jpg.rf.3b2fe5f943c3ae337a3d1dcffed2c148.jpg",
+     "source": "rf_hendi",
+     "true": "dark",
+     "status": "ok",
+     "label": "medium",
+     "conf": 0.8526,
+     "n": 34,
+     "counts": {
+      "light": 0,
+      "medium": 29,
+      "dark": 5
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 378.3,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_hendi/train/Light/20240817_103701_020_saved_jpg.rf.c26880090ac1acfa77fd05a854bad4ff.jpg",
+     "source": "rf_hendi",
+     "true": "light",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.5452,
+     "n": 11,
+     "counts": {
+      "light": 0,
+      "medium": 5,
+      "dark": 6
+     },
+     "warnings": [
+      "count_visible_only",
+      "mixed_roast",
+      "bean_count_estimated"
+     ],
+     "ms": 439.0,
+     "violations": []
+    },
+    {
+     "path": "raw/rf_boos/train/images/WhatsApp-Video-2026-05-19-at-9_15_06-PM_mp4-0021_jpg.rf.3a63d9ee1cc0d443150865160fd1c982.jpg",
+     "source": "rf_boos",
+     "true": "dark",
+     "status": "ok",
+     "label": "dark",
+     "conf": 0.9999,
+     "n": 3,
+     "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 3
+     },
+     "warnings": [],
+     "ms": 382.7,
+     "violations": []
+    }
+   ],
+   "extra": [
+    {
+     "image": "white",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.9159,
+      "probs": {
+       "light": 0.0119,
+       "medium": 0.0721,
+       "dark": 0.9159
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 11.3,
+       "ml": 393.6,
+       "total": 405.0
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 92%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "black",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8985,
+      "probs": {
+       "light": 0.0015,
+       "medium": 0.1,
+       "dark": 0.8985
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 2.2,
+       "ml": 257.7,
+       "total": 259.9
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 90%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "rgb noise",
+     "result": {
+      "status": "ok",
+      "label": "medium",
+      "confidence": 0.9094,
+      "probs": {
+       "light": 0.0903,
+       "medium": 0.9094,
+       "dark": 0.0002
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       800,
+       600
+      ],
+      "timing_ms": {
+       "decode": 38.9,
+       "ml": 535.6,
+       "total": 574.5
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วกลาง (ความมั่นใจ 91%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 2",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8732,
+      "probs": {
+       "light": 0.001,
+       "medium": 0.1258,
+       "dark": 0.8732
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 5.2,
+       "ml": 299.0,
+       "total": 304.2
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 87%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "hendi empty 3",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.8718,
+      "probs": {
+       "light": 0.0011,
+       "medium": 0.1272,
+       "dark": 0.8718
+      },
+      "warnings": [
+       "no_beans_detected"
+      ],
+      "n_beans": 0,
+      "counts": {
+       "light": 0,
+       "medium": 0,
+       "dark": 0
+      },
+      "count_method": "exact",
+      "proportions": null,
+      "len(beans)": 0,
+      "beans[:2]": [],
+      "image_size": [
+       640,
+       640
+      ],
+      "timing_ms": {
+       "decode": 6.8,
+       "ml": 305.2,
+       "total": 312.0
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 87%) · ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    },
+    {
+     "image": "synthetic 300 flat",
+     "result": {
+      "status": "ok",
+      "label": "dark",
+      "confidence": 0.6665,
+      "probs": {
+       "light": 0.0,
+       "medium": 0.3335,
+       "dark": 0.6665
+      },
+      "warnings": [
+       "mixed_roast"
+      ],
+      "n_beans": 300,
+      "counts": {
+       "light": 0,
+       "medium": 100,
+       "dark": 200
+      },
+      "count_method": "exact",
+      "proportions": {
+       "light": 0.0,
+       "medium": 0.3333,
+       "dark": 0.6667
+      },
+      "len(beans)": 300,
+      "beans[:2]": [
+       {
+        "bbox": [
+         7,
+         11,
+         27,
+         19
+        ],
+        "label": "medium",
+        "conf": 0.664
+       },
+       {
+        "bbox": [
+         51,
+         11,
+         27,
+         19
+        ],
+        "label": "dark",
+        "conf": 0.5666
+       }
+      ],
+      "image_size": [
+       900,
+       600
+      ],
+      "timing_ms": {
+       "decode": 8.9,
+       "ml": 708.0,
+       "total": 718.4
+      },
+      "model": "perbean-dev-fold-rf_boos-v3-preview",
+      "schema_version": 3,
+      "message_th": "ผลวิเคราะห์: คั่วเข้ม (ความมั่นใจ 67%) · ในภาพมีเมล็ดหลายระดับคั่วปนกัน"
+     },
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract"
+    }
+   ],
+   "bad": [
+    {
+     "input": "empty bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "random bytes",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "truncated jpeg",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "text",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "4x4 png",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "รูปเล็กเกินไป กรุณาถ่ายหรือเลือกรูปเมล็ดกาแฟที่ชัดและใหญ่ขึ้น",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "None",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "str path",
+     "status": "error",
+     "label": null,
+     "message_th": "ระบบขัดข้องชั่วคราว กรุณาลองส่งรูปใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    },
+    {
+     "input": "pdf header",
+     "status": "bad_image",
+     "label": null,
+     "message_th": "เปิดไฟล์รูปนี้ไม่ได้ กรุณาเลือกไฟล์รูป (JPG, PNG หรือ HEIC) ใหม่อีกครั้ง",
+     "image_size": null,
+     "violations": [],
+     "fw_origin_main": "REJECT: result fields do not match roastml contract",
+     "fw_patched": "ok"
+    }
+   ],
+   "log_errors_warnings": [
+    {
+     "level": "ERROR",
+     "msg": "predict_bytes expects bytes, got str",
+     "exc": "",
+     "count": 1
+    }
+   ],
+   "majority_valueerror_count": 0,
+   "bean_path_fallback_count": 0
+  }
+ }
+}

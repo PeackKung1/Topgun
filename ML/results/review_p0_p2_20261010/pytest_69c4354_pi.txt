@@ -1,0 +1,218 @@
+..........s.......s..................................................... [ 23%]
+........................................................................ [ 46%]
+..................................................FFFFFFFFFFFFFF.F...... [ 70%]
+...................................................ss................... [ 93%]
+....................                                                     [100%]
+================================== FAILURES ===================================
+_______ test_service_full_and_compact_v3_persist_dedupe_market[0-exact] _______
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_service_full_and_compact_0')
+n = 0, method = 'exact'
+
+    @pytest.mark.parametrize('n,method',[(0,'exact'),(300,'exact'),(300,'estimated')])
+    def test_service_full_and_compact_v3_persist_dedupe_market(fw,tmp_path,n,method):
+        service,app=fw; path=tmp_path/'counts.sqlite3'
+>       full=result(n,method); compact=app.mqtt_result(full)
+                                       ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:36: AttributeError
+----------------------------- Captured log setup ------------------------------
+ERROR    topgun.firmware:app.py:36 ML model failed to load; keeping the web service available without predictions\nTraceback (most recent call last):\n  File "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py", line 33, in create_app\n    predictor = load(os.getenv("ROASTML_MODEL", "/opt/topgun/ML/models/current"))\n  File "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\ML\\roastml\\api.py", line 277, in load\n    backend, threshold = _load_model_dir(Path(source), backend_kwargs)\n                         ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\ML\\roastml\\api.py", line 291, in _load_model_dir\n    raise FileNotFoundError(f"\u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e42\u0e21\u0e40\u0e14\u0e25: {path.resolve()}")\nFileNotFoundError: \u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e42\u0e1f\u0e25\u0e40\u0e14\u0e2d\u0e23\u0e4c\u0e42\u0e21\u0e40\u0e14\u0e25: C:\\opt\\topgun\\ML\\models\\current
+______ test_service_full_and_compact_v3_persist_dedupe_market[300-exact] ______
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_service_full_and_compact_1')
+n = 300, method = 'exact'
+
+    @pytest.mark.parametrize('n,method',[(0,'exact'),(300,'exact'),(300,'estimated')])
+    def test_service_full_and_compact_v3_persist_dedupe_market(fw,tmp_path,n,method):
+        service,app=fw; path=tmp_path/'counts.sqlite3'
+>       full=result(n,method); compact=app.mqtt_result(full)
+                                       ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:36: AttributeError
+____ test_service_full_and_compact_v3_persist_dedupe_market[300-estimated] ____
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_service_full_and_compact_2')
+n = 300, method = 'estimated'
+
+    @pytest.mark.parametrize('n,method',[(0,'exact'),(300,'exact'),(300,'estimated')])
+    def test_service_full_and_compact_v3_persist_dedupe_market(fw,tmp_path,n,method):
+        service,app=fw; path=tmp_path/'counts.sqlite3'
+>       full=result(n,method); compact=app.mqtt_result(full)
+                                       ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:36: AttributeError
+_______________ test_v3_counts_win_over_conflicting_proportions _______________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_v3_counts_win_over_confli0')
+
+    def test_v3_counts_win_over_conflicting_proportions(fw,tmp_path):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:52: AttributeError
+____________ test_invalid_v3_rejected_without_legacy_fallback[sum] ____________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'sum'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+_________ test_invalid_v3_rejected_without_legacy_fallback[negative] __________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'negative'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+___________ test_invalid_v3_rejected_without_legacy_fallback[bool] ____________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'bool'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+__________ test_invalid_v3_rejected_without_legacy_fallback[warning] __________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'warning'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+__________ test_invalid_v3_rejected_without_legacy_fallback[method] ___________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'method'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+___________ test_invalid_v3_rejected_without_legacy_fallback[label] ___________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'label'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+__________ test_invalid_v3_rejected_without_legacy_fallback[unknown] __________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+bad = 'unknown'
+
+    @pytest.mark.parametrize('bad',['sum','negative','bool','warning','method','label','unknown'])
+    def test_invalid_v3_rejected_without_legacy_fallback(fw,bad):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:60: AttributeError
+_______ test_legacy_v2_aggregate_fallback_and_existing_schema_migration _______
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_legacy_v2_aggregate_fallb0')
+
+    def test_legacy_v2_aggregate_fallback_and_existing_schema_migration(fw,tmp_path):
+        service,app=fw; path=tmp_path/'legacy.sqlite3'
+        with sqlite3.connect(path) as db:
+            db.execute('CREATE TABLE predictions (msg_id TEXT PRIMARY KEY,created_at TEXT NOT NULL,status TEXT NOT NULL,label TEXT,confidence REAL,model TEXT NOT NULL,result_json TEXT NOT NULL)')
+        r={k:v for k,v in result().items() if k in LEGACY_RESULT_KEYS}
+        r['proportions']=dict.fromkeys(('light','medium','dark'),1/3)
+        r['beans']=[]
+        service.persist_event(event(r),path)
+        assert service.read_market_snapshot(path)['counts']==dict.fromkeys(('light','medium','dark'),100)
+>       assert app.mqtt_result(r)['beans']==[]
+               ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:80: AttributeError
+__________ test_null_v3_counting_does_not_reconstruct_legacy_counts ___________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_null_v3_counting_does_not0')
+
+    def test_null_v3_counting_does_not_reconstruct_legacy_counts(fw,tmp_path):
+>       service,app=fw; r=app.mqtt_result(result())
+                          ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:84: AttributeError
+_______________ test_http_keeps_beans_but_queues_only_aggregate _______________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020217D8B850>
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_http_keeps_beans_but_queu0')
+
+    def test_http_keeps_beans_but_queues_only_aggregate(fw,monkeypatch,tmp_path):
+        service,app=fw; queued=[]
+        monkeypatch.setattr(app,'enqueue_prediction',lambda payload:queued.append(payload))
+        predictor=Predictor(FakeBackend(lambda img:output(300,'estimated')))
+        client=app.create_app(predictor,start_background=False).test_client()
+        response=client.post('/api/predict',data={'image':(io.BytesIO(img_bytes()),'beans.jpg')})
+        r=response.get_json()
+        assert response.status_code==200 and len(r['beans'])==300
+>       assert len(queued)==1 and 'beans' not in queued[0]
+E       AssertionError: assert (1 == 1 and 'beans' not in {'status': 'low_confidence', 'label': 'light', 'label_th': '\u0e04\u0e31\u0e48\u0e27\u0e2d\u0e48\u0e2d\u0e19', 'message_th': '\u0e19\u0e48\u0e32\u0e08\u0e30\u0e40\u0e1b\u0e47\u0e19\u0e04\u0e31\u0e48\u0e27\u0e2d\u0e48\u0e2d\u0e19 \u0e41\u0e15\u0e48\u0e04\u0e27\u0e32\u0e21\u0e21\u0e31\u0e48\u0e19\u0e43\u0e08\u0e15...\u0e32\u0e07\u0e41\u0e2a\u0e07\u0e2a\u0e35\u0e02\u0e32\u0e27 \xb7 \u0e43\u0e19\u0e20\u0e32\u0e1e\u0e21\u0e35\u0e40\u0e21\u0e25\u0e47\u0e14\u0e2b\u0e25\u0e32\u0e22\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e04\u0e31\u0e48\u0e27\u0e1b\u0e19\u0e01\u0e31\u0e19 \xb7 \u0e08\u0e33\u0e19\u0e27\u0e19\u0e40\u0e21\u0e25\u0e47\u0e14\u0e40\u0e1b\u0e47\u0e19\u0e04\u0e48\u0e32\u0e1b\u0e23\u0e30\u0e21\u0e32\u0e13\u0e08\u0e32\u0e01\u0e02\u0e2d\u0e1a\u0e17\u0e35\u0e48\u0e21\u0e2d\u0e07\u0e40\u0e2b\u0e47\u0e19 \u0e40\u0e21\u0e25\u0e47\u0e14\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e07\u0e01\u0e31\u0e19\u0e2d\u0e32\u0e08\u0e19\u0e31\u0e1a\u0e44\u0e21\u0e48\u0e04\u0e23\u0e1a', ...})
+E        +  where 1 = len([{'status': 'low_confidence', 'label': 'light', 'label_th': '\u0e04\u0e31\u0e48\u0e27\u0e2d\u0e48\u0e2d\u0e19', 'message_th': '\u0e19\u0e48\u0e32\u0e08\u0e30\u0e40\u0e1b\u0e47\u0e19\u0e04\u0e31\u0e48\u0e27\u0e2d\u0e48\u0e2d\u0e19 \u0e41\u0e15\u0e48\u0e04\u0e27\u0e32\u0e21\u0e21\u0e31\u0e48\u0e19\u0e43\u0e08...\u0e07\u0e41\u0e2a\u0e07\u0e2a\u0e35\u0e02\u0e32\u0e27 \xb7 \u0e43\u0e19\u0e20\u0e32\u0e1e\u0e21\u0e35\u0e40\u0e21\u0e25\u0e47\u0e14\u0e2b\u0e25\u0e32\u0e22\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e04\u0e31\u0e48\u0e27\u0e1b\u0e19\u0e01\u0e31\u0e19 \xb7 \u0e08\u0e33\u0e19\u0e27\u0e19\u0e40\u0e21\u0e25\u0e47\u0e14\u0e40\u0e1b\u0e47\u0e19\u0e04\u0e48\u0e32\u0e1b\u0e23\u0e30\u0e21\u0e32\u0e13\u0e08\u0e32\u0e01\u0e02\u0e2d\u0e1a\u0e17\u0e35\u0e48\u0e21\u0e2d\u0e07\u0e40\u0e2b\u0e47\u0e19 \u0e40\u0e21\u0e25\u0e47\u0e14\u0e17\u0e35\u0e48\u0e1a\u0e31\u0e07\u0e01\u0e31\u0e19\u0e2d\u0e32\u0e08\u0e19\u0e31\u0e1a\u0e44\u0e21\u0e48\u0e04\u0e23\u0e1a', ...}])
+
+tests\test_firmware_v3.py:98: AssertionError
+_____________ test_concurrent_first_database_migration_and_dedupe _____________
+
+fw = (<module 'service' from 'C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classificatio...\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\Firmware\\app.py'>)
+tmp_path = WindowsPath('C:/Users/Sh/AppData/Local/Temp/claude/C--Users-Public-Documents-TOPGUN-CONTEST-Topgun--claude-worktrees-roast-classification-review-038bb1/9252b7bf-466d-45a1-b933-146e6be5b3df/scratchpad/pt_pi/test_concurrent_first_database0')
+
+    def test_concurrent_first_database_migration_and_dedupe(fw,tmp_path):
+        service,app=fw; path=tmp_path/'concurrent.sqlite3'
+>       payload=event(app.mqtt_result(result(300,'estimated')))
+                      ^^^^^^^^^^^^^^^
+E       AttributeError: module 'app' has no attribute 'mqtt_result'
+
+tests\test_firmware_v3.py:118: AttributeError
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_compare_tabular.py:6: training tools need scikit-learn; not installed on the Pi runtime
+SKIPPED [1] tests\test_d1_tools.py:5: training tools need scikit-learn; not installed on the Pi runtime
+SKIPPED [1] tests\test_export_d1.py:6: training tools need scikit-learn; not installed on the Pi runtime
+SKIPPED [1] tests\test_roi_scaling.py:7: training tools need scikit-learn; not installed on the Pi runtime
+SKIPPED [1] tests\test_run_tools.py:7: training tools need scikit-learn; not installed on the Pi runtime
+SKIPPED [1] tests\test_baseline.py:88: could not import 'sklearn': Pi simulation blocked sklearn
+SKIPPED [1] tests\test_baseline.py:202: could not import 'sklearn': Pi simulation blocked sklearn
+SKIPPED [1] tests\test_onnx_backend.py:150: could not import 'onnx': Pi simulation blocked onnx
+SKIPPED [1] tests\test_onnx_backend.py:181: could not import 'onnxruntime': Pi simulation blocked onnxruntime
+15 failed, 289 passed, 9 skipped in 56.03s
+pi exit 1

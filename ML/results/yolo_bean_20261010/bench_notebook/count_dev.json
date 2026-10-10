@@ -1,0 +1,112 @@
+[
+  {
+    "path": "raw/rf_boos/test/images/Mixed_mp4-0094_jpg.rf.1bfde20c73e5ff64af8185633aa46489.jpg",
+    "scene": "flat",
+    "gt": 6,
+    "n": 6,
+    "counts": {
+      "light": 0,
+      "medium": 1,
+      "dark": 5
+    }
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0045_jpg.rf.92d54e9e9912ad0f3b6892a76984ac70.jpg",
+    "scene": "flat",
+    "gt": 6,
+    "n": 6,
+    "counts": {
+      "light": 0,
+      "medium": 2,
+      "dark": 4
+    }
+  },
+  {
+    "path": "raw/rf_boos/train/images/Mixed_mp4-0089_jpg.rf.c987e9c35ae4be67b3443fafab61b20b.jpg",
+    "scene": "flat",
+    "gt": 6,
+    "n": 6,
+    "counts": {
+      "light": 0,
+      "medium": 2,
+      "dark": 4
+    }
+  },
+  {
+    "path": "count_test/images/E12_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 60,
+    "counts": {
+      "light": 0,
+      "medium": 60,
+      "dark": 0
+    }
+  },
+  {
+    "path": "count_test/images/E13_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 21,
+    "counts": {
+      "light": 0,
+      "medium": 0,
+      "dark": 21
+    }
+  },
+  {
+    "path": "count_test/images/E18_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 54,
+    "counts": {
+      "light": 0,
+      "medium": 54,
+      "dark": 0
+    }
+  },
+  {
+    "path": "count_test/images/E19_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 66,
+    "counts": {
+      "light": 1,
+      "medium": 65,
+      "dark": 0
+    }
+  },
+  {
+    "path": "count_test/images/E20_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 48,
+    "counts": {
+      "light": 1,
+      "medium": 47,
+      "dark": 0
+    }
+  },
+  {
+    "path": "count_test/images/E21_agtron_roi.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 3,
+    "counts": {
+      "light": 0,
+      "medium": 3,
+      "dark": 0
+    }
+  },
+  {
+    "path": "raw/rf_hendi/valid/Dark/20240817_104520_003_jpg.rf.583fbc12dbaba5065d81ef448d4fdf17.jpg",
+    "scene": "pile",
+    "gt": null,
+    "n": 102,
+    "counts": {
+      "light": 0,
+      "medium": 92,
+      "dark": 10
+    }
+  }
+]

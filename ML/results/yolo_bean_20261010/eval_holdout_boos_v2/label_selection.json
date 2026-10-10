@@ -1,0 +1,400 @@
+{
+  "rule": "(ตาม prereg_perbean_v2):\n  1. eligible = macro-F1 ราย fold ≥ broadcast − 0.02 ทุก fold และ light↔dark รวม ≤ 0.05 และ error ภาพปน (rf_boos Mixed) < broadcast\n  2. ในกลุ่ม eligible เลือก error ภาพปนต่ำสุด · เสมอ → ตามลำดับที่ประกาศ (rect, ellipse, mask · prior น้อยก่อน)\n  3. ไม่มีตัว eligible → เลือกตัวที่ error ภาพปน < broadcast และ \"ขาดดุล F1 ของ fold ที่แย่สุด\" น้อยที่สุด แล้วระบุว่าไม่ผ่านเกณฑ์",
+  "gates": {
+    "fold_f1_drop": 0.02,
+    "cross_extreme_rate": 0.05
+  },
+  "candidates": {
+    "broadcast": {
+      "card": {},
+      "fold_macro_f1": {
+        "ontoum224": 0.8578504440917203,
+        "rf_robusta": 0.3724014173021859,
+        "rf_boos": 0.6233713998419881,
+        "agtron": 0.5322381437063918
+      },
+      "mixed_error_per_image": 7.735294117647059,
+      "mixed_images": 102,
+      "light_dark_rate": 0.03169398907103826,
+      "fold_delta": {
+        "ontoum224": 0.0,
+        "rf_robusta": 0.0,
+        "rf_boos": 0.0,
+        "agtron": 0.0
+      },
+      "worst_fold_deficit": 0.0,
+      "gates": {
+        "noninferior_all_folds": true,
+        "light_dark": true,
+        "mixed_better_than_broadcast": false
+      },
+      "eligible": false
+    },
+    "rect0.2|prior0": {
+      "card": {
+        "box_shape": "rect",
+        "box_shrink": 0.2,
+        "bean_label_mode": "per_box"
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7006282482057345,
+        "rf_robusta": 0.43065776403447137,
+        "rf_boos": 0.6046107571601324,
+        "agtron": 0.35280185437790396
+      },
+      "mixed_error_per_image": 1.2450980392156863,
+      "mixed_images": 102,
+      "light_dark_rate": 0.03759153353136316,
+      "fold_delta": {
+        "ontoum224": -0.15722219588598574,
+        "rf_robusta": 0.05825634673228547,
+        "rf_boos": -0.018760642681855733,
+        "agtron": -0.17943628932848782
+      },
+      "worst_fold_deficit": 0.17943628932848782,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "rect0.2|prior0.5": {
+      "card": {
+        "box_shape": "rect",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 0.5
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7691783284169165,
+        "rf_robusta": 0.4333213451099123,
+        "rf_boos": 0.6260642259870131,
+        "agtron": 0.38867226710043973
+      },
+      "mixed_error_per_image": 1.911764705882353,
+      "mixed_images": 102,
+      "light_dark_rate": 0.01989978046653109,
+      "fold_delta": {
+        "ontoum224": -0.08867211567480382,
+        "rf_robusta": 0.060919927807726426,
+        "rf_boos": 0.0026928261450249735,
+        "agtron": -0.14356587660595205
+      },
+      "worst_fold_deficit": 0.14356587660595205,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "rect0.2|prior1": {
+      "card": {
+        "box_shape": "rect",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 1.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7932817518986889,
+        "rf_robusta": 0.4294484479476674,
+        "rf_boos": 0.6380352515848875,
+        "agtron": 0.4202209782488843
+      },
+      "mixed_error_per_image": 3.4215686274509802,
+      "mixed_images": 102,
+      "light_dark_rate": 0.01922313916941363,
+      "fold_delta": {
+        "ontoum224": -0.06456869219303141,
+        "rf_robusta": 0.0570470306454815,
+        "rf_boos": 0.014663851742899414,
+        "agtron": -0.11201716545750745
+      },
+      "worst_fold_deficit": 0.11201716545750745,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "rect0.2|prior2": {
+      "card": {
+        "box_shape": "rect",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 2.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.811154290397169,
+        "rf_robusta": 0.41770670229803814,
+        "rf_boos": 0.6397936173707869,
+        "agtron": 0.46228034505263543
+      },
+      "mixed_error_per_image": 3.9705882352941178,
+      "mixed_images": 102,
+      "light_dark_rate": 0.023914371928036166,
+      "fold_delta": {
+        "ontoum224": -0.04669615369455127,
+        "rf_robusta": 0.045305284995852235,
+        "rf_boos": 0.0164222175287988,
+        "agtron": -0.06995779865375634
+      },
+      "worst_fold_deficit": 0.06995779865375634,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "ellipse0.1|prior0": {
+      "card": {
+        "box_shape": "ellipse",
+        "box_shrink": 0.1,
+        "bean_label_mode": "per_box"
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7087786935507898,
+        "rf_robusta": 0.45379715205764776,
+        "rf_boos": 0.5893473176658095,
+        "agtron": 0.3747835743521657
+      },
+      "mixed_error_per_image": 1.2450980392156863,
+      "mixed_images": 102,
+      "light_dark_rate": 0.03739789514486208,
+      "fold_delta": {
+        "ontoum224": -0.14907175054093047,
+        "rf_robusta": 0.08139573475546186,
+        "rf_boos": -0.03402408217617858,
+        "agtron": -0.15745456935422608
+      },
+      "worst_fold_deficit": 0.15745456935422608,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "ellipse0.1|prior0.5": {
+      "card": {
+        "box_shape": "ellipse",
+        "box_shrink": 0.1,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 0.5
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7672554182063362,
+        "rf_robusta": 0.4476238957573619,
+        "rf_boos": 0.6058147078563992,
+        "agtron": 0.4097317625358598
+      },
+      "mixed_error_per_image": 2.2058823529411766,
+      "mixed_images": 102,
+      "light_dark_rate": 0.0214002535500784,
+      "fold_delta": {
+        "ontoum224": -0.09059502588538404,
+        "rf_robusta": 0.07522247845517599,
+        "rf_boos": -0.017556691985588846,
+        "agtron": -0.12250638117053197
+      },
+      "worst_fold_deficit": 0.12250638117053197,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "ellipse0.1|prior1": {
+      "card": {
+        "box_shape": "ellipse",
+        "box_shrink": 0.1,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 1.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.7869564548051545,
+        "rf_robusta": 0.43866318338646887,
+        "rf_boos": 0.6201509133406373,
+        "agtron": 0.43946961171215376
+      },
+      "mixed_error_per_image": 3.480392156862745,
+      "mixed_images": 102,
+      "light_dark_rate": 0.019925807479643037,
+      "fold_delta": {
+        "ontoum224": -0.07089398928656576,
+        "rf_robusta": 0.06626176608428297,
+        "rf_boos": -0.003220486501350761,
+        "agtron": -0.09276853199423801
+      },
+      "worst_fold_deficit": 0.09276853199423801,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "ellipse0.1|prior2": {
+      "card": {
+        "box_shape": "ellipse",
+        "box_shrink": 0.1,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 2.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.8184066762959397,
+        "rf_robusta": 0.4248296938105181,
+        "rf_boos": 0.6279474512155984,
+        "agtron": 0.4763473555513955
+      },
+      "mixed_error_per_image": 3.9901960784313726,
+      "mixed_images": 102,
+      "light_dark_rate": 0.02326440747550193,
+      "fold_delta": {
+        "ontoum224": -0.039443767795780627,
+        "rf_robusta": 0.052428276508332206,
+        "rf_boos": 0.004576051373610279,
+        "agtron": -0.05589078815499626
+      },
+      "worst_fold_deficit": 0.05589078815499626,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "mask|prior0": {
+      "card": {
+        "box_shape": "mask",
+        "box_shrink": 0.2,
+        "bean_label_mode": "per_box"
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.8552875147333654,
+        "rf_robusta": 0.39247996276231306,
+        "rf_boos": 0.6180333835058813,
+        "agtron": 0.43043213145805254
+      },
+      "mixed_error_per_image": 1.5588235294117647,
+      "mixed_images": 102,
+      "light_dark_rate": 0.04013190501640746,
+      "fold_delta": {
+        "ontoum224": -0.002562929358354893,
+        "rf_robusta": 0.020078545460127162,
+        "rf_boos": -0.0053380163361067545,
+        "agtron": -0.10180601224833924
+      },
+      "worst_fold_deficit": 0.10180601224833924,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "mask|prior0.5": {
+      "card": {
+        "box_shape": "mask",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 0.5
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.8558143396120133,
+        "rf_robusta": 0.40461081173236985,
+        "rf_boos": 0.6308321044782507,
+        "agtron": 0.4620738376834876
+      },
+      "mixed_error_per_image": 2.6176470588235294,
+      "mixed_images": 102,
+      "light_dark_rate": 0.02744986346672459,
+      "fold_delta": {
+        "ontoum224": -0.002036104479707035,
+        "rf_robusta": 0.032209394430183946,
+        "rf_boos": 0.007460704636262583,
+        "agtron": -0.07016430602290419
+      },
+      "worst_fold_deficit": 0.07016430602290419,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "mask|prior1": {
+      "card": {
+        "box_shape": "mask",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 1.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.8557207841217388,
+        "rf_robusta": 0.4021281656438296,
+        "rf_boos": 0.6335640124078008,
+        "agtron": 0.4845088931849047
+      },
+      "mixed_error_per_image": 3.8333333333333335,
+      "mixed_images": 102,
+      "light_dark_rate": 0.02471767050365342,
+      "fold_delta": {
+        "ontoum224": -0.00212965996998149,
+        "rf_robusta": 0.029726748341643683,
+        "rf_boos": 0.01019261256581272,
+        "agtron": -0.04772925052148708
+      },
+      "worst_fold_deficit": 0.04772925052148708,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    },
+    "mask|prior2": {
+      "card": {
+        "box_shape": "mask",
+        "box_shrink": 0.2,
+        "bean_label_mode": "image_prior",
+        "prior_weight": 2.0
+      },
+      "fold_macro_f1": {
+        "ontoum224": 0.8567862422351586,
+        "rf_robusta": 0.3885255866735502,
+        "rf_boos": 0.6289717878964187,
+        "agtron": 0.5078912927516869
+      },
+      "mixed_error_per_image": 4.029411764705882,
+      "mixed_images": 102,
+      "light_dark_rate": 0.026419518081087928,
+      "fold_delta": {
+        "ontoum224": -0.0010642018565616418,
+        "rf_robusta": 0.016124169371364294,
+        "rf_boos": 0.005600388054430638,
+        "agtron": -0.0243468509547049
+      },
+      "worst_fold_deficit": 0.0243468509547049,
+      "gates": {
+        "noninferior_all_folds": false,
+        "light_dark": true,
+        "mixed_better_than_broadcast": true
+      },
+      "eligible": false
+    }
+  },
+  "chosen": "mask|prior2",
+  "chosen_card": {
+    "box_shape": "mask",
+    "box_shrink": 0.2,
+    "bean_label_mode": "image_prior",
+    "prior_weight": 2.0
+  },
+  "status": "NO candidate passes all dev gates; chosen by rule 3 (smallest worst-fold deficit among mixed-improving candidates)",
+  "selection_bias": "chosen on dev LOSO; frozen/test not evaluated"
+}

@@ -319,6 +319,15 @@ def _load_model_dir(path: Path, backend_kwargs: dict[str, Any]) -> tuple[Backend
             return BeanLinearBackend(path, card), float(threshold)
         except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
             raise ModelLoadError(f"โหลดโมเดล {backend_type} จาก {path} ไม่ได้: {e}") from e
+    if backend_type == "det_b1_beans":
+        # detector (ONNX) หาเมล็ด + สีของ B1 ตัดสินระดับคั่วต่อกรอบ
+        if backend_kwargs:
+            raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")
+        try:
+            from .det_backend import DetBeanBackend
+            return DetBeanBackend(path, card), float(threshold)
+        except (ImportError, OSError, ValueError, KeyError, TypeError, RuntimeError, json.JSONDecodeError) as e:
+            raise ModelLoadError(f"โหลดโมเดล {backend_type} จาก {path} ไม่ได้: {e}") from e
     if backend_type in ("onnx_rgb", "tabular_json"):
         if backend_kwargs:
             raise ModelLoadError(f"backend {backend_type} ไม่รับ argument: {sorted(backend_kwargs)}")

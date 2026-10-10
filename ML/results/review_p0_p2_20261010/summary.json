@@ -1,0 +1,394 @@
+{
+ "review": "P0-P2 independent review",
+ "date": "2026-10-10",
+ "scope_commit": "69c4354",
+ "seed": 20261010,
+ "rules_followed": {
+  "code_modified": false,
+  "trained_or_tuned": false,
+  "split_test_opened": false,
+  "count_test_frozen_rows_run": false,
+  "commits": 0,
+  "main_side_effect": "git status on main may have refreshed .git/index stat cache; nothing else"
+ },
+ "counts": {
+  "PASS": 11,
+  "FAIL": 13,
+  "UNVERIFIED": 2
+ },
+ "verdicts": [
+  {
+   "id": "A1",
+   "verdict": "PASS",
+   "evidence": "main = origin/main (ref ในเครื่อง) = 69c4354 ไม่ ahead/behind · Firmware/ มี 7 commit ทั้งหมดโดย Kittiphob Subsorn · c02ed6a/3a7172d/d3a6dcb แตะไฟล์นอก ML/ = 0 ไฟล์ · (ไม่ได้ fetch → ความสดของ remote = UNVERIFIED · worktree seed-count มี Firmware แก้ค้าง 6 ไฟล์ ไม่ได้ commit)"
+  },
+  {
+   "id": "A2",
+   "verdict": "UNVERIFIED",
+   "evidence": "ทำซ้ำไม่ได้: `git -C <main> status --porcelain` และ `git diff --stat` ว่างทั้งคู่ ณ ตอนตรวจ · ไม่มี .gitattributes · ls-files --eol = 241 ไฟล์ i/lf w/crlf · อ่าน core.autocrlf ไม่ได้ (คำสั่งถูกปฏิเสธสิทธิ์)"
+  },
+  {
+   "id": "A3",
+   "verdict": "FAIL",
+   "evidence": "ค่า default โหลด models/current = backend b1_linear (สร้าง 8 ต.ค.) → ไม่เรียก counter.py เลย · n_beans/counts/count_method = null · beans = [] · ROAST_BEANS ไม่มีผล · label มาจาก softmax ระดับภาพ"
+  },
+  {
+   "id": "A4",
+   "verdict": "PASS",
+   "evidence": "card ของ current: LOSO 0.6382 / 0.6774 ตรง results/baseline_loso.json:136,713 · เป็น card ของ B1 จึงไม่มีเกณฑ์รายเมล็ด · card preview (ไม่ได้ deploy) ตรงไฟล์ P1 และเขียน 'P1 dev gates failed/unmeasured', deployment_eligible=false"
+  },
+  {
+   "id": "B1",
+   "verdict": "FAIL",
+   "evidence": "prereg ไม่ถูกแก้หลังเห็นผล (blob 48431eb commit เดียว c02ed6a · mtime 9 ต.ค. 22:57 < ไฟล์ผล P1 ตัวแรก 10 ต.ค. 00:33) และเกณฑ์ 8 ตัวตรง GATES · แต่ status ยัง 'DRAFT … no P1 experiment has been run' = รัน P1 บน prereg ที่ไม่เคยอนุมัติ + เบี่ยงจาก prereg 3 จุด"
+  },
+  {
+   "id": "B2",
+   "verdict": "FAIL",
+   "evidence": "40 แถว · กรอกแล้ว 11 (dev 3 + frozen 8) ทั้งหมดเป็น rf_boos ที่ prefill จาก YOLO · คนนับจริง = 0 · pile 14 แถวว่าง · web 15 ช่องไม่มีรูป · frozen touching ถูก 'เลือก' ด้วยผลตัวนับเก่า และ P0 audit เปิดภาพ frozen 397 ภาพก่อน split"
+  },
+  {
+   "id": "B3",
+   "verdict": "PASS",
+   "evidence": "คำนวณซ้ำจาก predictions_old/new.csv ตรง summary ทุกค่า (boos MAE 0.390/0.399 · ontoum =1: 1.000/0.018 · empty 1.000/0.207 · dup 0/346 คู่)"
+  },
+  {
+   "id": "C1",
+   "verdict": "FAIL",
+   "evidence": "Empty แยก group จริง (tune 145 / report 160) และ score() ใช้ tune-half เท่านั้น · แต่ report-half ถูกรัน 2 ครั้ง (00:45 → 0.8938, แก้โค้ด, 10:03 → 0.9125) · ontoum 895 / boos 598 / count-dev 3 แถว เป็นชุดเดียวกันทั้ง tune และ report · ontoum target = 1 ถูก"
+  },
+  {
+   "id": "C2",
+   "verdict": "FAIL",
+   "evidence": "146/160 = 0.9125 < 0.95 · ผิด 14 ภาพ ทุกภาพ n=1 จาก 2 ใน 6 วิดีโอ · pattern = วัตถุสว่างอมเหลืองที่มุมบนซ้ายของภาพ (ชิดขอบ, 0.03–0.23% ของภาพ, L*≈72–80, hue≈96°) ไม่ใช่เงาหรือลายพื้น"
+  },
+  {
+   "id": "C3",
+   "verdict": "FAIL",
+   "evidence": "ทั้งสองอย่าง: fixture ไม่สมจริง (สีเรียบ, ปิดภาพ 92.7%) และตัวนับแตกเมล็ดจริง: 1.7–3.2 ชิ้น/เมล็ด, ref_area 70–228 px เทียบของจริง 1303 px, เมล็ดเข้ม ~105 เมล็ดไม่ถูกนับเลย, n แกว่ง 514↔974 ตามคุณภาพ JPEG · คู่ IoU>0.5 แค่ 4–22 คู่ = ไม่ใช่นับซ้ำ"
+  },
+  {
+   "id": "C4",
+   "verdict": "PASS",
+   "evidence": "summary เขียน count_test_touching/pile = 'unmeasured', passed = null, eligible = false · ไม่ได้อ้างว่าผ่าน · (ข้อค้นพบเพิ่ม: ภาพกองจริง agtron ผ่านทาง FW → n=1 'exact' ไม่มี warning 16/20 ภาพ)"
+  },
+  {
+   "id": "C5",
+   "verdict": "PASS",
+   "evidence": "เกิน max_beans → เก็บ 1000 ก้อนใหญ่สุด + method=estimated + note max_beans_cap (ทดสอบ max_beans=100 บน 300 เมล็ด → 100 estimated) · feature/core/bbox เป็น vectorized · ยกเว้น _blob_shapes เป็น loop ต่อทุก component รวมฝุ่น (counter.py:168-183, 430)"
+  },
+  {
+   "id": "D1",
+   "verdict": "PASS",
+   "evidence": "คำนวณใหม่จาก feature cache + โมเดลราย fold ได้ตรง summary ทั้ง 12 ค่า (cm ต่างสูงสุด 8e-12) · weight 1/n ต่อภาพถูก · หมายเหตุ: ไม่มีไฟล์ prediction รายเมล็ด มีแต่ count รายภาพ"
+  },
+  {
+   "id": "D2",
+   "verdict": "PASS",
+   "evidence": "0 group ข้าม source · 0 md5/phash ซ้ำข้าม source · 0 แถว frozen · 0 แถว split=test · scaler = สถิติถ่วงน้ำหนักของ train fold เท่านั้น (ต่าง 1e-14) · C และ gap เลือกจาก train fold · ข้อสังเกต: fold rf_boos ไม่มี medium เลย"
+  },
+  {
+   "id": "D3",
+   "verdict": "FAIL",
+   "evidence": "feature รายเมล็ดไม่ใช่สาเหตุ (ontoum ΔL_med +0.34 ± 1.19) · ตัวโมเดลรายเมล็ดคือสาเหตุ: เอาน้ำหนัก B1 มาใช้กับ feature รายเมล็ดได้ 0.8615 (ontoum) / 0.6306 (boos) · rf_robusta ป้อน 'เมล็ด' ที่ไม่ใช่เมล็ด (L*≈46 ทั้ง medium/dark) เข้าเทรน 74% ของ medium"
+  },
+  {
+   "id": "D4",
+   "verdict": "FAIL",
+   "evidence": "20.9% มาจาก 2 fold: rf_robusta dark→light 174.4 ภาพ (50.3%) + rf_boos light→dark 158.3 ภาพ (44.0%) · ontoum 3.9% · agtron 1.8%"
+  },
+  {
+   "id": "D5",
+   "verdict": "FAIL",
+   "evidence": "วัดแค่ 3 เฟรมของวิดีโอเดียว (GT = YOLO prefill): error ต่อภาพ B1 8.33 / B-bean 5.00 / +group 8.33 จาก 6 เมล็ด · ข้อมูลที่ใช้ได้โดยไม่แตะ frozen: rf_boos Mixed 102 เฟรม, rf_robusta mixed 981 ภาพ"
+  },
+  {
+   "id": "E1",
+   "verdict": "PASS",
+   "evidence": "0 invariant ผิด ใน (100 + 6 + 8 ภาพ) × 3 โมเดล · ส่วนต่าง proportions ≤ 1.5e-4 มาจากการปัด 4 ตำแหน่งตามออกแบบ · เสมอ 9–11/100 ตัดสินด้วยค่าเฉลี่ย prob"
+  },
+  {
+   "id": "E2",
+   "verdict": "PASS",
+   "evidence": "เกิด 0/100 ทั้งสองโมเดลรายเมล็ด · ถ้าเกิดจะเป็น status 'error' (ไม่ใช่ bad_image) ข้อความ 'ระบบขัดข้องชั่วคราว…' (api.py:167-177) · ในทางปฏิบัติ majority_probs โยนก่อนใน backend → ถอยเป็น B1 เงียบ ๆ"
+  },
+  {
+   "id": "E3",
+   "verdict": "FAIL",
+   "evidence": "Firmware/service.py:56 บน origin/main บังคับ set(result) == 12 key → ผล v3 (16 key) ถูกปฏิเสธ 100/100 ภาพ + 8/8 ผลเสีย → subscriber ทิ้ง event → SQLite/หน้า market ไม่ได้ข้อมูล · HTTP ตอบ browser ยังปกติ"
+  },
+  {
+   "id": "E4",
+   "verdict": "FAIL",
+   "evidence": "ที่ 69c4354 สะอาด: ปกติ 320 passed / 15 failed · จำลอง Pi 289 passed / 15 failed / 9 skipped · 15 ตัวที่ล้มอยู่ใน tests/test_firmware_v3.py (ทดสอบ patch FW ที่ยังไม่ commit) · เลขใน commit (335 · 304+9) ได้เฉพาะ worktree ที่มี patch"
+  },
+  {
+   "id": "F1",
+   "verdict": "FAIL",
+   "evidence": "git apply --check ผ่านทั้ง 6 patch บน 69c4354 ไม่ชน · แต่แตะ 6 ไฟล์ ไม่ใช่ 4 (app.py, service.py, script.js, style.css, index.html, market.html)"
+  },
+  {
+   "id": "F2",
+   "verdict": "PASS",
+   "evidence": "DOM ใช้ textContent/createElement ทั้งหมด ไม่มี innerHTML · upload สูงสุด 32 MiB (client + MAX_CONTENT_LENGTH) · SQL ใช้ ? ทุกจุด · ไม่มี credential ใน patch · ข้อสังเกต: BEGIN IMMEDIATE ทุกครั้งที่ connect แม้ตอนอ่าน"
+  },
+  {
+   "id": "F3",
+   "verdict": "UNVERIFIED",
+   "evidence": "อ่านโค้ดแล้วสเกลถูก (sx = canvas/image_size แยกแกน · รูปที่แสดงคือ blob เดียวกับที่ส่ง · DPR ≤ 2 · ResizeObserver) · วาด 964 กรอบ 1.3–3.3 ms บน notebook · ไม่ได้ทดสอบบนมือถือจริง/EXIF จริง"
+  },
+  {
+   "id": "F4",
+   "verdict": "PASS",
+   "evidence": "mqtt_result() ตัด beans ออกสำหรับ v3 (patch app.py) · enqueue = queue.put_nowait · publish ทำใน daemon thread (mqtt_pub.py:21-43) · ยังไม่เคยส่งถึง broker จริง"
+  },
+  {
+   "id": "F5",
+   "verdict": "FAIL",
+   "evidence": "252 ms = รอบ pilot LAN บน notebook Windows (loopback proxy, ภาพสังเคราะห์ 4–123 KB) · hotspot n=0 เพราะรอบนั้นไม่ได้รัน hotspot · รอบสุดท้ายที่ครบ 2 profile ได้ p95 3983 / 2995 ms = ไม่ผ่าน · ยังไม่มีตัวเลขบน Pi"
+  }
+ ],
+ "main_serves_now": [
+  "Backend: b1_linear ชื่อ b1-Lab_hist-C0.01-R2 จาก ML/models/current (สร้าง 8 ต.ค. 14:23 ก่อน P0–P2 ทั้งหมด) ห่อด้วย contract v3",
+  "ตัวนับ: ไม่มี — counter.py ไม่ถูกเรียก · n_beans, counts, count_method, proportions = null · ROAST_BEANS ตั้งหรือไม่ตั้งก็ไม่มีผลกับ backend นี้",
+  "beans[]: ว่างเสมอ — ไม่ใช่ทั้ง B1 broadcast, B-bean หรือ B-bean+group",
+  "label ระดับภาพ: softmax ของ B1 บน feature Lab_hist จากพิกเซลที่ segment() เลือก · low_conf_threshold = 0.0 → status เป็น ok ทุกภาพที่เปิดได้ แม้ภาพว่าง (ได้ 'คั่วเข้ม' + no_beans_detected)",
+  "ฝั่ง FW: /api/predict ตอบ browser ได้ แต่ subscriber ของ origin/main ปฏิเสธ event v3 ทุกตัว → SQLite/หน้า market ว่าง · pytest ที่ commit นี้ล้ม 15 ตัว"
+ ],
+ "blockers": [
+  {
+   "rank": 1,
+   "problem": "main ไม่สอดคล้องกันเอง: ML v3 + FW v2",
+   "evidence": "ผล v3 ทุกตัวถูก service.py:56 ปฏิเสธ → ตลาด/SQLite ไม่มีข้อมูล และ pytest ล้ม 15 ตัว",
+   "smallest_fix": "ให้เพื่อน merge patch แค่ 2 ไฟล์ (service.py + app.py) ก็พอให้ persist ได้ · 4 ไฟล์ที่เหลือเป็นหน้าจอ"
+  },
+  {
+   "rank": 2,
+   "problem": "requirement 'รายเมล็ด + นับ' ยังไม่ถูกเสิร์ฟเลย",
+   "evidence": "default เป็น B1 ระดับภาพ · ไม่มีโมเดลรายเมล็ดตัวไหนผ่านเกณฑ์ และ models/ ของ main ไม่มีโมเดล v3",
+   "smallest_fix": "ตัดสินใจว่าจะเสิร์ฟอะไรวันจันทร์ (ดูข้อ 4 ด้านล่าง) · ทางเล็กสุดที่ซื่อตรง = ตัวนับ + label ระดับภาพของ B1 กระจายให้ทุกเมล็ด พร้อม warning"
+  },
+  {
+   "rank": 3,
+   "problem": "ภาพกองจริงนับได้ 1 เมล็ด",
+   "evidence": "agtron เต็มเฟรม 16/20 ภาพ → n=1, count_method='exact', ไม่มี warning · กองสังเคราะห์แตกเป็นชิ้นและทิ้งเมล็ดเข้ม · ไม่มี GT touching/pile เลย",
+   "smallest_fix": "นับ GT 7 ภาพ pile ใน dev ด้วยมือ + เพิ่มกฎ 'ก้อนเดียวใหญ่มาก → เส้นทาง pile + estimated' แล้ววัดบน dev ก่อน"
+  },
+  {
+   "rank": 4,
+   "problem": "ตัวจำแนกรายเมล็ดแย่กว่า B1 มาก",
+   "evidence": "light F1 = 0 บน ontoum และ boos · light↔dark 20.9% (เกณฑ์ 5%)",
+   "smallest_fix": "การทดลองเดียว: เทรน nested LOSO เดิมโดยตัด rf_robusta ออกจากชุดเทรนรายเมล็ด (ประกาศเกณฑ์ก่อนรัน)"
+  },
+  {
+   "rank": 5,
+   "problem": "ยังไม่มีหลักฐาน < 1 s บน Pi",
+   "evidence": "ML อย่างเดียวบน notebook กับภาพกองจริง 1600 px = 530–683 ms (เกณฑ์ Pi 500 ms) · E2E รอบสุดท้าย 3–4 s ยังไม่รู้สาเหตุ",
+   "smallest_fix": "รัน tools/pi_bench.sh บน Pi จริงด้วยภาพจริง 1600 px 20 ภาพ + แยกวัด fetch→JSON ออกจากช่วงรอ animation frame"
+  }
+ ],
+ "decisions_needed": [
+  "จะเสิร์ฟอะไรวันจันทร์: (ก) B1 ระดับภาพอย่างเดียว บอกตรง ๆ ว่ายังไม่นับ · (ข) ตัวนับ + label ของ B1 กระจายทุกเมล็ด (นับได้ แต่ภาพปนหลายระดับไม่รองรับ) · (ค) รอผลการทดลองตัด rf_robusta ก่อน — ผมแนะนำ (ข) เป็นค่าตั้งต้น และรัน (ค) คู่ขนาน",
+  "patch FW แตะ 6 ไฟล์ ไม่ใช่ 4: รับทั้ง 6 หรือให้เพื่อนรับเฉพาะ service.py + app.py ก่อน",
+  "prereg_perbean_v2: อนุมัติย้อนหลังพร้อมบันทึก 3 จุดที่เบี่ยง หรือออก v3 · และจะแก้ fold rf_boos ที่ไม่มี medium (เพราะวิดีโอ Medium-1- ถูก freeze) อย่างไร",
+  "อนุญาตให้เทรนใหม่ 1 รอบเพื่อยืนยันสมมติฐาน D3 ไหม (รอบตรวจนี้ห้ามเทรน จึงยังไม่ได้รัน)",
+  "metal_chroma_min = 16: ได้ Empty tune-half 100% แต่ตัดเมล็ดคั่วเข้ม (chroma 9–13) ออกเมื่อพื้นหลังไม่ขาวสม่ำเสมอ — ยอมแลกหรือไม่",
+  "ใครจะนับ GT: pile 7 ภาพ dev + หา touching สำหรับ dev (ตอนนี้ touching อยู่ใน frozen ทั้งหมด)",
+  "worktree seed-count มี Firmware แก้ค้าง 6 ไฟล์ที่ Claude รอบก่อนเขียนไว้ (นอกขอบเขต ML/): เก็บไว้ให้เพื่อนดู หรือให้คุณล้างเอง",
+  "โฟลเดอร์รายงานนี้ยังไม่ commit (test ที่ commit นี้ไม่ผ่าน และคำสั่งรอบนี้คืออ่านอย่างเดียว) — จะให้ commit ไหม"
+ ],
+ "key_numbers": {
+  "pytest_at_69c4354": {
+   "normal": {
+    "passed": 320,
+    "failed": 15
+   },
+   "pi_sim": {
+    "passed": 289,
+    "failed": 15,
+    "skipped": 9
+   }
+  },
+  "pytest_with_fw_patch": {
+   "normal": {
+    "passed": 335
+   },
+   "pi_sim": {
+    "passed": 304,
+    "skipped": 9
+   }
+  },
+  "fw_origin_main_rejects_v3_of_100": 100,
+  "invariant_violations": {
+   "current(main default)": {},
+   "bean_candidate(main)": {
+    "proportions!=counts/n": 4
+   },
+   "v3_preview(worktree only)": {
+    "proportions!=counts/n": 1
+   }
+  },
+  "majority_valueerror_of_100": {
+   "current(main default)": 0,
+   "bean_candidate(main)": 0,
+   "v3_preview(worktree only)": 0
+  },
+  "empty_report_half": {
+   "n": 160,
+   "fail": 14,
+   "zero_rate": 0.9125,
+   "fail_groups": {
+    "rf_hendi:20240817_154323": 7,
+    "rf_hendi:20240817_154338": 7
+   }
+  },
+  "synthetic_pile_n_by_input": {
+   "raw_array": 974,
+   "jpeg_q85": 514,
+   "jpeg_q85_then_q84(browser-like)": 970,
+   "jpeg_q60": 517
+  },
+  "agtron_fullframe_fw_n_beans": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   6,
+   23,
+   24,
+   26
+  ],
+  "agtron_roi_n_beans": [
+   53,
+   58,
+   60,
+   61,
+   62,
+   63,
+   66,
+   66,
+   67,
+   67,
+   67,
+   70,
+   70,
+   77,
+   77,
+   83,
+   86,
+   87,
+   87,
+   89
+  ],
+  "swap_macro_f1": {
+   "ontoum224": {
+    "B1model_x_imageFeat(ref)": 0.8579,
+    "B1model_x_beanFeat": 0.8615,
+    "beanModel_x_imageFeat": 0.3875,
+    "beanModel_x_beanFeat(P1)": 0.4034
+   },
+   "rf_robusta": {
+    "B1model_x_imageFeat(ref)": 0.3683,
+    "B1model_x_beanFeat": 0.254,
+    "beanModel_x_imageFeat": 0.3249,
+    "beanModel_x_beanFeat(P1)": 0.2396
+   },
+   "rf_boos": {
+    "B1model_x_imageFeat(ref)": 0.6234,
+    "B1model_x_beanFeat": 0.6306,
+    "beanModel_x_imageFeat": 0.2515,
+    "beanModel_x_beanFeat(P1)": 0.2634
+   },
+   "agtron": {
+    "B1model_x_imageFeat(ref)": 0.6374,
+    "B1model_x_beanFeat": 0.407,
+    "beanModel_x_imageFeat": 0.6969,
+    "beanModel_x_beanFeat(P1)": 0.6534
+   }
+  },
+  "light_dark_by_fold": {
+   "folds": {
+    "ontoum224": {
+     "light->dark": 0.0,
+     "dark->light": 14.0,
+     "light_imgs": 300.0,
+     "dark_imgs": 295.0
+    },
+    "rf_robusta": {
+     "light->dark": 6.3,
+     "dark->light": 174.4,
+     "light_imgs": 65.0,
+     "dark_imgs": 351.0
+    },
+    "rf_boos": {
+     "light->dark": 158.3,
+     "dark->light": 0.0,
+     "light_imgs": 198.0,
+     "dark_imgs": 298.0
+    },
+    "agtron": {
+     "light->dark": 0.6,
+     "dark->light": 5.9,
+     "light_imgs": 50.0,
+     "dark_imgs": 166.0
+    }
+   },
+   "pooled_rate": 0.2086,
+   "share_of_errors": {
+    "ontoum224": 0.039,
+    "rf_robusta": 0.503,
+    "rf_boos": 0.44,
+    "agtron": 0.018
+   }
+  },
+  "e2e_runs_ms": {
+   "final_1139": {
+    "LAN_p95": 252.0,
+    "hotspot_n": 0
+   },
+   "review_1143": {
+    "LAN_p95": 2992.5,
+    "hotspot_n": 0
+   },
+   "visible_1149": {
+    "LAN_p95": 3982.6,
+    "hotspot_p95": 2995.2
+   }
+  },
+  "notebook_ml_ms_real_agtron": {
+   "orig_7MB_bean_model": [
+    805,
+    1010
+   ],
+   "pre1600_bean_model": [
+    530,
+    683
+   ],
+   "pre1600_b1_current": [
+    249,
+    318
+   ]
+  }
+ },
+ "evidence_files": [
+  "evidence_contract.json",
+  "evidence_perbean.json",
+  "evidence_counter.json",
+  "pytest_69c4354_normal.txt",
+  "pytest_69c4354_pi.txt",
+  "scripts/"
+ ],
+ "overlays_outside_repo": "$ROAST_DATA_DIR/contact_sheets/review_p0_p2_20261010/"
+}

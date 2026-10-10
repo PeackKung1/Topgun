@@ -1,0 +1,27 @@
+{
+  "exp": "holdout_boos",
+  "seconds": 867.0627726999992,
+  "ultralytics": "8.4.175",
+  "run_dir": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\data\\cache\\yolo_runs\\yolo_bean_20261010_holdout_boos",
+  "val_metrics_last_epoch(monitor only)": {
+    "metrics/precision(B)": 0.9391439770355355,
+    "metrics/recall(B)": 0.9285219285219285,
+    "metrics/mAP50(B)": 0.9812446655926929,
+    "metrics/mAP50-95(B)": 0.8185656726975422
+  },
+  "model_dir": "C:\\Users\\Public\\Documents\\TOPGUN_CONTEST\\Topgun\\.claude\\worktrees\\roast-classification-review-038bb1\\ML\\models\\yolo_bean_20261010\\holdout_boos",
+  "onnx_bytes": 10624041,
+  "config": {
+    "model": "yolo11n.pt",
+    "epochs": 30,
+    "imgsz": 640,
+    "batch": 8,
+    "seed": 20261009,
+    "single_cls": true,
+    "amp": false,
+    "deterministic": true,
+    "plots": false,
+    "augment": "ultralytics defaults",
+    "checkpoint_used": "last.pt (fixed epochs; val only monitors loss)"
+  }
+}
