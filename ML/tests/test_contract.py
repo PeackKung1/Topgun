@@ -103,8 +103,10 @@ def test_schema_every_field_many_calls(stub):
 
 
 def test_fw_entry_takes_bytes_only_and_metadata_is_separate():
-    # FW เรียก predict_bytes(raw) เท่านั้น — metadata ของ dataset อยู่ที่ predict_dataset
-    assert list(inspect.signature(Predictor.predict_bytes).parameters) == ["self", "raw"]
+    # FW ส่งแค่ bytes (+ variant ที่โมเดลประกาศเอง แบบ keyword-only) — metadata ของ dataset อยู่ที่ predict_dataset เท่านั้น
+    params = inspect.signature(Predictor.predict_bytes).parameters
+    assert list(params) == ["self", "raw", "variant"]
+    assert params["variant"].kind is inspect.Parameter.KEYWORD_ONLY and params["variant"].default is None
     p = load("stub", seed=SEED, status_weights={"ok": 1.0})
     r = p.predict_dataset(img_bytes(), source="agtron", roi="0 0 10 10")  # stub ไม่รองรับ metadata
     assert_valid_result(r)

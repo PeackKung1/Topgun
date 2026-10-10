@@ -7,6 +7,8 @@ model_card.json:
    "bean_label_mode": "per_box" | "image_prior" | "group" | "broadcast",
         # image_prior = prob ต่อกรอบ × (prob ระดับภาพ)^prior_weight · group = จัดกลุ่มความสว่าง (group_config) · broadcast = label ของภาพ
    "box_shape": "rect" | "ellipse" | "mask", "box_shrink": 0.2,     # พิกเซลที่ใช้คิดสีในแต่ละกรอบ (mask = พิกเซลของ segment ∩ กรอบ)
+   "variants": {"balanced": {"label_th": "...", "prior_weight": 2.0}, "per_bean": {"label_th": "...", "prior_weight": 0.0}},
+   "default_variant": "balanced",   # ตัวเลือกที่ผู้ใช้เลือกได้ต่อ request (เฉพาะ bean_label_mode = image_prior · ต่างกันแค่ prior_weight)
    "seg_config": {...}, "low_conf_threshold": ...}
 
 ลำดับ: WB (ตัวเดียวกับ B1) → B1 ระดับภาพ → detector บนภาพ decode → feature ต่อกรอบ → softmax ต่อกรอบ → เสียงข้างมาก
@@ -77,6 +79,7 @@ class DetBeanBackend(LinearBackend):
         self.prior_weight = float(card.get("prior_weight", 1.0))
         if not np.isfinite(self.prior_weight) or self.prior_weight < 0:
             raise ValueError("prior_weight ต้อง ≥ 0")
+        self.variants, self.default_variant = self._read_variants(card)
         self.group_cfg = card.get("group_config")
         if self.label_mode == "group":   # ตรวจ config ตอน load ให้พังเร็ว
             group_predictions(np.zeros((1, 20)), np.ones((1, 3)) / 3, list(self.bean_model.classes), self.group_cfg)
@@ -84,8 +87,35 @@ class DetBeanBackend(LinearBackend):
             raise ValueError("group_config ใช้ได้เฉพาะ bean_label_mode = group")
         self.enabled = os.environ.get("ROAST_BEANS", "1").strip() != "0"
 
-    def predict_profile(self, img, *, source: str = "", roi: str = ""):
+    def _read_variants(self, card: dict) -> tuple[dict, str | None]:
+        """ตรวจ variants ตอน load: ชื่อ a-z0-9_ · มีได้เฉพาะ label_th + prior_weight · default ต้องให้ค่าเท่ากับ card"""
+        variants = card.get("variants")
+        if variants is None:
+            if card.get("default_variant") is not None:
+                raise ValueError("default_variant ต้องมี variants")
+            return {}, None
+        if self.label_mode != "image_prior" or not isinstance(variants, dict) or not variants:
+            raise ValueError("variants ใช้ได้เฉพาะ bean_label_mode = image_prior และต้องไม่ว่าง")
+        out = {}
+        for name, spec in variants.items():
+            if not isinstance(name, str) or not name or len(name) > 32 or not name.replace("_", "").isalnum() or not name.isascii():
+                raise ValueError(f"ชื่อ variant ไม่ถูกต้อง: {name!r}")
+            if not isinstance(spec, dict) or set(spec) != {"label_th", "prior_weight"} or not isinstance(spec["label_th"], str):
+                raise ValueError(f"variant {name}: ต้องมี label_th และ prior_weight เท่านั้น")
+            weight = float(spec["prior_weight"])
+            if not np.isfinite(weight) or weight < 0:
+                raise ValueError(f"variant {name}: prior_weight ต้อง ≥ 0")
+            out[name] = {"label_th": spec["label_th"], "prior_weight": weight}
+        default = card.get("default_variant")
+        if default not in out or out[default]["prior_weight"] != self.prior_weight:
+            raise ValueError("default_variant ต้องอยู่ใน variants และมี prior_weight เท่ากับของ card")
+        return out, default
+
+    def predict_profile(self, img, *, source: str = "", roi: str = "", variant: str | None = None):
         start = time.perf_counter()
+        if variant is not None and variant not in self.variants:
+            raise ValueError(f"unknown variant: {variant!r}")
+        prior_weight = self.variants[variant]["prior_weight"] if variant is not None else self.prior_weight
         offset = np.zeros(2, np.int64)
         if source == "agtron":
             from .rgb_views import crop_roi
@@ -142,7 +172,7 @@ class DetBeanBackend(LinearBackend):
                 if self.label_mode == "image_prior":
                     if list(self.model.classes) != classes:
                         raise ValueError("image/bean model class order differs")
-                    P = fuse_image_prior(P, image_p, self.prior_weight)
+                    P = fuse_image_prior(P, image_p, prior_weight)
                 tp = time.perf_counter()
                 labels, conf = P.argmax(1), P.max(1)
                 if self.label_mode == "group":
@@ -168,6 +198,7 @@ class DetBeanBackend(LinearBackend):
     def info(self):
         return super().info() | {"backend": self.kind, "beans_enabled": self.enabled, "bean_label_mode": self.label_mode,
                                 "group_config": self.group_cfg, "prior_weight": self.prior_weight,
+                                "variants": self.variants, "default_variant": self.default_variant,
                                 "box_shape": self.box_shape, "box_shrink": self.box_shrink,
                                 "det_config": self.det_cfg.to_dict(), "detector_input": self.detector.size,
                                 "bean_validation": VALIDATION_NOTE,

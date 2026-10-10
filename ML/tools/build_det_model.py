@@ -66,12 +66,25 @@ def main(argv=None) -> int:
         failed.append("rf_boos count MAE (held-out detector)")
     if evf["count"]["empty_report_half"]["zero_rate"]["value"] < GATES["empty_zero_rate"]:
         failed.append("Empty zero-rate (report half)")
+    # ตัวเลือกให้ผู้ใช้เทียบบน dashboard: ค่าที่กฎเลือก กับ per-bean ล้วน (prior 0) — ตัวเลข dev ของทั้งคู่อยู่ใน label_selection.json
+    variants = {}
+    if label_card.get("bean_label_mode") == "image_prior" and label_card.get("prior_weight"):
+        per_bean = sel["candidates"][sel["chosen"].split("|")[0] + "|prior0"]
+        variants = {"variants": {
+            "balanced": {"label_th": "เน้นภาพคั่วระดับเดียว (ค่าเริ่มต้น)", "prior_weight": float(label_card["prior_weight"])},
+            "per_bean": {"label_th": "เน้นภาพปนหลายระดับ (ตัดสินทีละเมล็ด)", "prior_weight": 0.0}}, "default_variant": "balanced"}
+        variant_dev = {"balanced": {"fold_macro_f1": chosen["fold_macro_f1"], "light_dark_rate": chosen["light_dark_rate"],
+                                    "mixed_error_per_image": chosen["mixed_error_per_image"]},
+                       "per_bean": {"fold_macro_f1": per_bean["fold_macro_f1"], "light_dark_rate": per_bean["light_dark_rate"],
+                                    "mixed_error_per_image": per_bean["mixed_error_per_image"]},
+                       "B1 broadcast": {"fold_macro_f1": base["fold_macro_f1"], "light_dark_rate": base["light_dark_rate"],
+                                        "mixed_error_per_image": base["mixed_error_per_image"]}}
     args.out.mkdir(parents=True)
     (args.out / "model.json").write_text(json.dumps(spec), encoding="utf-8")
     shutil.copyfile(args.detector, args.out / "bean.onnx")
     card = {
         "backend": "det_b1_beans", "name": args.name, "model_file": "model.json", "detector_file": "bean.onnx",
-        "det_config": DetConfig().to_dict(), **label_card, "seg_config": SegConfig().to_dict(),
+        "det_config": DetConfig().to_dict(), **label_card, **variants, "seg_config": SegConfig().to_dict(),
         "low_conf_threshold": 0.0, "created": time.strftime("%Y-%m-%d %H:%M:%S"), "schema_version": 3,
         "feature_set": "Lab_hist", "C": 0.01,
         "train": {"b1": {"rows_single_roast": len(single), "sources": list(FOLDS), "video_cap": 10, "split": "trainval minus count-test frozen groups",
@@ -84,7 +97,8 @@ def main(argv=None) -> int:
             "pooled_light_dark_rate": {"B1 broadcast": base["light_dark_rate"], "deployed": chosen["light_dark_rate"]},
             "mixed_rf_boos_error_per_image(102 frames, 6 beans each)": {"B1 broadcast": base["mixed_error_per_image"],
                                                                          "deployed": chosen["mixed_error_per_image"]},
-            "label_selection": {"chosen": sel["chosen"], "status": sel["status"], "selection_bias": sel["selection_bias"]}},
+            "label_selection": {"chosen": sel["chosen"], "status": sel["status"], "selection_bias": sel["selection_bias"]},
+            **({"variants_dev(heldout detector)": variant_dev} if variants else {})},
         "gates": {**{k: GATES[k] for k in ("flat_mae", "touching_mape", "pile_mape", "boos_mae", "empty_zero_rate", "fold_f1_drop", "cross_extreme_rate", "pi_p95_ms")},
                   "failed": failed, "unmeasured": ["touching MAPE (no GT)", "pile MAPE (no GT)", "Pi 5 p95", "count-test frozen", "split=test"]},
         "deployment_eligible": False,
