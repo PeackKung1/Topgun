@@ -3,6 +3,7 @@
     from roastml.api import load
     predictor = load("stub")                  # หรือ load("ML/models/current") เมื่อมีโมเดล
     result = predictor.predict_bytes(raw)     # ไม่ raise · thread-safe · คืน dict ที่ json.dumps ได้
+    result = predictor.predict_bytes(raw, variant="per_bean")   # ตัวเลือกของโมเดล (ดู info()["backend"]["variants"]) · ไม่ใส่ = ค่าเริ่มต้น
 
 - `load()` raise ได้ (เรียกครั้งเดียวตอน start ให้พังเร็วถ้าตั้งค่าผิด)
 - `predict_bytes()` ห้าม raise: ทุกความผิดพลาดกลายเป็น status "bad_image" หรือ "error"
@@ -67,9 +68,13 @@ class Predictor:
         self._load_ms: float | None = None
 
     # ------------------------------------------------------------------ public
-    def predict_bytes(self, raw: Any) -> dict[str, Any]:
-        """ทางเข้าของ FW (contract v3) — รับ bytes อย่างเดียว ไม่ raise"""
-        return self._safe_predict(raw)
+    def predict_bytes(self, raw: Any, *, variant: str | None = None) -> dict[str, Any]:
+        """ทางเข้าของ FW (contract v3) — รับ bytes ไม่ raise
+
+        variant: ชื่อตัวเลือกที่โมเดลประกาศใน info()["backend"]["variants"] (เช่นวิธีให้ label รายเมล็ด)
+                 None = ค่าเริ่มต้นของโมเดล · ชื่อที่โมเดลไม่มี → status "error"
+        """
+        return self._safe_predict(raw, variant=variant)
 
     def predict_dataset(self, raw: Any, *, source: str, roi: str = "") -> dict[str, Any]:
         """เหมือน predict_bytes + metadata ของ dataset (source, ROI ของ agtron) — สำหรับ tools เท่านั้น
@@ -79,10 +84,10 @@ class Predictor:
         """
         return self._safe_predict(raw, source=source, roi=roi)
 
-    def _safe_predict(self, raw: Any, *, source: str = "", roi: str = "") -> dict[str, Any]:
+    def _safe_predict(self, raw: Any, *, source: str = "", roi: str = "", variant: str | None = None) -> dict[str, Any]:
         t0 = time.perf_counter()
         try:
-            return self._predict(raw, t0, source=source, roi=roi)
+            return self._predict(raw, t0, source=source, roi=roi, variant=variant)
         except Exception:  # ด่านสุดท้าย — ไม่ควรมาถึงตรงนี้
             log.exception("unexpected error in predict_bytes")
             try:
@@ -139,8 +144,12 @@ class Predictor:
 
     # ----------------------------------------------------------------- internal
     def _predict(self, raw: Any, t0: float, *, source: str = "", roi: str = "",
-                 stages: dict | None = None) -> dict[str, Any]:
+                 stages: dict | None = None, variant: str | None = None) -> dict[str, Any]:
         stages = {} if stages is None else stages
+        variants = getattr(self.backend, "variants", None) or {}
+        if variant is not None and variant not in variants:
+            log.error("unknown model variant %r (available: %s)", variant, sorted(variants))
+            return self._failure("error", t0, decode_ms=0.0)
         if raw is None:
             return self._failure("bad_image", t0, decode_ms=0.0)
         if not isinstance(raw, (bytes, bytearray, memoryview)):
@@ -159,7 +168,7 @@ class Predictor:
             stages["decode"] = decode_ms
 
         try:
-            out = self._run_backend(img, source=source, roi=roi, stages=stages)
+            out = self._run_backend(img, source=source, roi=roi, stages=stages, variant=variant)
             label, conf, probs = self._check_probs(out)
             image_size = list(img.image.size)
             beans = _clean_beans(out.beans, image_size)
@@ -190,16 +199,27 @@ class Predictor:
             "proportions": _clean_proportions({k: v / out.n_beans for k, v in counts.items()}) if counts and out.n_beans else None,
             "beans": beans,
             "timing_ms": _timing(decode_ms, ml_ms, _ms_since(t0), stages),
-            "model": self.backend.name,
+            "model": self._model_name(variant),
             "schema_version": SCHEMA_VERSION,
             "counts": counts,
             "count_method": method,
             "image_size": image_size,
         }
 
+    def _model_name(self, variant: str | None = None) -> str:
+        """ชื่อโมเดลในผล — โมเดลที่มีตัวเลือกจะต่อท้าย @<variant> ให้รู้ว่าผลมาจากตัวเลือกไหน"""
+        name = getattr(self.backend, "name", "?")
+        variants = getattr(self.backend, "variants", None)
+        return f"{name}@{variant or self.backend.default_variant}" if variants else name
+
     def _run_backend(self, img: DecodedImage, *, source: str = "", roi: str = "",
-                     stages: dict | None = None) -> BackendOutput:
+                     stages: dict | None = None, variant: str | None = None) -> BackendOutput:
         def run():
+            if variant is not None:
+                out, measured = self.backend.predict_profile(img, source=source, roi=roi, variant=variant)
+                if stages is not None:
+                    stages.update(measured)
+                return out
             if stages is not None and hasattr(self.backend, "predict_profile"):
                 out, measured = self.backend.predict_profile(img, source=source, roi=roi)
                 stages.update(measured)
@@ -246,7 +266,7 @@ class Predictor:
             "proportions": None,
             "beans": [],
             "timing_ms": _timing(decode_ms, max(0.0, total - decode_ms), total),
-            "model": getattr(self.backend, "name", "?"),
+            "model": self._model_name(),
             "schema_version": SCHEMA_VERSION,
             "counts": None,
             "count_method": None,

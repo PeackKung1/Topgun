@@ -1,0 +1,50 @@
+ลองโมเดลนับเมล็ด + ระดับคั่วรายเมล็ด พร้อมปุ่มเลือก 2 แบบบน dashboard
+(ข้อเสนอจากฝั่ง ML — Firmware/ ยังไม่ถูกแก้ใน repo · เจ้าของ FW เป็นคน apply เอง)
+
+ไฟล์ในโฟลเดอร์นี้
+  firmware_v3_plus_variant.patch   patch เดียว ครอบ 6 ไฟล์ใน Firmware/ (app.py, service.py, static/script.js,
+                                   static/style.css, templates/index.html, templates/market.html)
+                                   = patch contract v3 เดิม (results/fw_v3_review_20261010) + ปุ่มเลือก 2 แบบ
+                                   + แก้หน้าไม่ค้างเมื่อแท็บถูกซ่อน (รอ requestAnimationFrame ไม่เกิน 250 ms)
+
+ขั้นตอน (ที่ root ของ repo หลัง pull)
+  1) git apply --check ML/results/fw_variant_patch_20261010/firmware_v3_plus_variant.patch
+     git apply         ML/results/fw_variant_patch_20261010/firmware_v3_plus_variant.patch
+     (ถอนออก: git apply -R <ไฟล์เดียวกัน>)
+  2) ขอไฟล์ det_b1_variants_20261010.zip จากฝั่ง ML (ไม่อยู่ใน git) แล้วแตกไว้ที่
+     ML/models/det_b1_variants_20261010/   → ต้องมี bean.onnx, model.json, model_card.json
+  3) ติดตั้งของ ML ใน venv เดียวกับ FW:
+     pip install -r ML/requirements-pi.txt      (numpy, opencv-python-headless, onnxruntime, pillow)
+     pip install -e ML
+  4) รัน:
+     ROASTML_MODEL="$PWD/ML/models/det_b1_variants_20261010" bash Firmware/run_local.sh
+     แล้วเปิด http://127.0.0.1:8080
+     (ไม่มีบัญชี HiveMQ: รันตรงก็ได้ —
+      cd Firmware && TOPGUN_MQTT_ENABLED=0 ROASTML_MODEL=../ML/models/det_b1_variants_20261010 python -m flask --app app run --port 8080
+      แบบนี้ผลรวม/ประวัติจะเป็น 0 เพราะไม่มี MQTT→SQLite)
+
+ปุ่มเลือก 2 แบบ ("วิธีตัดสินระดับคั่วรายเมล็ด" เหนือปุ่มวิเคราะห์)
+  - เน้นภาพคั่วระดับเดียว (ค่าเริ่มต้น)        variant = balanced   (prior_weight 2)
+  - เน้นภาพปนหลายระดับ (ตัดสินทีละเมล็ด)       variant = per_bean   (prior_weight 0)
+  จำนวนเมล็ดและกรอบเหมือนกันทั้งสองแบบ ต่างกันเฉพาะ label รายเมล็ด
+  เปลี่ยนตัวเลือกหลังวิเคราะห์แล้ว หน้าเว็บจะส่งรูปเดิมซ้ำให้เอง · ผลแสดงบรรทัด "ตัวเลือก: …"
+
+สิ่งที่ FW ต้องรู้
+  - /health → ml.backend.variants = {ชื่อ: {label_th, prior_weight}}, ml.backend.default_variant
+    โมเดลที่ไม่มี variants → หน้าเว็บซ่อนปุ่มเลือกเอง
+  - POST /api/predict รับ field "variant" (ไม่ใส่ = ค่าเริ่มต้น) → predictor.predict_bytes(raw, variant=...)
+    ชื่อผิดรูปแบบ → 400 · ชื่อที่โมเดลไม่มี → ผล status "error"
+  - result["model"] ลงท้าย @<variant> (เช่น det-yolo11n-b1@per_bean) → ใช้แยกผลใน SQLite/MQTT ได้
+  - key ของผลยังเป็น contract v3 เดิม 16 key
+
+ตัวเลขบน dev ของสองแบบ (detector ที่ไม่เคยเห็น rf_boos · น้ำหนัก B1 ราย fold ไม่เคยเห็น source นั้น · ยังไม่ได้วัด frozen/test)
+  macro-F1 ราย fold        ontoum224  rf_robusta  rf_boos  agtron   light<->dark  error ภาพปน/ภาพ (6 เมล็ด)
+  B1 กระจายทั้งภาพ          0.8579     0.3724      0.6234   0.5322   3.2%          7.74
+  balanced                  0.8568     0.3885      0.6290   0.5079   2.6%          4.03
+  per_bean                  0.8553     0.3925      0.6180   0.4304   4.0%          1.56
+  ที่มา: ML/results/yolo_bean_20261010/eval_holdout_boos_v2/label_selection.json
+
+ข้อจำกัดที่ควรรู้ตอนลอง
+  - ภาพว่างยังขึ้นระดับคั่วพร้อมป้าย "ไม่พบเมล็ด"
+  - เมล็ดเล็กมากในภาพ (ถ่ายจานจากไกล) ตรวจไม่เจอ · กองเมล็ดคั่วเข้มแบบถ่ายใกล้นับได้น้อย
+  - ยังไม่ได้วัดเวลาบน Pi (notebook: p50 90 ms / p95 124 ms)

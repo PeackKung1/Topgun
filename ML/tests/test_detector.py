@@ -255,6 +255,53 @@ def test_mask_shape_backend_matches_contract(tmp_path, fake_det):
     assert r["counts"] == {"light": 1, "medium": 0, "dark": 2} and p.info()["backend"]["box_shape"] == "mask"
 
 
+VARIANTS = {"variants": {"balanced": {"label_th": "ก", "prior_weight": 2.0}, "per_bean": {"label_th": "ข", "prior_weight": 0.0}},
+            "default_variant": "balanced", "bean_label_mode": "image_prior", "prior_weight": 2.0}
+
+
+def test_variants_select_prior_weight_per_request(tmp_path, fake_det):
+    p = load(det_model(tmp_path, **VARIANTS))
+    boxes = [(40 + 110 * i, 40, 90, 70) for i in range(5)]
+    fake_det.boxes = boxes
+    raw = scene_bytes(list(zip(boxes, [DARK, DARK, DARK, DARK, (120, 82, 55)])))   # เมล็ดสุดท้ายอยู่กึ่งกลาง
+    default, balanced, per_bean = p.predict_bytes(raw), p.predict_bytes(raw, variant="balanced"), p.predict_bytes(raw, variant="per_bean")
+    for r in (default, balanced, per_bean):
+        assert_valid_result(r)
+        check_counts(r)
+    assert default["model"] == balanced["model"] == "test-det_b1_beans@balanced" and per_bean["model"].endswith("@per_bean")
+    assert default["counts"] == balanced["counts"] and [b["bbox"] for b in default["beans"]] == [b["bbox"] for b in per_bean["beans"]]
+    plain = load(det_model(tmp_path / "plain", bean_label_mode="per_box")).predict_bytes(raw)
+    assert per_bean["counts"] == plain["counts"]          # prior 0 = ต่อกรอบล้วน
+    info = p.info()["backend"]
+    assert set(info["variants"]) == {"balanced", "per_bean"} and info["default_variant"] == "balanced"
+
+
+def test_unknown_variant_is_an_error_result_not_an_exception(tmp_path, fake_det):
+    with_variants, without = load(det_model(tmp_path / "a", **VARIANTS)), load(det_model(tmp_path / "b"))
+    raw = scene_bytes([((40, 40, 80, 60), DARK)])
+    for p in (with_variants, without):
+        r = p.predict_bytes(raw, variant="nope")
+        assert_valid_result(r)
+        assert r["status"] == "error" and r["label"] is None
+    assert without.predict_bytes(raw)["model"] == "test-det_b1_beans"     # ไม่มี variants → ชื่อเดิม
+    assert load(write_model(tmp_path / "b1", "b1_linear")).predict_bytes(raw, variant="per_bean")["status"] == "error"
+
+
+@pytest.mark.parametrize("bad", [
+    {"variants": {}}, {"variants": {"a b": {"label_th": "x", "prior_weight": 0}}, "default_variant": "a b"},
+    {"variants": {"a": {"label_th": "x", "prior_weight": 0, "conf": 1}}, "default_variant": "a"},
+    {"variants": {"a": {"label_th": "x", "prior_weight": 1.0}}, "default_variant": "a"},      # default ไม่ตรง prior_weight ของ card
+    {"variants": {"a": {"label_th": "x", "prior_weight": 2.0}}, "default_variant": "b"}, {"default_variant": "a"}])
+def test_bad_variants_fail_at_load(tmp_path, fake_det, bad):
+    with pytest.raises(ModelLoadError):
+        load(det_model(tmp_path, **({"bean_label_mode": "image_prior", "prior_weight": 2.0} | bad)))
+
+
+def test_variants_need_image_prior_mode(tmp_path, fake_det):
+    with pytest.raises(ModelLoadError):
+        load(det_model(tmp_path, **(VARIANTS | {"bean_label_mode": "per_box"})))
+
+
 def test_no_boxes_reports_zero_and_keeps_image_label(tmp_path, fake_det):
     p = load(det_model(tmp_path))
     r = p.predict_bytes(scene_bytes([]))
