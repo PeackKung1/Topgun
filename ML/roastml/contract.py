@@ -17,7 +17,7 @@ LABEL_TH = {"light": "คั่วอ่อน", "medium": "คั่วกล�
 
 STATUSES = ("ok", "low_confidence", "bad_image", "error")
 
-WARNINGS = ("no_beans_detected", "mixed_roast", "blurry", "dark_image", "colored_light", "bean_count_estimated")
+WARNINGS = ("no_beans_detected", "mixed_roast", "blurry", "dark_image", "colored_light", "bean_count_estimated", "count_visible_only")
 WARNING_TH = {
     "no_beans_detected": "ไม่เห็นเมล็ดชัดเจน ลองถ่ายให้เมล็ดอยู่กลางภาพและใกล้ขึ้น",
     "mixed_roast": "ในภาพมีเมล็ดหลายระดับคั่วปนกัน",
@@ -25,6 +25,7 @@ WARNING_TH = {
     "dark_image": "ภาพมืด ลองถ่ายในที่สว่างขึ้น",
     "colored_light": "แสงมีสีเพี้ยน ลองถ่ายใต้แสงสีขาวหรือแสงธรรมชาติ",
     "bean_count_estimated": "จำนวนเมล็ดเป็นค่าประมาณจากขอบที่มองเห็น เมล็ดที่บังกันอาจนับไม่ครบ",
+    "count_visible_only": "นับเฉพาะเมล็ดที่เห็นอย่างน้อยครึ่ง เมล็ดที่ถูกบังอาจนับไม่ได้",
 }
 
 # key ทุกตัวที่ต้องมีในผลลัพธ์ (ลำดับตาม spec)

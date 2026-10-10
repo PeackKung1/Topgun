@@ -25,7 +25,8 @@ from pathlib import Path
 
 import numpy as np
 
-from roastml.bean_backend import DEFAULT_BEAN_COUNTING, VALIDATION_NOTE, BeanLinearBackend
+from roastml.bean_backend import VALIDATION_NOTE, BeanLinearBackend
+from roastml.counter import CountConfig
 from roastml.decode import decode_image
 from roastml.linear_backend import LinearBackend
 from tools.index_sources import read_yolo_boxes, read_yolo_names
@@ -79,7 +80,7 @@ def build(out: Path, run: str, extra: dict | None = None) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(CURRENT / card.get("model_file", "model.json"), out / "model.json")
     new = {**card, "backend": "b1_linear_beans", "name": f"{card.get('name', 'b1')}+beans",
-           "model_file": "model.json", "bean_counting": dict(DEFAULT_BEAN_COUNTING),
+           "model_file": "model.json", "count_config": CountConfig().to_dict(),
            "bean_validation": VALIDATION_NOTE, "bean_run": run,
            "base_model_md5": md5(CURRENT / "model.json"), "base_card_md5": md5(CURRENT / "model_card.json"),
            "model_json_md5": md5(out / "model.json"), **(extra or {})}

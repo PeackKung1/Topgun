@@ -48,6 +48,59 @@ def pixel_stats(lab_px: np.ndarray) -> np.ndarray:
     return np.concatenate([np.asarray(stats, np.float64), hist])
 
 
+def _grouped_percentiles(vals: np.ndarray, starts: np.ndarray, counts: np.ndarray, qs) -> np.ndarray:
+    """vals เรียงภายในกลุ่มแล้ว (กลุ่มต่อกัน) → percentile แบบ linear เหมือน np.percentile ต่อกลุ่ม · (n_group, len(qs))"""
+    out = np.empty((len(counts), len(qs)))
+    for j, q in enumerate(qs):
+        pos = (counts - 1) * (q / 100.0)
+        lo = np.floor(pos).astype(np.int64)
+        hi = np.minimum(lo + 1, counts - 1)
+        frac = pos - lo
+        out[:, j] = vals[starts + lo] * (1 - frac) + vals[starts + hi] * frac
+    return out
+
+
+def pixel_stats_grouped(lab_px: np.ndarray, labels: np.ndarray, n: int) -> np.ndarray:
+    """pixel_stats ของหลายเมล็ดพร้อมกัน (vectorized ไม่มี loop ต่อเมล็ด) — ผลเท่ากับเรียก pixel_stats ทีละกลุ่ม
+
+    lab_px (m, 3) · labels (m,) int ใน 0..n-1 · ทุกกลุ่มต้องมี ≥ 1 พิกเซล → (n, len(FEATURES_ALL))
+    """
+    raw_labels = np.asarray(labels)
+    if raw_labels.dtype.kind not in 'iu':
+        raise ValueError('group labels must be integers')
+    labels = raw_labels.astype(np.int64)
+    lab_px = np.asarray(lab_px, np.float64)
+    if n < 1 or lab_px.ndim != 2 or lab_px.shape[1] != 3 or labels.shape != (len(lab_px),):
+        raise ValueError("invalid grouped pixels/labels shape")
+    if not np.isfinite(lab_px).all() or np.any(labels < 0) or np.any(labels >= n):
+        raise ValueError("invalid grouped pixel values/labels")
+    counts = np.bincount(labels, minlength=n)
+    if len(counts) != n or np.any(counts == 0):
+        raise ValueError("ทุกเมล็ดต้องมีพิกเซล ≥ 1 และ label อยู่ใน 0..n-1")
+    starts = np.concatenate([[0], np.cumsum(counts)[:-1]])
+    L, a, b = lab_px[:, 0], lab_px[:, 1], lab_px[:, 2]
+    C = np.hypot(a, b)
+
+    def sorted_within(v):
+        # lexsort remains correct for every finite input, including extremes
+        # used in parity tests; no hidden Lab-range assumption.
+        return v[np.lexsort((v, labels))]
+
+    pL = _grouped_percentiles(sorted_within(L), starts, counts, (10, 25, 50, 75, 90))
+    a_med = _grouped_percentiles(sorted_within(a), starts, counts, (50,))[:, 0]
+    b_med = _grouped_percentiles(sorted_within(b), starts, counts, (50,))[:, 0]
+    C_med = _grouped_percentiles(sorted_within(C), starts, counts, (50,))[:, 0]
+    mean = np.bincount(labels, L, n) / counts
+    std = np.sqrt(np.maximum(np.bincount(labels, (L - mean[labels]) ** 2, n) / counts, 0.0))
+    bins = np.clip(np.searchsorted(L_BINS, np.clip(L, 0, 100), side="right") - 1, 0, len(L_BINS) - 2)
+    hist = np.bincount(labels * (len(L_BINS) - 1) + bins, minlength=n * (len(L_BINS) - 1))
+    hist = hist.reshape(n, len(L_BINS) - 1).astype(np.float64) / counts[:, None]
+    p10, p25, p50, p75, p90 = pL.T
+    stats = np.column_stack([p50, mean, p10, p25, p75, p90, std, p75 - p25, a_med, b_med, C_med,
+                             np.degrees(np.arctan2(b_med, a_med))])
+    return np.concatenate([stats, hist], axis=1)
+
+
 @dataclass
 class ImageFeatures:
     x: np.ndarray        # (len(FEATURES_ALL),)

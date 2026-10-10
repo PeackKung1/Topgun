@@ -190,7 +190,19 @@ def _odd(n: float) -> int:
 
 
 # ---------------------------------------------------------------- main
-def segment(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans: bool = True) -> SegResult:
+@dataclass
+class PreparedImage:
+    scale: float
+    wb: WhiteBalance
+
+
+def prepare_image(rgb: np.ndarray, cfg: SegConfig, *, allow_wb: bool = True) -> PreparedImage:
+    work, scale = to_work(rgb, cfg)
+    return PreparedImage(scale, background_white_balance(work.astype(np.float32) / 255.0, cfg, allow=allow_wb))
+
+
+def segment(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans: bool = True,
+            prepared: PreparedImage | None = None) -> SegResult:
     """rgb uint8 (h, w, 3) → SegResult · ไม่ raise กับภาพปกติ ไม่มีทางได้ "ไม่พบเมล็ด"
 
     find_beans=False: ข้ามการหาเมล็ด ใช้ทั้งภาพ (โหมด pile) — ใช้กับ agtron ที่ crop ROI มาแล้ว
@@ -198,13 +210,13 @@ def segment(rgb: np.ndarray, cfg: SegConfig | None = None, *, find_beans: bool =
     cfg = cfg or SegConfig()
     if rgb.ndim != 3 or rgb.shape[2] != 3 or min(rgb.shape[:2]) < 8:
         raise ValueError(f"ต้องเป็นภาพ RGB ขนาด ≥ 8 px: {rgb.shape}")
-    work, s = to_work(rgb, cfg)
-    h, w = work.shape[:2]
+    prepared = prepared or prepare_image(rgb, cfg, allow_wb=find_beans)
+    s, wbr = prepared.scale, prepared.wb
+    h, w = wbr.lab.shape[:2]
     full_box = (0, 0, w, h)
     notes: list[str] = []
 
     # --- white balance + exposure จากพื้นหลังขาว (ฟังก์ชันกลาง ใช้ร่วมกับ box_features) ---
-    wbr = background_white_balance(work.astype(np.float32) / 255.0, cfg, allow=find_beans)
     f, lab, bg, border_uniform, wb = wbr.f, wbr.lab, wbr.bg, wbr.border_uniform, wbr.applied
 
     def fallback(mode: str, note: str | None) -> SegResult:

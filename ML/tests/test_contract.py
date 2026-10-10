@@ -60,6 +60,9 @@ def assert_valid_result(r: dict) -> None:
 
         if r["n_beans"] is None:
             assert r["proportions"] is None and r["beans"] == []
+        elif r["n_beans"] == 0:
+            assert r["beans"] == [] and r["proportions"] is None
+            assert "no_beans_detected" in r["warnings"]
         else:
             assert r["n_beans"] == len(r["beans"]) >= 1
             assert set(r["proportions"]) == set(LABELS)
