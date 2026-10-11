@@ -1,0 +1,666 @@
+{
+  "plan": {
+    "protocol": "keras_cnn_v1: tools/train_d1.py groupguard protocol, network swapped to keras.applications",
+    "search_seed": 20261006,
+    "confirmation_seeds": [
+      20261006,
+      20261007,
+      20261008
+    ],
+    "outer_folds": [
+      "ontoum224",
+      "rf_robusta",
+      "rf_boos",
+      "agtron"
+    ],
+    "training_cap_seed": 20261006,
+    "cap_frames_per_video": 10,
+    "classes": [
+      "light",
+      "medium",
+      "dark"
+    ],
+    "rgb_view_config": {
+      "size": 224,
+      "views": [
+        "full",
+        "smart"
+      ],
+      "view_weights": [
+        0.5,
+        0.5
+      ],
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "pad_rgb": [
+        124,
+        116,
+        104
+      ],
+      "seg_config": {
+        "work_side": 800,
+        "border_frac": 0.04,
+        "bg_uniform_de": 10.0,
+        "bg_uniform_min": 0.6,
+        "white_balance": true,
+        "wb_min_L": 50.0,
+        "wb_max_chroma": 20.0,
+        "wb_target": 0.9,
+        "wb_max_gain": 3.0,
+        "min_contrast": 12.0,
+        "min_area_frac": 0.0004,
+        "max_area_frac": 0.9,
+        "min_rel_area": 0.25,
+        "min_solidity": 0.8,
+        "max_aspect": 3.0,
+        "cluster_area_ratio": 2.5,
+        "cluster_min_solidity": 0.5,
+        "core_frac": 0.25,
+        "min_core_px": 200,
+        "pile_beanlike_min": 0.6,
+        "crop_margin": 0.05,
+        "trim_lo": 15.0,
+        "trim_hi": 98.0,
+        "trim_center": 0.05,
+        "full_trim_lo": 2.0,
+        "full_trim_hi": 90.0
+      }
+    },
+    "training_views": "identical inference-capable full+smart RGB; no annotation bbox crops",
+    "agtron": "mandatory EXIF-oriented ROI; no white balance; never see number labels",
+    "patience": 2,
+    "batch_images": 32,
+    "selection": "inner group validation macro-F1 then NLL then earliest epoch/grid order",
+    "temperature_grid": [
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      5.0
+    ],
+    "low_conf_threshold": 0.0,
+    "augmentation_mild": {
+      "rotation_degrees": [
+        -180,
+        180
+      ],
+      "horizontal_vertical_flip": true,
+      "crop_scale": [
+        0.85,
+        1.0
+      ],
+      "exposure_EV": [
+        -0.3,
+        0.3
+      ],
+      "linear_red_blue_gain_log": [
+        -0.08,
+        0.08
+      ],
+      "noise_sigma": 0.005,
+      "blur_probability": 0.15,
+      "JPEG_probability": 0.2,
+      "JPEG_quality": [
+        70,
+        95
+      ]
+    },
+    "forbidden_augmentation": [
+      "hue rotation",
+      "strong saturation",
+      "grayscale",
+      "equalization"
+    ],
+    "augmentation_wbexp": {
+      "rotation_degrees": [
+        -180,
+        180
+      ],
+      "horizontal_vertical_flip": true,
+      "crop_scale": [
+        0.85,
+        1.0
+      ],
+      "exposure_EV": [
+        -0.5,
+        0.5
+      ],
+      "linear_red_blue_gain_log": [
+        -0.2,
+        0.2
+      ],
+      "noise_sigma": 0.005,
+      "blur_probability": 0.15,
+      "JPEG_probability": 0.2,
+      "JPEG_quality": [
+        70,
+        95
+      ]
+    },
+    "arms": {
+      "K1_control_frozen": {
+        "family": "frozen",
+        "backbone": "MobileNetV3Small",
+        "grid": [
+          {
+            "lr": 0.01
+          },
+          {
+            "lr": 0.003
+          }
+        ],
+        "max_epochs": 40
+      },
+      "K1_control_finetune": {
+        "family": "finetune",
+        "backbone": "MobileNetV3Small",
+        "grid": [
+          {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          {
+            "lr": 0.0003,
+            "augmentation": "mild"
+          }
+        ],
+        "max_epochs": 4
+      },
+      "K2_new_finetune": {
+        "family": "finetune",
+        "backbone": "MobileNetV3Small",
+        "grid": [
+          {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          {
+            "lr": 0.0003,
+            "augmentation": "wbexp"
+          }
+        ],
+        "max_epochs": 4
+      }
+    },
+    "arm_rationale": {
+      "K1_control_frozen": "control: same frozen-head grid as D1 groupguard (one full-batch AdamW step per epoch, <=40)",
+      "K1_control_finetune": "control: same fine-tune grid as D1 groupguard; checks Keras result ~ PyTorch D1_finetune",
+      "K2_new_finetune": "one new variable vs K1_control_finetune: 'mild' replaced by 'wbexp' (exposure_EV and linear_red_blue_gain_log widened to the medium values; geometry, noise, blur and JPEG stay mild). Reason: the 8 Oct evidence names strong colour cast as the D1 failure on rf_boos, and the medium arm confounded photometric strength with crop 0.5 and JPEG q30. Same backbone, lr, epochs, grid size."
+    },
+    "rows": "tools.train_baseline.load_rows(root); must be 3395 trainval images of 4 sources, 3 classes",
+    "views": "tools.train_d1.prepare_views(root): full+smart 224 uint8 RGB; view logits averaged in training and prediction",
+    "outer_train": "video_cap_mask(groups, paths, seed=20261006) & source != fold; holdout = every image of the fold source",
+    "inner_split": "tools.compare_tabular.inner_split(labels[tr], validation_groups[tr], 20261006)",
+    "inner_groups": {
+      "file": "inner_groups.json",
+      "directory": "qa_audit_regen_20261011",
+      "sha256": "8586948c28036a7631b6c9bc896694fdd405227049c4a5cab2419434192c6400"
+    },
+    "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac",
+    "tuning": "seed 20261006 only; chosen config/epoch/temperature reused for seeds 20261006/20261007/20261008; refit on the whole fold train; holdout never used for any choice",
+    "seeding": "keras.utils.set_random_seed(seed) + tf.config.experimental.enable_op_determinism(); numpy default_rng(seed) for batch order and augmentation (same call order as D1)",
+    "model": {
+      "backbone": "keras.applications.MobileNetV3Small(input_shape=(224,224,3), include_top=False, weights='imagenet', pooling='avg', include_preprocessing=True)",
+      "preprocessing": "the backbone's own built-in Rescaling layer; views are fed as float32 0-255, no ImageNet mean/std and no second normalisation",
+      "head": "one Dense(3) on the 576-d pooled feature (Keras default init)",
+      "batchnorm": "running statistics frozen (backbone called with training=False); affine and conv weights trainable",
+      "optimizer": "keras.optimizers.AdamW(lr, weight_decay=0.01, epsilon=1e-8)",
+      "loss": "class-weighted cross entropy, weights n/(3*count) on the fit rows, weighted mean"
+    },
+    "metric": "tools.train_baseline.fold_table + tools.compare_tabular.calibration via tools.summarize_runs.evaluate; primary = mean LOSO macro-F1 (mean of 4 folds, then mean +- std(ddof=1) over 3 seeds)",
+    "decision_rule": {
+      "wins_if": "mean LOSO macro-F1 (mean over 3 seeds) > B1",
+      "B1_mean_macro_f1": 0.6381973706626417,
+      "otherwise": "B1 stays the deployed model",
+      "references": [
+        "B1",
+        "D1_finetune",
+        "D1_finetune_medaug"
+      ],
+      "reference_source": "results/summary_20261008/model_comparison.csv and per_fold.csv"
+    },
+    "export": "only for an arm that beats B1: tf2onnx FP32, max |dp| vs Keras < 1e-5 and identical labels, then notebook p95",
+    "deviations": [
+      "inner groups: the original cache/qa_audit_20261008/inner_groups.json was not available on this machine; regenerated with tools.qa_audit (results/qa_audit_regen_20261011, same policy and thresholds, 4-source manifest). Cannot be verified identical to the 8 Oct file.",
+      "manifest.csv was rebuilt from the 4 source zips (no rf_hendi); per-source/label counts match results/manifest_summary.json but the original manifest sha256 is not reproduced, so view pixels cannot be verified byte-identical to D1's.",
+      "compute: TensorFlow has no native-Windows GPU build after 2.10 and WSL2 is not installed, so everything runs on CPU.",
+      "K1 uses Keras ImageNet weights and the backbone's built-in preprocessing, which differ from torchvision's; K1 controls the protocol, it is not a weight-identical replica of D1.",
+      "a --smoke-limit code check on a small subsample ran after this plan was written and before the real run; its outputs live outside results/ and were not used for any choice."
+    ],
+    "limits": "LOSO source-level convenience dataset; no Pi/E2E/frozen-test claim; every arm run is reported"
+  },
+  "versions": {
+    "python": "3.12.1",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1",
+    "keras_backend": "tensorflow",
+    "numpy": "2.5.3",
+    "opencv": "5.0.0",
+    "built_with_cuda": false,
+    "gpus": [],
+    "device": "CPU",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD"
+  },
+  "weights": {
+    "MobileNetV3Small": {
+      "backbone": "MobileNetV3Small",
+      "source": "keras.applications ImageNet weights (downloaded by Keras)",
+      "files": [
+        {
+          "file": "weights_mobilenet_v3_small_224_1.0_float_no_top_v2.h5",
+          "bytes": 4334752,
+          "sha256": "002803a73df2ab65425267ee2082d1ec213b6aa9716f19ac1a1ed5361239c5f6"
+        }
+      ]
+    }
+  },
+  "data": {
+    "key": "771a679f4e44b108",
+    "n": 3395,
+    "shape": [
+      3395,
+      2,
+      224,
+      224,
+      3
+    ],
+    "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac",
+    "preprocessing_code_sha256": {
+      "rgb_views.py": "f9dcd9f7ffdc661aafc8ef33eb0ec24c43d15d24b2f4797152d23aafb5630d1c",
+      "decode.py": "03d3ad1fafd3492b077228e6427da047b02a87cc97fc518bcff02f0c09907249",
+      "segment.py": "d6ec58a45c1134f61026f6b4d33206760796e983a15ce8a986de8e0687f6d009"
+    }
+  },
+  "capped_training_rows": 2393,
+  "inner_groups_sha256": "8586948c28036a7631b6c9bc896694fdd405227049c4a5cab2419434192c6400",
+  "training_code_sha256": "ed5de3b669124572a2d89d19f9eb81f7ae9896abef8326f0258e6eea5c029239",
+  "arms": {
+    "K1_control_frozen": {
+      "model": "K1_control_frozen",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.35726988391732784,
+      "mean_macro_f1_std": 0.11403283299000354,
+      "pooled_macro_f1_mean": 0.4185899642741744,
+      "pooled_macro_f1_std": 0.1022589277531214,
+      "mean_acc_mean": 0.4718827401134152,
+      "pooled_acc_mean": 0.47069219440353455,
+      "pooled_cross_step_rate_mean": 0.10967108492881689,
+      "pooled_ece_mean": 0.23500866253195576,
+      "worst_fold_first_seed": "rf_boos",
+      "worst_fold_macro_f1_first_seed": 0.3037254460154345,
+      "beats_B1": false,
+      "source": "keras_cnn_20261011 (this run)",
+      "per_seed_mean_macro_f1": [
+        0.4451548166445343,
+        0.22841177736078466,
+        0.3982430577466644
+      ],
+      "per_fold_macro_f1_by_seed": {
+        "ontoum224": [
+          0.4821234374230316,
+          0.2254611105949548,
+          0.6379939782175028
+        ],
+        "rf_robusta": [
+          0.512551027020022,
+          0.22467900016187062,
+          0.4087198091316142
+        ],
+        "rf_boos": [
+          0.3037254460154345,
+          0.16680660509375875,
+          0.18550896918365156
+        ],
+        "agtron": [
+          0.48221935611964933,
+          0.29670039359255457,
+          0.360749474453889
+        ]
+      },
+      "pooled_confusion_first_seed": [
+        [
+          346,
+          191,
+          203
+        ],
+        [
+          255,
+          563,
+          489
+        ],
+        [
+          191,
+          395,
+          762
+        ]
+      ],
+      "selection": {
+        "ontoum224": {
+          "train_rows": 1498,
+          "train_groups": 449,
+          "holdout_rows": 895,
+          "config": {
+            "lr": 0.003
+          },
+          "epochs": 13,
+          "temperature": 1.0
+        },
+        "rf_robusta": {
+          "train_rows": 1516,
+          "train_groups": 906,
+          "holdout_rows": 1046,
+          "config": {
+            "lr": 0.01
+          },
+          "epochs": 6,
+          "temperature": 0.75
+        },
+        "rf_boos": {
+          "train_rows": 2333,
+          "train_groups": 1338,
+          "holdout_rows": 893,
+          "config": {
+            "lr": 0.01
+          },
+          "epochs": 6,
+          "temperature": 0.75
+        },
+        "agtron": {
+          "train_rows": 1832,
+          "train_groups": 1339,
+          "holdout_rows": 561,
+          "config": {
+            "lr": 0.01
+          },
+          "epochs": 4,
+          "temperature": 0.75
+        }
+      },
+      "train_seconds": {
+        "20261006": 1.1092157999992196,
+        "20261007": 1.073360499998671,
+        "20261008": 1.108452299999044
+      }
+    },
+    "K1_control_finetune": {
+      "model": "K1_control_finetune",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.46598305545416263,
+      "mean_macro_f1_std": 0.03359036361250639,
+      "pooled_macro_f1_mean": 0.5081463361505181,
+      "pooled_macro_f1_std": 0.04376424492766737,
+      "mean_acc_mean": 0.564977760171507,
+      "pooled_acc_mean": 0.5527736867943053,
+      "pooled_cross_step_rate_mean": 0.06647029945999018,
+      "pooled_ece_mean": 0.2590236420965684,
+      "worst_fold_first_seed": "rf_boos",
+      "worst_fold_macro_f1_first_seed": 0.4617372526777759,
+      "beats_B1": false,
+      "source": "keras_cnn_20261011 (this run)",
+      "per_seed_mean_macro_f1": [
+        0.5022868531511665,
+        0.45965647825886147,
+        0.43600583495246004
+      ],
+      "per_fold_macro_f1_by_seed": {
+        "ontoum224": [
+          0.5394962120672981,
+          0.7190500682721334,
+          0.31644077441689783
+        ],
+        "rf_robusta": [
+          0.520383159682252,
+          0.430168233403365,
+          0.5029833131775284
+        ],
+        "rf_boos": [
+          0.4617372526777759,
+          0.16750983698707142,
+          0.45317068078684253
+        ],
+        "agtron": [
+          0.48753078817733986,
+          0.5218977743728761,
+          0.47142857142857136
+        ]
+      },
+      "pooled_confusion_first_seed": [
+        [
+          347,
+          280,
+          113
+        ],
+        [
+          235,
+          450,
+          622
+        ],
+        [
+          25,
+          123,
+          1200
+        ]
+      ],
+      "selection": {
+        "ontoum224": {
+          "train_rows": 1498,
+          "train_groups": 449,
+          "holdout_rows": 895,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          "epochs": 4,
+          "temperature": 1.5
+        },
+        "rf_robusta": {
+          "train_rows": 1516,
+          "train_groups": 906,
+          "holdout_rows": 1046,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "mild"
+          },
+          "epochs": 3,
+          "temperature": 0.5
+        },
+        "rf_boos": {
+          "train_rows": 2333,
+          "train_groups": 1338,
+          "holdout_rows": 893,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "mild"
+          },
+          "epochs": 1,
+          "temperature": 1.0
+        },
+        "agtron": {
+          "train_rows": 1832,
+          "train_groups": 1339,
+          "holdout_rows": 561,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "mild"
+          },
+          "epochs": 3,
+          "temperature": 1.0
+        }
+      },
+      "train_seconds": {
+        "20261006": 624.3222103000007,
+        "20261007": 630.2735092999992,
+        "20261008": 622.7754769000003
+      }
+    },
+    "K2_new_finetune": {
+      "model": "K2_new_finetune",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.46934219536931915,
+      "mean_macro_f1_std": 0.02588463058345825,
+      "pooled_macro_f1_mean": 0.5063896835414229,
+      "pooled_macro_f1_std": 0.04180701049998121,
+      "mean_acc_mean": 0.5669404031054514,
+      "pooled_acc_mean": 0.55306823760432,
+      "pooled_cross_step_rate_mean": 0.05959744722631321,
+      "pooled_ece_mean": 0.2191884768213177,
+      "worst_fold_first_seed": "rf_robusta",
+      "worst_fold_macro_f1_first_seed": 0.36263805738183463,
+      "beats_B1": false,
+      "source": "keras_cnn_20261011 (this run)",
+      "per_seed_mean_macro_f1": [
+        0.47470817476209737,
+        0.4921232744622911,
+        0.441195136883569
+      ],
+      "per_fold_macro_f1_by_seed": {
+        "ontoum224": [
+          0.5394962120672981,
+          0.7190500682721334,
+          0.31644077441689783
+        ],
+        "rf_robusta": [
+          0.36263805738183463,
+          0.5513772163041474,
+          0.45412192279646774
+        ],
+        "rf_boos": [
+          0.5086481243614916,
+          0.16680660509375875,
+          0.5286291055049094
+        ],
+        "agtron": [
+          0.48805030523776516,
+          0.531259208179125,
+          0.46558874481600093
+        ]
+      },
+      "pooled_confusion_first_seed": [
+        [
+          407,
+          223,
+          110
+        ],
+        [
+          404,
+          306,
+          597
+        ],
+        [
+          97,
+          151,
+          1100
+        ]
+      ],
+      "selection": {
+        "ontoum224": {
+          "train_rows": 1498,
+          "train_groups": 449,
+          "holdout_rows": 895,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          "epochs": 4,
+          "temperature": 1.5
+        },
+        "rf_robusta": {
+          "train_rows": 1516,
+          "train_groups": 906,
+          "holdout_rows": 1046,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          "epochs": 4,
+          "temperature": 2.0
+        },
+        "rf_boos": {
+          "train_rows": 2333,
+          "train_groups": 1338,
+          "holdout_rows": 893,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "wbexp"
+          },
+          "epochs": 1,
+          "temperature": 0.75
+        },
+        "agtron": {
+          "train_rows": 1832,
+          "train_groups": 1339,
+          "holdout_rows": 561,
+          "config": {
+            "lr": 0.0003,
+            "augmentation": "none"
+          },
+          "epochs": 2,
+          "temperature": 0.5
+        }
+      },
+      "train_seconds": {
+        "20261006": 445.7811567000025,
+        "20261007": 426.3756221000001,
+        "20261008": 423.34179659999995
+      }
+    }
+  },
+  "references": {
+    "B1": {
+      "n_seeds": "3",
+      "mean_macro_f1_mean": "0.6381973706626417",
+      "mean_macro_f1_std": "0.0",
+      "pooled_macro_f1_mean": "0.6646302333540495",
+      "pooled_macro_f1_std": "0.0",
+      "mean_acc_mean": "0.6627208003595129",
+      "pooled_acc_mean": "0.6592047128129602",
+      "pooled_cross_step_rate_mean": "0.030927835051546393",
+      "pooled_ece_mean": "0.23156753193045967",
+      "worst_fold_first_seed": "rf_robusta",
+      "worst_fold_macro_f1_first_seed": "0.3845173667974892"
+    },
+    "D1_finetune": {
+      "n_seeds": "3",
+      "mean_macro_f1_mean": "0.43894506981262166",
+      "mean_macro_f1_std": "0.019446476320815025",
+      "pooled_macro_f1_mean": "0.5212772447600721",
+      "pooled_macro_f1_std": "0.027151052592115688",
+      "mean_acc_mean": "0.5676257859679312",
+      "pooled_acc_mean": "0.5628865979381443",
+      "pooled_cross_step_rate_mean": "0.08296514482081492",
+      "pooled_ece_mean": "0.23718484034914145",
+      "worst_fold_first_seed": "rf_boos",
+      "worst_fold_macro_f1_first_seed": "0.282509854526025"
+    },
+    "D1_finetune_medaug": {
+      "n_seeds": "3",
+      "mean_macro_f1_mean": "0.41140325734513555",
+      "mean_macro_f1_std": "0.04150322937910802",
+      "pooled_macro_f1_mean": "0.5367424065906065",
+      "pooled_macro_f1_std": "0.029962741852934155",
+      "mean_acc_mean": "0.5649088894719895",
+      "pooled_acc_mean": "0.5617083946980855",
+      "pooled_cross_step_rate_mean": "0.08483063328424152",
+      "pooled_ece_mean": "0.24902630154216795",
+      "worst_fold_first_seed": "rf_boos",
+      "worst_fold_macro_f1_first_seed": "0.3026428670264287"
+    }
+  },
+  "decision": {
+    "B1_mean_macro_f1": 0.6381973706626417,
+    "arms_beating_B1": [],
+    "result": "no arm beats B1; B1 stays the deployed model"
+  },
+  "frozen_test_loaded": false
+}

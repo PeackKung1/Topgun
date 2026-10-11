@@ -1,0 +1,17 @@
+source,label,rows,manifest_groups,near_duplicate_connected_group_components,independence_verified,hard_exclude
+agtron,dark,255,5,5,False,0
+agtron,light,76,5,5,False,0
+agtron,medium,230,5,5,False,0
+ontoum224,dark,295,295,295,False,0
+ontoum224,green,299,299,298,False,0
+ontoum224,light,300,300,299,False,0
+ontoum224,medium,300,300,300,False,0
+rf_boos,dark,298,2,2,False,0
+rf_boos,light,297,2,2,False,0
+rf_boos,medium,298,2,2,False,0
+rf_boos,mixed,102,1,1,False,0
+rf_robusta,dark,500,231,221,False,0
+rf_robusta,green,452,203,174,False,0
+rf_robusta,light,67,1,1,False,0
+rf_robusta,medium,479,210,202,False,0
+rf_robusta,mixed,981,5,3,False,0

@@ -1,0 +1,277 @@
+{
+  "plan": {
+    "protocol": "ensemble_b1_cnn_v1",
+    "rule": "p = 0.5 * p_B1 + 0.5 * p_CNN per image, prediction = argmax; no weight, threshold or temperature is fitted",
+    "members": {
+      "B1": "tools.compare_tabular.run_loso('B1', 20261006, 'reference', R2 cap, group-guarded inner temperature); deterministic, so the same B1 probabilities are paired with every CNN seed",
+      "CNN": {
+        "run": "keras_cnn_20261011",
+        "arms": [
+          "K1_control_frozen",
+          "K1_control_finetune",
+          "K2_new_finetune"
+        ],
+        "seeds": [
+          20261006,
+          20261007,
+          20261008
+        ],
+        "plan_sha256": "086f4f574e3806cc817669b766a94dddcf64568cbd02c864b3d6c7bdd7ca9948"
+      }
+    },
+    "ensembles": {
+      "E_B1+K1_control_frozen": [
+        "B1",
+        "K1_control_frozen"
+      ],
+      "E_B1+K1_control_finetune": [
+        "B1",
+        "K1_control_finetune"
+      ],
+      "E_B1+K2_new_finetune": [
+        "B1",
+        "K2_new_finetune"
+      ]
+    },
+    "all_reported": "every ensemble listed here is reported; none is dropped or selected",
+    "gate_before_ensembling": "B1 fixed-protocol refit must reproduce mean LOSO macro-F1 0.6381973706626417 within 1e-12; otherwise stop",
+    "population": "the 3395 trainval images of tools.train_baseline.load_rows; split=test never read",
+    "inner_groups": {
+      "file": "inner_groups.json",
+      "directory": "qa_audit_regen_20261011",
+      "sha256": "8586948c28036a7631b6c9bc896694fdd405227049c4a5cab2419434192c6400"
+    },
+    "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac",
+    "metric": "tools.summarize_runs.evaluate (fold_table + calibration); primary = mean LOSO macro-F1, mean +- std(ddof=1) over the 3 CNN seeds",
+    "decision_rule": {
+      "wins_if": "mean LOSO macro-F1 (mean over 3 seeds) > B1",
+      "B1_mean_macro_f1": 0.6381973706626417,
+      "otherwise": "B1 stays the deployed model"
+    },
+    "post_hoc_disclosure": "this idea was proposed after the holdout results of both members were seen (CNN ahead of B1 on rf_robusta only). The rule itself has no tunable part, but the decision to try it used holdout information, so a win here would be a hypothesis to confirm on new data, not a deploy decision by itself.",
+    "diagnostics": "per fold: share of images where exactly one member is right, and the 'either member right' upper bound; descriptive only",
+    "limits": "LOSO source-level convenience dataset; no Pi/E2E/frozen-test claim; inner groups and manifest are the regenerated copies documented in the CNN run plan"
+  },
+  "b1_refit": {
+    "fixed_reference_mean_macro_f1": 0.6381973706626417,
+    "reference_mean_macro_f1": 0.6381973706626417,
+    "feature_cache": "baseline_features_6ae3ccfbdf.json",
+    "feature_cache_sha256": "f251b083a84c3de18245037ec9e255e2b8c798f9d62661298b4e9643d0985e27",
+    "feature_errors": 0,
+    "r2_train_rows": 2393,
+    "inner_group_guard": {
+      "sha256": "8586948c28036a7631b6c9bc896694fdd405227049c4a5cab2419434192c6400",
+      "original_groups": 1344,
+      "guarded_groups": 1326
+    },
+    "per_fold_vs_tracked_B1": {
+      "ontoum224": {
+        "macro_f1": 0.8901939363964617,
+        "macro_f1_tracked": 0.8901939363964617,
+        "ece": 0.44256834713803594,
+        "ece_tracked": 0.44256834713803594,
+        "temperature": 5.0
+      },
+      "rf_robusta": {
+        "macro_f1": 0.3845173667974892,
+        "macro_f1_tracked": 0.3845173667974892,
+        "ece": 0.36341789235606803,
+        "ece_tracked": 0.36341789235606803,
+        "temperature": 0.5
+      },
+      "rf_boos": {
+        "macro_f1": 0.6661269149074026,
+        "macro_f1_tracked": 0.6661269149074026,
+        "ece": 0.16239063759545158,
+        "ece_tracked": 0.16239063759545158,
+        "temperature": 1.5
+      },
+      "agtron": {
+        "macro_f1": 0.611951264549213,
+        "macro_f1_tracked": 0.611951264549213,
+        "ece": 0.09136429919844853,
+        "ece_tracked": 0.09136429919844853,
+        "temperature": 1.0
+      }
+    },
+    "max_abs_macro_f1_diff": 0.0,
+    "max_abs_ece_diff": 0.0
+  },
+  "ensembles": {
+    "E_B1+K1_control_frozen": {
+      "model": "E_B1+K1_control_frozen",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.4568130190365647,
+      "mean_macro_f1_std": 0.10303692725075343,
+      "pooled_macro_f1_mean": 0.5071661517089332,
+      "pooled_macro_f1_std": 0.10280240597847154,
+      "mean_acc_mean": 0.5320568389364838,
+      "pooled_acc_mean": 0.521453117329406,
+      "pooled_cross_step_rate_mean": 0.08659793814432991,
+      "pooled_ece_mean": 0.10856404188000389,
+      "worst_fold_first_seed": "rf_robusta",
+      "worst_fold_macro_f1_first_seed": 0.42468061102551385,
+      "beats_B1": false,
+      "source": "ensemble_b1_keras_20261011 (this run)"
+    },
+    "E_B1+K1_control_finetune": {
+      "model": "E_B1+K1_control_finetune",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.5050840667848137,
+      "mean_macro_f1_std": 0.039534785164484755,
+      "pooled_macro_f1_mean": 0.560875305243019,
+      "pooled_macro_f1_std": 0.05123374532365771,
+      "mean_acc_mean": 0.58861151058737,
+      "pooled_acc_mean": 0.5785959744722632,
+      "pooled_cross_step_rate_mean": 0.055866470299459986,
+      "pooled_ece_mean": 0.09666759786828039,
+      "worst_fold_first_seed": "agtron",
+      "worst_fold_macro_f1_first_seed": 0.48187633262260127,
+      "beats_B1": false,
+      "source": "ensemble_b1_keras_20261011 (this run)"
+    },
+    "E_B1+K2_new_finetune": {
+      "model": "E_B1+K2_new_finetune",
+      "n_seeds": 3,
+      "mean_macro_f1_mean": 0.4975707065483685,
+      "mean_macro_f1_std": 0.03814471704782934,
+      "pooled_macro_f1_mean": 0.5621195916810221,
+      "pooled_macro_f1_std": 0.05071912476895384,
+      "mean_acc_mean": 0.59295051939376,
+      "pooled_acc_mean": 0.5800687285223368,
+      "pooled_cross_step_rate_mean": 0.05331369661266568,
+      "pooled_ece_mean": 0.09155434787089611,
+      "worst_fold_first_seed": "rf_robusta",
+      "worst_fold_macro_f1_first_seed": 0.47811956323748134,
+      "beats_B1": false,
+      "source": "ensemble_b1_keras_20261011 (this run)"
+    }
+  },
+  "per_seed_mean_macro_f1": {
+    "E_B1+K1_control_frozen": [
+      0.5104910450974168,
+      0.33801961233223676,
+      0.5219283996800403
+    ],
+    "E_B1+K1_control_finetune": [
+      0.5502906255542308,
+      0.48798301614602163,
+      0.4769785586541886
+    ],
+    "E_B1+K2_new_finetune": [
+      0.5401300755676597,
+      0.48611672914655,
+      0.4664653149308956
+    ]
+  },
+  "complementarity": {
+    "E_B1+K1_control_frozen": {
+      "ontoum224": {
+        "only_B1_right": 0.4432029795158287,
+        "only_CNN_right": 0.05325884543761639,
+        "both_right": 0.4484171322160149,
+        "either_right_upper_bound_acc": 0.9448789571694599
+      },
+      "rf_robusta": {
+        "only_B1_right": 0.21637985978330146,
+        "only_CNN_right": 0.2772466539196941,
+        "both_right": 0.25398342893562775,
+        "either_right_upper_bound_acc": 0.7476099426386233
+      },
+      "rf_boos": {
+        "only_B1_right": 0.3717805151175812,
+        "only_CNN_right": 0.037327360955580445,
+        "both_right": 0.3057110862262038,
+        "either_right_upper_bound_acc": 0.7148189622993654
+      },
+      "agtron": {
+        "only_B1_right": 0.25133689839572193,
+        "only_CNN_right": 0.15151515151515152,
+        "both_right": 0.36007130124777187,
+        "either_right_upper_bound_acc": 0.7629233511586454
+      },
+      "pooled": {
+        "only_B1_right": 0.32282768777614135,
+        "only_CNN_right": 0.13431516936671575,
+        "both_right": 0.3363770250368188,
+        "either_right_upper_bound_acc": 0.793519882179676
+      }
+    },
+    "E_B1+K1_control_finetune": {
+      "ontoum224": {
+        "only_B1_right": 0.362756052141527,
+        "only_CNN_right": 0.0398510242085661,
+        "both_right": 0.5288640595903166,
+        "either_right_upper_bound_acc": 0.9314711359404096
+      },
+      "rf_robusta": {
+        "only_B1_right": 0.23422562141491396,
+        "only_CNN_right": 0.32377310388782665,
+        "both_right": 0.2361376673040153,
+        "either_right_upper_bound_acc": 0.794136392606756
+      },
+      "rf_boos": {
+        "only_B1_right": 0.3236282194848824,
+        "only_CNN_right": 0.08995893990294886,
+        "both_right": 0.35386338185890254,
+        "either_right_upper_bound_acc": 0.7674505412467338
+      },
+      "agtron": {
+        "only_B1_right": 0.1140819964349376,
+        "only_CNN_right": 0.19013666072489602,
+        "both_right": 0.4973262032085562,
+        "either_right_upper_bound_acc": 0.8015448603683897
+      },
+      "pooled": {
+        "only_B1_right": 0.27177221404025526,
+        "only_CNN_right": 0.1653411880216004,
+        "both_right": 0.3874324987727049,
+        "either_right_upper_bound_acc": 0.8245459008345607
+      }
+    },
+    "E_B1+K2_new_finetune": {
+      "ontoum224": {
+        "only_B1_right": 0.362756052141527,
+        "only_CNN_right": 0.0398510242085661,
+        "both_right": 0.5288640595903166,
+        "either_right_upper_bound_acc": 0.9314711359404096
+      },
+      "rf_robusta": {
+        "only_B1_right": 0.23581899298916506,
+        "only_CNN_right": 0.29381771829190567,
+        "both_right": 0.23454429572976418,
+        "either_right_upper_bound_acc": 0.7641810070108349
+      },
+      "rf_boos": {
+        "only_B1_right": 0.30645763344531546,
+        "only_CNN_right": 0.10862262038073907,
+        "both_right": 0.37103396789846954,
+        "either_right_upper_bound_acc": 0.786114221724524
+      },
+      "agtron": {
+        "only_B1_right": 0.1651812240047534,
+        "only_CNN_right": 0.24480095068330363,
+        "both_right": 0.4462269756387403,
+        "either_right_upper_bound_acc": 0.8562091503267973
+      },
+      "pooled": {
+        "only_B1_right": 0.2761904761904762,
+        "only_CNN_right": 0.170054000981836,
+        "both_right": 0.383014236622484,
+        "either_right_upper_bound_acc": 0.8292587137947963
+      }
+    }
+  },
+  "decision": {
+    "B1_mean_macro_f1": 0.6381973706626417,
+    "ensembles_beating_B1": [],
+    "result": "no ensemble beats B1; B1 stays the deployed model"
+  },
+  "versions": {
+    "python": "3.13.5",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.1"
+  },
+  "tool_sha256": "27854f99b6a41641df6d5f25880130341adec09577eac38accac7b30066a4980",
+  "frozen_test_loaded": false
+}

@@ -1,0 +1,55 @@
+{
+  "id": "qa_20261008_v1",
+  "seed": 20261006,
+  "scope": "All manifest split=trainval rows; no split=test image opened.",
+  "hard_exclusion": [
+    "image byte read/decode failure",
+    "mandatory Agtron ROI missing or invalid after EXIF"
+  ],
+  "review_only": [
+    "resolution",
+    "blur",
+    "clipping/exposure",
+    "compression",
+    "annotation mismatch/invalid bbox",
+    "WB guard",
+    "pipeline mask mismatch",
+    "near duplicates",
+    "non-target/ambiguous labels"
+  ],
+  "label_rule": "No relabeling, no exclusion by absolute color, predicted label or model error. No source is added to/removed from the reference R2 pool.",
+  "blur": {
+    "long_side": 256,
+    "texture_std_min": 8,
+    "ratio_fine_coarse_max": 0.8,
+    "minimum_laplacian_var_by_original_short_side": {
+      "below128": 8,
+      "128to511": 12,
+      "512plus": 18
+    },
+    "meaning": "Conservative review heuristic combining original resolution, texture and multiscale detail; not a calibrated focus classifier."
+  },
+  "clipping": {
+    "black_rgb_max": 2,
+    "white_rgb_min": 253,
+    "review_fraction": 0.15,
+    "meaning": "Measured in bean bbox interior when available; review only, especially dark roast."
+  },
+  "compression": {
+    "jpeg_mean_quantizer_min": 35,
+    "bytes_per_original_pixel_max": 0.25
+  },
+  "near_duplicate": {
+    "phash_hamming_max": 6,
+    "gray64_mad_max": 0.03,
+    "meaning": "Pair candidates; low-texture/same-scene matches require visual confirmation, never automatic exclusions."
+  },
+  "pipeline": {
+    "selected_pixels_in_bbox_review_below": 0.5,
+    "diagnostic_bbox_only": true
+  },
+  "wb": "Use shared runtime guard; Agtron ROI deliberately disables background WB because bean pile is not a neutral reference. paper_path is not loaded.",
+  "holdout": "QA hard exclusions only intersect outer-training masks. Every reference holdout image remains unchanged.",
+  "learned_thresholds": "None. Any future learned quality threshold must be fitted in the training fold only.",
+  "preregistered_at_utc": "2026-10-10T17:47:23.535940+00:00"
+}

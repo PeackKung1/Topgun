@@ -1,0 +1,53 @@
+{
+  "protocol": "ensemble_b1_cnn_v1",
+  "rule": "p = 0.5 * p_B1 + 0.5 * p_CNN per image, prediction = argmax; no weight, threshold or temperature is fitted",
+  "members": {
+    "B1": "tools.compare_tabular.run_loso('B1', 20261006, 'reference', R2 cap, group-guarded inner temperature); deterministic, so the same B1 probabilities are paired with every CNN seed",
+    "CNN": {
+      "run": "keras_cnn_20261011",
+      "arms": [
+        "K1_control_frozen",
+        "K1_control_finetune",
+        "K2_new_finetune"
+      ],
+      "seeds": [
+        20261006,
+        20261007,
+        20261008
+      ],
+      "plan_sha256": "086f4f574e3806cc817669b766a94dddcf64568cbd02c864b3d6c7bdd7ca9948"
+    }
+  },
+  "ensembles": {
+    "E_B1+K1_control_frozen": [
+      "B1",
+      "K1_control_frozen"
+    ],
+    "E_B1+K1_control_finetune": [
+      "B1",
+      "K1_control_finetune"
+    ],
+    "E_B1+K2_new_finetune": [
+      "B1",
+      "K2_new_finetune"
+    ]
+  },
+  "all_reported": "every ensemble listed here is reported; none is dropped or selected",
+  "gate_before_ensembling": "B1 fixed-protocol refit must reproduce mean LOSO macro-F1 0.6381973706626417 within 1e-12; otherwise stop",
+  "population": "the 3395 trainval images of tools.train_baseline.load_rows; split=test never read",
+  "inner_groups": {
+    "file": "inner_groups.json",
+    "directory": "qa_audit_regen_20261011",
+    "sha256": "8586948c28036a7631b6c9bc896694fdd405227049c4a5cab2419434192c6400"
+  },
+  "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac",
+  "metric": "tools.summarize_runs.evaluate (fold_table + calibration); primary = mean LOSO macro-F1, mean +- std(ddof=1) over the 3 CNN seeds",
+  "decision_rule": {
+    "wins_if": "mean LOSO macro-F1 (mean over 3 seeds) > B1",
+    "B1_mean_macro_f1": 0.6381973706626417,
+    "otherwise": "B1 stays the deployed model"
+  },
+  "post_hoc_disclosure": "this idea was proposed after the holdout results of both members were seen (CNN ahead of B1 on rf_robusta only). The rule itself has no tunable part, but the decision to try it used holdout information, so a win here would be a hypothesis to confirm on new data, not a deploy decision by itself.",
+  "diagnostics": "per fold: share of images where exactly one member is right, and the 'either member right' upper bound; descriptive only",
+  "limits": "LOSO source-level convenience dataset; no Pi/E2E/frozen-test claim; inner groups and manifest are the regenerated copies documented in the CNN run plan"
+}
