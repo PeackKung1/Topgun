@@ -10,7 +10,7 @@
   const overlayButton = document.querySelector('#overlay-toggle'), legend = document.querySelector('#overlay-legend');
   const maxUploadBytes = 32 * 1024 * 1024;
   let selectedFile = null, displayImage = null, lastResult = null, overlayEnabled = true, busy = false;
-  let selectionVersion = 0, e2eNode = null;
+  let selectionVersion = 0, e2eNode = null, prepared = null;
   const variantPicker = document.querySelector('#variant-picker'), variantOptions = document.querySelector('#variant-options');
   const variantLabels = {};
 
@@ -71,18 +71,26 @@
     try { image.src = url; await image.decode(); return image; }
     finally { URL.revokeObjectURL(url); }
   }
-  async function compressImage(file) {
-    const image = await readImage(file);
-    const scale = Math.min(1, 1600 / Math.max(image.naturalWidth, image.naturalHeight));
-    const work = document.createElement('canvas');
-    work.width = Math.max(1, Math.round(image.naturalWidth * scale));
-    work.height = Math.max(1, Math.round(image.naturalHeight * scale));
-    const ctx = work.getContext('2d', { alpha: false });
-    if (!ctx) throw new Error('เบราว์เซอร์ไม่รองรับการย่อรูป');
-    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, work.width, work.height);
-    ctx.drawImage(image, 0, 0, work.width, work.height);
-    return new Promise((resolve, reject) => work.toBlob(
-      blob => blob ? resolve(blob) : reject(new Error('แปลงรูปไม่สำเร็จ')), 'image/jpeg', 0.84));
+  // Decode + downscale + JPEG-encode once, starting when the file is chosen. The same canvas is the
+  // preview and the exact pixels that get uploaded, so a submit only waits for whatever is still unfinished.
+  function prepareUpload(file) {
+    const started = performance.now();
+    const canvasReady = readImage(file).then(image => {
+      const scale = Math.min(1, 1600 / Math.max(image.naturalWidth, image.naturalHeight));
+      const work = document.createElement('canvas');
+      work.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      work.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const ctx = work.getContext('2d', { alpha: false });
+      if (!ctx) throw new Error('เบราว์เซอร์ไม่รองรับการย่อรูป');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, work.width, work.height);
+      ctx.drawImage(image, 0, 0, work.width, work.height);
+      return work;
+    });
+    const blobReady = canvasReady.then(work => new Promise((resolve, reject) => work.toBlob(
+      blob => blob ? resolve({ blob, ms: performance.now() - started }) : reject(new Error('แปลงรูปไม่สำเร็จ')),
+      'image/jpeg', 0.84)));
+    blobReady.catch(() => {}); // handled by whoever awaits it; avoid an unhandled-rejection report
+    return { file, canvasReady, blobReady };
   }
   function validBox(box) {
     return Array.isArray(box) && box.length === 4 && box.every(Number.isFinite) && box[2] > 0 && box[3] > 0;
@@ -93,7 +101,7 @@
     const cssWidth = Math.max(1, canvas.getBoundingClientRect().width || 600);
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const width = Math.max(1, Math.round(cssWidth * ratio));
-    const height = Math.max(1, Math.round(width * displayImage.naturalHeight / displayImage.naturalWidth));
+    const height = Math.max(1, Math.round(width * displayImage.height / displayImage.width));
     if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) throw new Error('เบราว์เซอร์ไม่รองรับการแสดงรูป');
@@ -176,14 +184,15 @@
     const version = ++selectionVersion;
     selectedFile = input.files?.[0] || null; button.disabled = !selectedFile;
     resultBox.hidden = true; progress.textContent = ''; lastResult = null;
-    overlayButton.disabled = true; legend.hidden = true; displayImage = null;
+    overlayButton.disabled = true; legend.hidden = true; displayImage = null; prepared = null;
     previewWrap.hidden = !selectedFile;
     if (!selectedFile) return;
     fileInfo.textContent = selectedFile.name + ' · ' + (selectedFile.size / 1024 / 1024).toFixed(1) + ' MB';
+    prepared = prepareUpload(selectedFile);
     try {
-      const image = await readImage(selectedFile);
+      const work = await prepared.canvasReady;
       if (version !== selectionVersion || busy) return;
-      displayImage = image; canvas.hidden = false; redraw();
+      displayImage = work; canvas.hidden = false; redraw();
     } catch (_error) {
       if (version !== selectionVersion) return;
       canvas.hidden = true;
@@ -199,18 +208,22 @@
     try {
       if (file.size > maxUploadBytes) throw new Error('ไฟล์ใหญ่เกิน 32 MiB กรุณาเลือกรูปที่เล็กกว่านี้');
       progress.textContent = 'กำลังย่อรูปและวิเคราะห์…';
-      let uploadFile = file, uploadName = file.name || 'coffee-image';
-      try { uploadFile = await compressImage(file); uploadName = 'coffee.jpg'; }
-      catch (_error) { progress.textContent = 'กำลังส่งไฟล์ต้นฉบับ…'; }
-      // Display the exact oriented upload; boxes scale from decoded image_size.
-      try { displayImage = await readImage(uploadFile); canvas.hidden = false; }
-      catch (_error) { displayImage = null; canvas.hidden = true; }
+      let uploadFile = file, uploadName = file.name || 'coffee-image', prepareMs = null;
+      if (!prepared || prepared.file !== file) prepared = prepareUpload(file);
+      try {
+        // Display the exact oriented upload; boxes scale from decoded image_size.
+        displayImage = await prepared.canvasReady; canvas.hidden = false;
+        const ready = await prepared.blobReady;
+        uploadFile = ready.blob; uploadName = 'coffee.jpg'; prepareMs = ready.ms;
+      } catch (_error) { progress.textContent = 'กำลังส่งไฟล์ต้นฉบับ…'; displayImage = null; canvas.hidden = true; }
+      const waitMs = performance.now() - started, sent = performance.now();
       const body = new FormData(); body.append('image', uploadFile, uploadName);
       const chosenVariant = form.querySelector('input[name="variant"]:checked');
       if (chosenVariant) body.append('variant', chosenVariant.value);
       const response = await fetch('/api/predict', { method: 'POST', body, signal: controller.signal });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'ส่งรูปไม่สำเร็จ (' + response.status + ')');
+      const requestMs = performance.now() - sent;
       progress.textContent = ''; lastResult = data; renderResult(data);
       const drawMs = redraw();
       // The second RAF records after the frame containing the canvas paint.
@@ -221,8 +234,15 @@
       ]);
       const e2eMs = performance.now() - started;
       e2eNode.textContent = 'กดส่งรูป → วาดเสร็จ ' + e2eMs.toFixed(1) + ' ms';
+      // Where the time went: what was still being prepared after the press, the HTTP round trip, the canvas draw.
+      const serverMs = Number.isFinite(data.timing_ms?.total) ? data.timing_ms.total : null;
+      resultBox.append(element('p', 'รอย่อรูป ' + waitMs.toFixed(0) + ' ms · ส่งรูปและรอผล ' + requestMs.toFixed(0) + ' ms' +
+        (serverMs === null ? '' : ' (ฝั่ง Pi ' + serverMs.toFixed(0) + ' · เครือข่าย ' + Math.max(0, requestMs - serverMs).toFixed(0) + ')') +
+        ' · วาด ' + drawMs.toFixed(0) + ' ms · ไฟล์ที่ส่ง ' + (uploadFile.size / 1024).toFixed(0) + ' kB' +
+        (prepareMs === null ? '' : ' · ย่อรูปทั้งหมด ' + prepareMs.toFixed(0) + ' ms (เริ่มตอนเลือกไฟล์)'), 'timing'));
       document.dispatchEvent(new CustomEvent('topgun:prediction-rendered', { detail: {
-        e2e_ms: e2eMs, draw_ms: drawMs, upload_bytes: uploadFile.size, n_beans: data.n_beans,
+        e2e_ms: e2eMs, draw_ms: drawMs, wait_ms: waitMs, request_ms: requestMs, prepare_ms: prepareMs,
+        upload_bytes: uploadFile.size, n_beans: data.n_beans,
         counts: data.counts, warnings: data.warnings, schema_version: data.schema_version,
         status: data.status, timing_ms: data.timing_ms, image_size: data.image_size,
         displayed_size: [canvas.width, canvas.height]

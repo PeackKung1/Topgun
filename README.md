@@ -5,7 +5,7 @@
 ## Firmware ที่มีใน repo
 
 - `Firmware/app.py` โหลด `roastml.api.load(ROASTML_MODEL)` ตอนเริ่ม service แล้วส่ง bytes ที่อัปโหลดให้ `predict_bytes(raw)`; ให้หน้าเว็บ `/`, API `POST /api/predict`, ประวัติ `/market` และ health check `/health`
-- หน้าเว็บพยายามย่อรูปเป็น JPEG ด้านยาวไม่เกิน 1600 px; ถ้า browser ย่อไม่ได้จะส่งไฟล์ต้นฉบับแทนเมื่อขนาดไม่เกิน 32 MiB และจับเวลาตั้งแต่เริ่มจนแสดงผลด้วย `performance.now()`
+- หน้าเว็บพยายามย่อรูปเป็น JPEG ด้านยาวไม่เกิน 1600 px โดยเริ่มย่อทันทีที่เลือกไฟล์; ถ้า browser ย่อไม่ได้จะส่งไฟล์ต้นฉบับแทนเมื่อขนาดไม่เกิน 32 MiB และจับเวลาตั้งแต่กดส่งจนแสดงผลด้วย `performance.now()` — เวลานี้รวมการย่อรูปเฉพาะส่วนที่ยังไม่เสร็จตอนกดส่ง หน้าเว็บแสดงเวลาย่อรูปทั้งหมด, เวลาส่งและรอผล และเวลาวาดแยกไว้ใต้ผล
 - `Firmware/mqtt_pub.py` ใส่ผลทำนายลง bounded queue; worker แยกส่ง MQTT ผ่าน HiveMQ Cloud/TLS จึงไม่รอ broker ใน request path
 - `Firmware/service.py` รับ event จาก MQTT ตรวจ contract แล้วบันทึก SQLite โดย `msg_id` เป็น primary key เพื่อกันข้อมูลซ้ำ
 - `Firmware/deploy/` มี unit files, hotspot script และ health check หลัง boot; MQTT ใช้ HiveMQ Cloud ผ่าน TLS โดยตรง
@@ -21,7 +21,7 @@
 - ตั้ง hotspot ด้วย NetworkManager ต้องระบุ wireless interface และ SSID/password ใน environment บน Pi ก่อนเรียกสคริปต์
 - ค่า HiveMQ host/port/topic/TLS ตั้งต้นอยู่ใน `.env.example`; กำหนด username/password ใน `/etc/topgun/topgun.env` บน Pi และอย่า commit รหัสผ่าน
 - MQTT event queue อยู่ใน RAM และมีขนาดจำกัด จึงไม่เก็บ event ค้างไว้เมื่อเครื่องดับหรือ broker ไม่กลับมา
-- เวลา end-to-end ที่หน้าเว็บรายงานครอบคลุมการย่อภาพ, upload, inference, response และ render; ต้องวัดบน Pi จริงเพื่อยืนยันเป้าหมาย 1 วินาที
+- เวลา end-to-end ที่หน้าเว็บรายงานนับจากกดส่ง: ครอบคลุมการย่อภาพส่วนที่ยังไม่เสร็จ, upload, inference, response และ render; ต้องวัดบน Pi จริงเพื่อยืนยันเป้าหมาย 1 วินาที
 
 ## ติดตั้ง Python แบบ offline
 
