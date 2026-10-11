@@ -22,6 +22,8 @@ RESULT_KEYS = {
 }
 V3_KEYS = RESULT_KEYS | {"schema_version", "counts", "count_method", "image_size"}
 _DB_INIT_LOCK = threading.Lock()
+_SNAPSHOT_LOCK = threading.Lock()
+_SNAPSHOTS: dict[tuple[str, int], dict[str, Any]] = {}   # see read_market_snapshot
 
 
 def database_path() -> Path:
@@ -165,110 +167,151 @@ def persist_event(payload: Any, path: str | os.PathLike[str] | None = None) -> b
         return cursor.rowcount == 1
 
 
-def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int = 50) -> dict[str, Any]:
-    with connect_db(path) as db:
-        rows = db.execute(
-            "SELECT created_at, status, result_json FROM predictions "
-            "WHERE status IN ('ok','low_confidence') ORDER BY created_at DESC"
-        ).fetchall()
+def _row_contribution(row: sqlite3.Row) -> dict[str, Any] | None:
+    """One stored prediction -> what it adds to the market, or None when it has no usable bean counts."""
+    try:
+        result = json.loads(row["result_json"])
+    except (TypeError, json.JSONDecodeError):
+        return None
+    if not isinstance(result, dict):
+        return None
 
-    counts = {label: 0 for label in LABELS}
-    recent_beans: list[dict[str, Any]] = []
-    bean_total = 0
-    estimated_results = 0
-    visible_only_results = 0
-    recent_results: list[dict[str, Any]] = []
-    for row in rows:
+    beans = result.get("beans")
+    valid_beans = [
+        bean for bean in beans
+        if isinstance(bean, dict) and bean.get("label") in LABELS
+    ] if isinstance(beans, list) else []
+
+    # Prefer per-bean detections when they account for the full aggregate.
+    # If only some detections are present, fall back to n_beans/proportions
+    # so the market totals do not silently drop the unlisted beans.
+    n_beans = result.get("n_beans")
+    proportions = result.get("proportions")
+    aggregate_counts = None
+    if "counts" not in result and isinstance(n_beans, int) and not isinstance(n_beans, bool) and n_beans > 0:
+        if isinstance(proportions, dict) and all(
+            isinstance(proportions.get(label), (int, float)) and not isinstance(proportions.get(label), bool)
+            for label in LABELS
+        ):
+            values = {label: float(proportions[label]) for label in LABELS}
+            if all(math.isfinite(value) and value >= 0 for value in values.values()):
+                proportion_total = sum(values.values())
+                if proportion_total > 0:
+                    raw = {label: n_beans * values[label] / proportion_total for label in LABELS}
+                    aggregate_counts = {label: int(raw[label]) for label in LABELS}
+                    remainder = n_beans - sum(aggregate_counts.values())
+                    for label in sorted(
+                        LABELS,
+                        key=lambda item: raw[item] - aggregate_counts[item],
+                        reverse=True,
+                    )[:remainder]:
+                        aggregate_counts[label] += 1
+
+    if "counts" in result:
+        # Includes zero and null: neither may fall back to rounded proportions.
         try:
-            result = json.loads(row["result_json"])
-        except (TypeError, json.JSONDecodeError):
-            continue
-        if not isinstance(result, dict):
-            continue
-
-        beans = result.get("beans")
-        valid_beans = [
-            bean for bean in beans
-            if isinstance(bean, dict) and bean.get("label") in LABELS
-        ] if isinstance(beans, list) else []
-
-        # Prefer per-bean detections when they account for the full aggregate.
-        # If only some detections are present, fall back to n_beans/proportions
-        # so the market totals do not silently drop the unlisted beans.
-        n_beans = result.get("n_beans")
-        proportions = result.get("proportions")
-        aggregate_counts = None
-        if "counts" not in result and isinstance(n_beans, int) and not isinstance(n_beans, bool) and n_beans > 0:
-            if isinstance(proportions, dict) and all(
-                isinstance(proportions.get(label), (int, float)) and not isinstance(proportions.get(label), bool)
-                for label in LABELS
-            ):
-                values = {label: float(proportions[label]) for label in LABELS}
-                if all(math.isfinite(value) and value >= 0 for value in values.values()):
-                    proportion_total = sum(values.values())
-                    if proportion_total > 0:
-                        raw = {label: n_beans * values[label] / proportion_total for label in LABELS}
-                        aggregate_counts = {label: int(raw[label]) for label in LABELS}
-                        remainder = n_beans - sum(aggregate_counts.values())
-                        for label in sorted(
-                            LABELS,
-                            key=lambda item: raw[item] - aggregate_counts[item],
-                            reverse=True,
-                        )[:remainder]:
-                            aggregate_counts[label] += 1
-
-        if "counts" in result:
-            # Includes zero and null: neither may fall back to rounded proportions.
-            try:
-                per_result_counts = _validated_counts(result)
-            except ValueError:
-                continue
-            if per_result_counts is None:
-                continue
-        elif valid_beans and (aggregate_counts is None or len(valid_beans) == n_beans):
-            per_result_counts = {label: 0 for label in LABELS}
-            for bean in valid_beans:
-                per_result_counts[bean["label"]] += 1
-        elif aggregate_counts is not None:
-            per_result_counts = aggregate_counts
-        elif valid_beans:
-            per_result_counts = {label: 0 for label in LABELS}
-            for bean in valid_beans:
-                per_result_counts[bean["label"]] += 1
-        else:
-            continue
-
-        estimated = _is_estimated(result)
-        visible_only = "count_visible_only" in (result.get("warnings") or [])
-        if estimated:
-            estimated_results += 1
-        visible_only_results += int(visible_only)
-        for label, count in per_result_counts.items():
-            counts[label] += count
-            bean_total += count
-        if len(recent_results) < limit:
-            recent_results.append({"created_at": row["created_at"], "n_beans": sum(per_result_counts.values()),
-                                   "counts": per_result_counts, "estimated": estimated, "count_visible_only": visible_only})
-
-        if valid_beans:
-            for index, bean in enumerate(valid_beans, start=1):
-                recent_beans.append({
-                    "created_at": row["created_at"],
-                    "index": index,
-                    "label": bean["label"],
-                    "confidence": bean.get("conf"),
-                })
+            per_result_counts = _validated_counts(result)
+        except ValueError:
+            return None
+        if per_result_counts is None:
+            return None
+    elif valid_beans and (aggregate_counts is None or len(valid_beans) == n_beans):
+        per_result_counts = {label: 0 for label in LABELS}
+        for bean in valid_beans:
+            per_result_counts[bean["label"]] += 1
+    elif aggregate_counts is not None:
+        per_result_counts = aggregate_counts
+    elif valid_beans:
+        per_result_counts = {label: 0 for label in LABELS}
+        for bean in valid_beans:
+            per_result_counts[bean["label"]] += 1
+    else:
+        return None
 
     return {
-        "counts": counts,
-        "bean_total": bean_total,
-        # Keep `total` for existing clients; it now means total beans.
-        "total": bean_total,
-        "estimated_results": estimated_results,
-        "visible_only_results": visible_only_results,
-        "recent_results": recent_results,
-        "recent_beans": recent_beans[:limit],
+        "created_at": row["created_at"],
+        "counts": per_result_counts,
+        "estimated": _is_estimated(result),
+        "visible_only": "count_visible_only" in (result.get("warnings") or []),
+        "beans": valid_beans,
     }
+
+
+def _new_market_state() -> dict[str, Any]:
+    return {"mark": None, "counts": {label: 0 for label in LABELS}, "estimated": 0, "visible_only": 0,
+            "results": [], "bean_rows": []}
+
+
+def _add_rows(state: dict[str, Any], rows: list[sqlite3.Row], limit: int) -> None:
+    """Fold rows into the running totals and keep only the newest entries the snapshot can show."""
+    for row in rows:
+        if row["status"] not in ("ok", "low_confidence"):
+            continue
+        item = _row_contribution(row)
+        if item is None:
+            continue
+        key = (row["created_at"], row["rowid"])
+        state["estimated"] += int(item["estimated"])
+        state["visible_only"] += int(item["visible_only"])
+        for label, count in item["counts"].items():
+            state["counts"][label] += count
+        state["results"].append((key, {
+            "created_at": item["created_at"], "n_beans": sum(item["counts"].values()), "counts": item["counts"],
+            "estimated": item["estimated"], "count_visible_only": item["visible_only"]}))
+        if item["beans"]:
+            state["bean_rows"].append((key, [
+                {"created_at": item["created_at"], "index": index, "label": bean["label"], "confidence": bean.get("conf")}
+                for index, bean in enumerate(item["beans"][:max(limit, 0)], start=1)]))
+    state["results"].sort(key=lambda entry: entry[0], reverse=True)
+    del state["results"][max(limit, 0):]
+    state["bean_rows"].sort(key=lambda entry: entry[0], reverse=True)
+    kept = shown = 0
+    while shown < limit and kept < len(state["bean_rows"]):   # newest rows until `limit` beans are covered
+        shown += len(state["bean_rows"][kept][1])
+        kept += 1
+    del state["bean_rows"][kept:]
+
+
+def read_market_snapshot(path: str | os.PathLike[str] | None = None, limit: int = 50) -> dict[str, Any]:
+    """Market totals plus the newest results (created_at, then insertion order, newest first).
+
+    Every open page polls this every few seconds, so the totals are kept per (database, limit) in this
+    process and only rows inserted since the previous call are parsed. persist_event only ever inserts;
+    if rows were deleted or the database was replaced, the totals are rebuilt from scratch.
+    """
+    db_path = Path(path) if path else database_path()
+    cache_key = (str(db_path), limit)
+    with _SNAPSHOT_LOCK:
+        with connect_db(db_path) as db:
+            db.execute("BEGIN")   # one read snapshot: the mark and the rows below must describe the same table
+            mark = tuple(db.execute(
+                "SELECT COUNT(*), COALESCE(MAX(rowid), 0), "
+                "(SELECT msg_id FROM predictions ORDER BY rowid DESC LIMIT 1) FROM predictions").fetchone())
+            state = _SNAPSHOTS.get(cache_key)
+            if state is None or state["mark"] != mark:
+                rows = None
+                if state is not None and mark[0] > state["mark"][0]:
+                    rows = db.execute("SELECT rowid, created_at, status, result_json FROM predictions WHERE rowid > ?",
+                                      (state["mark"][1],)).fetchall()
+                    if len(rows) != mark[0] - state["mark"][0]:
+                        rows = None   # not a pure append
+                if rows is None:
+                    state = _new_market_state()
+                    rows = db.execute("SELECT rowid, created_at, status, result_json FROM predictions").fetchall()
+                _add_rows(state, rows, limit)
+                state["mark"] = mark
+                _SNAPSHOTS[cache_key] = state
+        bean_total = sum(state["counts"].values())
+        return {
+            "counts": dict(state["counts"]),
+            "bean_total": bean_total,
+            # Keep `total` for existing clients; it now means total beans.
+            "total": bean_total,
+            "estimated_results": state["estimated"],
+            "visible_only_results": state["visible_only"],
+            "recent_results": [dict(entry, counts=dict(entry["counts"])) for _, entry in state["results"]],
+            "recent_beans": [dict(bean) for _, beans in state["bean_rows"] for bean in beans][:max(limit, 0)],
+        }
 
 
 def run_subscriber() -> None:

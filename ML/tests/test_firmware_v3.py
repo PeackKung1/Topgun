@@ -120,3 +120,54 @@ def test_concurrent_first_database_migration_and_dedupe(fw,tmp_path):
         inserted=list(pool.map(lambda _:service.persist_event(payload,path),range(4)))
     assert sum(inserted)==1
     assert service.read_market_snapshot(path)['bean_total']==300
+
+
+def test_market_snapshot_incremental_matches_full_rebuild(fw,tmp_path):
+    """read_market_snapshot folds in only new rows: after every insert it must equal a from-scratch rebuild."""
+    service,app=fw; path=tmp_path/'incremental.sqlite3'
+    def rebuilt(limit):
+        kept=dict(service._SNAPSHOTS); service._SNAPSHOTS.clear()
+        try:return service.read_market_snapshot(path,limit)
+        finally:service._SNAPSHOTS.clear(); service._SNAPSHOTS.update(kept)
+    def check():
+        for limit in (50,3):
+            assert service.read_market_snapshot(path,limit)==rebuilt(limit)
+    failed=app.mqtt_result(result(3)); failed.update(status='bad_image',label=None,n_beans=None,counts=None,count_method=None,warnings=[])
+    legacy={k:v for k,v in result(6).items() if k in LEGACY_RESULT_KEYS}   # v2: beans listed, no counts key
+    stamps=['2026-10-10T04:00:05Z','2026-10-10T04:00:01Z','2026-10-10T04:00:09Z','2026-10-10T04:00:01Z','2026-10-10T04:00:07Z',
+            '2026-10-10T04:00:03Z','2026-10-10T04:00:08Z','2026-10-10T04:00:02Z']   # arrive out of order, with a tie
+    payloads=[result(3),app.mqtt_result(result(30,'estimated')),failed,legacy,app.mqtt_result(result(0)),result(60),
+              app.mqtt_result(result(9)),legacy]
+    assert service.read_market_snapshot(path)['bean_total']==0
+    for stamp,r in zip(stamps,payloads):
+        assert service.persist_event({**event(copy.deepcopy(r)),'created_at':stamp},path)
+        check()
+    snapshot=service.read_market_snapshot(path,3)
+    assert snapshot['bean_total']==3+30+6+0+60+9+6 and snapshot['estimated_results']==1
+    assert [r['created_at'][-3:-1] for r in snapshot['recent_results']]==['08','07','05']        # failed 09 is skipped
+    assert [(b['created_at'][-3:-1],b['index']) for b in snapshot['recent_beans']]==[('05',1),('05',2),('05',3)]
+    assert service.read_market_snapshot(path,3) is not snapshot and service.read_market_snapshot(path,3)==snapshot
+    snapshot['counts']['light']=-1; snapshot['recent_results'][0]['counts']['light']=-1          # callers cannot corrupt the cache
+    check()
+    with service.connect_db(path) as db:                                                         # history trimmed by hand → rebuild
+        db.execute("DELETE FROM predictions WHERE created_at='2026-10-10T04:00:07Z'")
+    check()
+    assert service.read_market_snapshot(path)['bean_total']==3+30+6+60+9+6
+    assert service.persist_event({**event(result(3)),'created_at':'2026-10-10T04:00:10Z'},path)  # delete + insert between two reads
+    with service.connect_db(path) as db:
+        db.execute("DELETE FROM predictions WHERE created_at='2026-10-10T04:00:05Z'")
+    check()
+    path.unlink(); [p.unlink() for p in tmp_path.glob('incremental.sqlite3-*')]                   # history wiped while running
+    assert service.read_market_snapshot(path)['bean_total']==0
+    assert service.persist_event(event(result(3)),path) and service.read_market_snapshot(path)['bean_total']==3
+
+
+def test_market_snapshot_parses_only_new_rows(fw,tmp_path,monkeypatch):
+    service,app=fw; path=tmp_path/'calls.sqlite3'; parsed=[]
+    real=service._row_contribution
+    monkeypatch.setattr(service,'_row_contribution',lambda row:parsed.append(row['rowid']) or real(row))
+    for _ in range(5):service.persist_event(event(app.mqtt_result(result(3))),path)
+    assert service.read_market_snapshot(path)['bean_total']==15 and len(parsed)==5
+    assert service.read_market_snapshot(path)['bean_total']==15 and len(parsed)==5               # nothing new → nothing parsed
+    service.persist_event(event(app.mqtt_result(result(3))),path)
+    assert service.read_market_snapshot(path)['bean_total']==18 and len(parsed)==6               # one new row → one parse

@@ -247,7 +247,8 @@
         status: data.status, timing_ms: data.timing_ms, image_size: data.image_size,
         displayed_size: [canvas.width, canvas.height]
       } }));
-      refreshCounts();
+      // The result reaches the history through MQTT a moment later; ask again instead of waiting for the 3 s poll.
+      for (const delay of [0, 500, 1500]) window.setTimeout(refreshCounts, delay);
     } catch (error) {
       progress.textContent = '';
       showError(error.name === 'AbortError' ? 'ส่งรูปใช้เวลานานเกินไป กรุณาลองใหม่' : error.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
