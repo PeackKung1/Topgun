@@ -15,6 +15,7 @@
 - `ML/SPEC.md` และไฟล์โมเดล `ML/models/current/` ไม่มีใน checkout นี้; Firmware อิง contract ใน `ML/roastml/api.py` และ `contract.py` และค่าเริ่มต้นจะโหลดโมเดลจาก `ML/models/current/`
 - `Firmware/run_local.sh` ใช้ `ML/models/current/` เป็นค่าเริ่มต้น; ตั้ง `ROASTML_MODEL=stub` เองได้เฉพาะทดสอบหน้าเว็บ โดยผลเป็นข้อมูลจำลอง ไม่ใช่การวิเคราะห์จริง
 - หากโมเดลโหลดไม่ได้ เว็บยังเปิดได้ แต่ `/api/predict` และ `/health` จะตอบ 503; ต้องนำโมเดลที่ ML ส่งมาไว้ใน path ที่ `ROASTML_MODEL` ระบุก่อนวิเคราะห์รูปจริง
+- backend `det_b1_beans` ตัดกรอบที่ detector วางบนตัวหนังสือสีอ่อนของป้าย (เช่น ตัวขาวบนป้ายน้ำตาล) ด้วย `flat_marks` ใน `ML/roastml/detector.py`; ตัวหนังสือสีเข้มบนพื้นอ่อนและตัวหนังสือบนพื้นมืดยังถูกนับเป็นเมล็ดได้ จนกว่าจะเทรน detector ใหม่ด้วยภาพป้ายเป็นตัวอย่างลบ; ปิดตัวกรองได้ด้วย `det_config.mark_flat_min = 0`
 - backend `b1_linear_beans` ส่งกรอบเมล็ดรายเมล็ด; ภาพที่ขอบเมล็ดแตะกันใช้ edge contours ประมาณจำนวนและส่ง warning `bean_count_estimated` ส่วนเมล็ดที่ถูกบังอาจนับไม่ครบ
 - `Firmware/deploy/coffee_service.service` ใช้ `/opt/topgun`, service account `topgun` และอ่าน port จาก `TOPGUN_PORT` (ค่าเริ่มต้น `8080`)
 - ตั้ง hotspot ด้วย NetworkManager ต้องระบุ wireless interface และ SSID/password ใน environment บน Pi ก่อนเรียกสคริปต์

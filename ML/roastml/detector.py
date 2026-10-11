@@ -3,6 +3,7 @@
 ภาพ decode (RGB) → letterbox เป็น imgsz → ONNX → ถอดกรอบ + NMS (numpy) → กรอบ [x, y, w, h] ในพิกัดภาพ decode
 รูปแบบ output ที่รองรับ: (1, 4 + nc, N) ของ Ultralytics detect ที่ export แบบไม่มี NMS (cx, cy, w, h เป็น px ของ input · คะแนนผ่าน sigmoid แล้ว)
 ภาพใหญ่ที่เมล็ดเล็ก: tile=True แบ่งภาพเป็นช่องซ้อนกันแล้วรวมด้วย NMS (ช้าลงตามจำนวนช่อง)
+หลัง NMS ตัดกรอบที่ไม่ใช่เมล็ด 2 แบบ: กรอบภาชนะ (container_boxes) และรอยพิมพ์สีอ่อนบนป้าย/พื้นเรียบ (flat_marks)
 ค่า conf / iou / max_det มาจาก model_card (ประกาศก่อนประเมิน) — ไม่ได้จูนบน test
 """
 from __future__ import annotations
@@ -27,6 +28,9 @@ class DetConfig:
     # (จาน/ถ้วยที่เมล็ดเล็กมากถูกมองเป็นเมล็ดใหญ่ 1 เมล็ด) · ค่าตั้งจากเหตุผล ไม่ได้จูน · container_min = 0 ปิด
     container_min: int = 5
     container_area_ratio: float = 4.0
+    # ตัดกรอบ "รอยพิมพ์สีอ่อนบนพื้นเรียบ" (ตัวหนังสือขาวบนป้าย): รอบกรอบเป็นพื้นสว่างสีเดียว ≥ สัดส่วนนี้ แต่ในกรอบไม่มีเนื้อเมล็ด
+    # ดู flat_marks · ตั้งจากภาพป้ายภาพเดียว (ตัวหนังสือ ≥ 0.79 · เมล็ดในกอง ≤ 0.58) ยังไม่ได้วัดกับ count test · 0 ปิด
+    mark_flat_min: float = 0.65
 
     @classmethod
     def from_dict(cls, d: dict | None) -> "DetConfig":
@@ -40,6 +44,8 @@ class DetConfig:
         if isinstance(cfg.container_min, bool) or not isinstance(cfg.container_min, int) or cfg.container_min < 0 \
                 or not np.isfinite(cfg.container_area_ratio) or cfg.container_area_ratio < 1:
             raise ValueError("det_config: container_min ≥ 0 และ container_area_ratio ≥ 1")
+        if isinstance(cfg.mark_flat_min, bool) or not 0 <= cfg.mark_flat_min <= 1:
+            raise ValueError("det_config: mark_flat_min อยู่นอกช่วง 0..1")
         for name in ("max_det", "pre_nms_top", "threads"):
             v = getattr(cfg, name)
             if isinstance(v, bool) or not isinstance(v, int) or v < 1:
@@ -100,6 +106,43 @@ def container_boxes(boxes: np.ndarray, min_inside: int, area_ratio: float) -> np
     np.fill_diagonal(inside, False)
     area = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
     return (inside.sum(axis=1) >= min_inside) & (area >= area_ratio * np.median(area))
+
+
+MARK_GRID = 32        # สุ่มพิกเซลเป็นตาราง 32×32 บนพื้นที่ 2× กรอบ → กรอบ = 16×16 ช่องกลาง · วงรอบ = ช่องที่เหลือ
+MARK_DE = 10.0        # ΔE จากสีพื้น (มัธยฐานของวงรอบ) ที่ถือว่า "ไม่ใช่พื้น" — ค่าเดียวกับ SegConfig.bg_uniform_de
+MARK_MIN_L = 50.0     # พื้นต้องสว่าง (กระดาษ/ป้าย) — กองเมล็ดคั่วเข้มที่มืดสม่ำเสมอไม่เข้าเงื่อนไข (เท่ากับ SegConfig.wb_min_L)
+MARK_BLOB = 3         # เนื้อเมล็ด = หน้าต่าง 3×3 ช่อง (≈ 0.2 ของด้านกรอบ) ที่ทุกช่องต่างจากพื้นและไม่สว่างกว่าพื้น
+
+
+def flat_marks(rgb: np.ndarray, boxes: np.ndarray, flat_min: float) -> np.ndarray:
+    """rgb uint8 · boxes (n, 4) x0, y0, x1, y1 → bool (n,) True = รอยพิมพ์สีอ่อนบนพื้นเรียบ (ตัวหนังสือ/โลโก้) ไม่ใช่เมล็ด
+
+    เมล็ดคั่วบนพื้นเรียบสว่างมีเนื้อที่ต่างจากพื้นและไม่สว่างกว่าพื้น · ตัวหนังสือสีอ่อนบนป้าย (ขาวบนน้ำตาล) สว่างกว่าพื้น
+    ตัดเฉพาะเมื่อครบทุกข้อ: พื้นรอบกรอบสว่าง (L ≥ MARK_MIN_L) + เรียบ (≥ flat_min ของวงรอบอยู่ใน ΔE < MARK_DE จากมัธยฐาน)
+    + ในกรอบไม่มีเนื้อเมล็ด · พื้นไม่เรียบ/มืด (กองเมล็ด ผ้า ไม้ลาย) → ไม่ตัด
+    ไม่ครอบคลุม: ตัวหนังสือสีเข้มบนพื้นอ่อน (เส้นหนาพอ ๆ กับเมล็ดในกรอบ แยกด้วยสี/รูปทรงไม่ได้) และตัวหนังสือบนพื้นมืด
+    """
+    n = len(boxes)
+    if not flat_min or not n:
+        return np.zeros(n, bool)
+    h, w = rgb.shape[:2]
+    b = boxes.astype(np.float64)
+    t = (np.arange(MARK_GRID) + 0.5) / MARK_GRID * 2 - 1   # -1..1 = 2× กรอบ รอบจุดกลาง
+    xx = np.clip(np.rint((b[:, 0, None] + b[:, 2, None]) / 2 + t * (b[:, 2, None] - b[:, 0, None])), 0, w - 1).astype(np.int64)
+    yy = np.clip(np.rint((b[:, 1, None] + b[:, 3, None]) / 2 + t * (b[:, 3, None] - b[:, 1, None])), 0, h - 1).astype(np.int64)
+    patch = rgb.reshape(-1, 3)[(yy[:, :, None] * w + xx[:, None, :]).ravel()].reshape(n * MARK_GRID, MARK_GRID, 3)
+    lab = cv2.cvtColor(patch, cv2.COLOR_RGB2Lab).reshape(n, MARK_GRID, MARK_GRID, 3)   # uint8: L × 2.55 · a, b + 128
+    q = MARK_GRID // 4
+    ring = np.ones((MARK_GRID, MARK_GRID), bool)
+    ring[q:-q, q:-q] = False
+    bg = np.median(lab[:, ring], axis=1).astype(np.float32)
+    d = (lab.astype(np.float32) - bg[:, None, None]) * np.float32([100 / 255, 1, 1])
+    far = np.einsum("nijc,nijc->nij", d, d) >= MARK_DE ** 2
+    flat = 1 - far[:, ring].mean(axis=1) >= flat_min
+    ink = (far & (d[..., 0] < MARK_DE / 2))[:, q:-q, q:-q]
+    m = ink.shape[1] - MARK_BLOB + 1
+    solid = np.logical_and.reduce([ink[:, i:i + m, j:j + m] for i in range(MARK_BLOB) for j in range(MARK_BLOB)]).any(axis=(1, 2))
+    return flat & (bg[:, 0] * (100 / 255) >= MARK_MIN_L) & ~solid
 
 
 def decode_output(out: np.ndarray, conf: float, channels_first: bool = True) -> tuple[np.ndarray, np.ndarray]:
@@ -166,6 +209,8 @@ class BeanDetector:
         keep = nms(boxes, scores, self.cfg.iou, self.cfg.max_det)
         boxes, scores = boxes[keep], scores[keep]
         real = ~container_boxes(boxes, self.cfg.container_min, self.cfg.container_area_ratio)
+        boxes, scores = boxes[real], scores[real]
+        real = ~flat_marks(rgb, boxes, self.cfg.mark_flat_min)
         boxes, scores = boxes[real], scores[real]
         x0 = np.clip(np.floor(boxes[:, 0]), 0, w - 1)
         y0 = np.clip(np.floor(boxes[:, 1]), 0, h - 1)

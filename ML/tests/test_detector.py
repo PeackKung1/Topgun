@@ -4,6 +4,7 @@ from __future__ import annotations
 import io
 import json
 
+import cv2
 import numpy as np
 import pytest
 from PIL import Image
@@ -12,7 +13,7 @@ from test_linear_backend import write_model
 
 from roastml import det_backend
 from roastml.api import ModelLoadError, load
-from roastml.detector import DetConfig, container_boxes, decode_output, letterbox, nms
+from roastml.detector import BeanDetector, DetConfig, container_boxes, decode_output, flat_marks, letterbox, nms
 from roastml.features import pixel_stats
 from roastml.perbean import box_bean_features, fuse_image_prior
 from roastml.segment import SegConfig
@@ -93,11 +94,57 @@ def test_decode_output_both_layouts(transpose):
 
 
 @pytest.mark.parametrize("bad", [{"conf": 0}, {"iou": 1.0}, {"max_det": 0}, {"max_det": 20000}, {"threads": True}, {"nope": 1},
-                                 {"container_min": -1}, {"container_area_ratio": 0.5}])
+                                 {"container_min": -1}, {"container_area_ratio": 0.5}, {"mark_flat_min": 1.5},
+                                 {"mark_flat_min": True}])
 def test_det_config_rejects_bad_values(bad):
     with pytest.raises(ValueError):
         DetConfig.from_dict(bad)
     assert DetConfig.from_dict({"conf": 0.3, "max_det": 500}).max_det == 500
+
+
+TAN = (176, 150, 100)   # ป้ายสีน้ำตาลอ่อน (L ≈ 63)
+
+
+def label_scene():
+    """ป้ายเรียบ: ตัวหนังสือขาว (ซ้าย) · เมล็ดเข้ม (กลาง) · เมล็ดอ่อนที่ยังเข้มกว่าป้าย (ขวา) → (ภาพ, กรอบ x0y0x1y1 สามกรอบ)"""
+    img = np.full((240, 640, 3), TAN, np.uint8)
+    cv2.putText(img, "Roast", (30, 135), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (240, 235, 220), 5, cv2.LINE_AA)
+    cv2.ellipse(img, (340, 120), (38, 26), 30, 0, 360, DARK, -1)
+    cv2.ellipse(img, (520, 120), (38, 26), 0, 0, 360, (150, 105, 70), -1)
+    return img, np.array([[85, 85, 145, 145], [298, 82, 382, 158], [478, 90, 562, 150]], float)
+
+
+def test_flat_marks_drop_light_print_on_label_but_keep_beans():
+    img, boxes = label_scene()
+    assert flat_marks(img, boxes, 0.65).tolist() == [True, False, False]
+    assert flat_marks(img, boxes, 0.0).tolist() == [False] * 3            # 0 = ปิด
+    assert flat_marks(img, np.zeros((0, 4)), 0.65).tolist() == []
+    mirrored = np.array([[640 - 145, 85, 640 - 85, 145]], float)          # view ที่ไม่ contiguous ก็ต้องใช้ได้
+    assert flat_marks(img[:, ::-1], mirrored, 0.65).tolist() == [True]
+
+
+def test_flat_marks_need_a_bright_flat_surface():
+    """พื้นมืด (กองเมล็ดเข้ม) หรือพื้นไม่เรียบ → ไม่ตัด แม้ในกรอบไม่มีเนื้อเมล็ด"""
+    rng = np.random.default_rng(0)
+    box = np.array([[130, 130, 190, 190]], float)
+    dark = np.full((320, 320, 3), DARK, np.uint8)                          # มืดสม่ำเสมอ
+    cv2.line(dark, (130, 160), (190, 160), (15, 10, 8), 2)                 # ร่องเมล็ดบาง ๆ
+    assert flat_marks(dark, box, 0.65).tolist() == [False]
+    busy = np.where(rng.random((320, 320, 1)) < 0.5, np.uint8(TAN), np.uint8(DARK))   # สว่างแต่ไม่เรียบ
+    assert flat_marks(busy, box, 0.65).tolist() == [False]
+    blank = np.full((320, 320, 3), TAN, np.uint8)                          # ป้ายเปล่า: ในกรอบไม่มีอะไร
+    assert flat_marks(blank, box, 0.65).tolist() == [True]
+
+
+@pytest.mark.parametrize("flat_min, kept", [(0.65, [0.8]), (0.0, [0.9, 0.8])])
+def test_detect_drops_box_on_label_text(flat_min, kept):
+    """detect(): กรอบบนตัวหนังสือของป้ายถูกตัด · กรอบบนเมล็ดคงอยู่ · mark_flat_min = 0 → ไม่กรอง (ไม่ต้องมี onnxruntime)"""
+    img, boxes = label_scene()
+    det = object.__new__(BeanDetector)
+    det.cfg, det.size = DetConfig(mark_flat_min=flat_min), 640
+    det._run = lambda rgb: (boxes[:2].copy(), np.array([0.9, 0.8]))
+    out, scores = det.detect(img)
+    assert scores.tolist() == pytest.approx(kept) and out[-1].tolist() == [298, 82, 84, 76]
 
 
 def test_real_onnx_detector_roundtrip(tmp_path):
@@ -106,7 +153,6 @@ def test_real_onnx_detector_roundtrip(tmp_path):
     pytest.importorskip("onnxruntime")
     from onnx import TensorProto, helper, numpy_helper
 
-    from roastml.detector import BeanDetector
     const = np.zeros((1, 5, 3), np.float32)
     const[0, :, 0] = [320, 320, 64, 32, 0.9]      # กลางภาพ input 640
     const[0, :, 1] = [322, 321, 64, 32, 0.8]      # ซ้อนตัวแรก → ถูก NMS ตัด
