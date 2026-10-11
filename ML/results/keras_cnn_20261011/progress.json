@@ -1,0 +1,6 @@
+{
+  "arm": "K2_new_finetune",
+  "seed": 20261008,
+  "mean_macro_f1": 0.441195136883569,
+  "seconds": 1843.2904861
+}

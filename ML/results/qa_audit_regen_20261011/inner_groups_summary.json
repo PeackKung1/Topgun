@@ -1,0 +1,15 @@
+{
+  "policy_id": "qa_inner_candidate_components_20261008_v1",
+  "manifest_sha256": "31e337ff9286cf83c14377dedd2eabfbc77631b1bb59dd6807cf39ec7f0b6cac",
+  "policy_sha256": "435477f514438cea6bae8d80918f6bb45358092c03010e0c5d5e0b994213fbc1",
+  "qa_policy_sha256": "57a16da7bbc1d01c1639eb1faf3dd1c5b5c0e7dbccbce036807b0d4c8fc53195",
+  "near_duplicate_pairs_sha256": "2cbe8d43f0a2f026dd9b6e27c4bd845a94ab42536d3fb9db7911e95aece573bb",
+  "ledger_sha256": "01580f9e4c17035cb606f382d4149f8de3aed3cfd5231a99fc889771bdb4b461",
+  "manifest_groups": 1844,
+  "inner_group_components": 1797,
+  "multi_manifest_group_components": 31,
+  "residual_within_source_candidate_cross_component_pairs": 0,
+  "unmerged_cross_source_candidate_pairs": 0,
+  "rule": "Apply only to inner train/validation splitting. Compute R2 video cap with original manifest groups first. Never merge sources, modify labels, exclude images or alter outer holdouts.",
+  "interpretation": "Conservative grouping guard; candidates are not all visually confirmed duplicates, and components are not proven independent samples."
+}
